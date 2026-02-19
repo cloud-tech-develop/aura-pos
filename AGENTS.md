@@ -64,6 +64,8 @@ import { ThemeService } from '../../../core/services/theme.service';
 
 ## Angular Best Practices
 
+> **IMPORTANT:** This project uses **Angular 21 with Zoneless Change Detection**. Zone.js has been removed from the application. All change detection is handled automatically through **Signals**.
+
 **Components:**
 - Standalone components (Angular 21 default - do NOT add `standalone: true`)
 - Use `input()` and `output()` functions instead of decorators
@@ -71,11 +73,16 @@ import { ThemeService } from '../../../core/services/theme.service';
 - Keep components small and single-responsibility
 - Use inline templates for small components (< 10 lines)
 
-**State Management:**
+**State Management (Signals - Required):**
 ```typescript
-// ✅ Use signals for state
+// ✅ Signals are REQUIRED for all component state
 readonly count = signal<number>(0);
 readonly doubled = computed(() => this.count() * 2);
+
+// ✅ Use signal effects for side effects
+effect(() => {
+  console.log('Count changed:', this.count());
+});
 
 // ✅ Service injection
 private router = inject(Router);
@@ -83,6 +90,26 @@ private posService = inject(PointOfSaleService);
 
 // ❌ No constructor injection
 constructor(private router: Router) {}
+```
+
+**Zoneless Change Detection:**
+```typescript
+// ✅ In app.config.ts - use provideZonelessChangeDetection
+import { provideZonelessChangeDetection } from '@angular/core';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZonelessChangeDetection(),
+    // ...other providers
+  ]
+};
+
+// ✅ Components update automatically when signals change
+// No need for manual detectChanges() calls
+
+// ✅ Use input signals for component inputs
+readonly myInput = input<string>('');
+readonly myRequiredInput = input.required<string>();
 ```
 
 **Templates:**
@@ -201,7 +228,7 @@ src/app/shared/        # Shared components, directives, pipes
 
 - PrimeNG v21 available for UI components
 - RxJS for async operations (use async pipe in templates)
-- Zone.js still enabled (default Angular behavior)
+- **Zone.js REMOVED** - This project uses Zoneless Change Detection with Signals
 - No NgModules for components (standalone only)
 - No `@HostBinding`/`@HostListener` decorators (use `host` object instead)
 - Use `NgOptimizedImage` for all static images

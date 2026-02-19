@@ -25,11 +25,7 @@ export class SidebarComponent {
 
   readonly menuSections: { title: string; items: MenuItem[] }[] = [
     {
-      title: '',
-      items: [{ id: 'inicio', label: 'Inicio', icon: 'home', route: '/dashboard' }],
-    },
-    {
-      title: 'Dashboard',
+      title: 'Inicio',
       items: [
         {
           id: 'dashboard',
