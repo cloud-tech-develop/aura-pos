@@ -36,11 +36,11 @@
   align-items: center;
   justify-content: center;
   color: white;
+  font-size: 1.125rem;
 }
 
-.logo-icon svg {
-  width: 20px;
-  height: 20px;
+.logo-icon i {
+  font-size: 1.125rem;
 }
 
 .logo-text {
@@ -68,9 +68,8 @@
   color: var(--sidebar-text);
 }
 
-.collapse-btn svg {
-  width: 18px;
-  height: 18px;
+.collapse-btn i {
+  font-size: 1.125rem;
 }
 
 /* Navigation */
@@ -137,11 +136,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.125rem;
 }
 
-.menu-icon svg {
-  width: 18px;
-  height: 18px;
+.menu-icon i {
+  font-size: 1.125rem;
 }
 
 .menu-label {
@@ -150,8 +149,7 @@
 }
 
 .expand-icon {
-  width: 16px;
-  height: 16px;
+  font-size: 0.875rem;
   transition: transform 0.2s ease;
 }
 
@@ -225,9 +223,8 @@
   color: var(--sidebar-text-muted);
 }
 
-.version svg {
-  width: 14px;
-  height: 14px;
+.version i {
+  font-size: 0.875rem;
 }
 
 .version span {

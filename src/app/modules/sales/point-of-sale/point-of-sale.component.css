@@ -40,8 +40,7 @@
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
+  font-size: 1rem;
   color: var(--text-muted);
   pointer-events: none;
 }
@@ -150,9 +149,8 @@
   background-color: rgba(139, 92, 246, 0.2);
 }
 
-.product-icon svg {
-  width: 24px;
-  height: 24px;
+.product-icon i {
+  font-size: 1.5rem;
 }
 
 .product-info {
@@ -222,9 +220,8 @@
   margin: 0;
 }
 
-.cart-title svg {
-  width: 20px;
-  height: 20px;
+.cart-title i {
+  font-size: 1.25rem;
   color: var(--primary-500);
 }
 
@@ -332,9 +329,8 @@
   text-align: center;
 }
 
-.empty-cart svg {
-  width: 48px;
-  height: 48px;
+.empty-cart i {
+  font-size: 3rem;
   margin-bottom: 1rem;
   opacity: 0.5;
 }

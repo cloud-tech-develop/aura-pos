@@ -87,8 +87,7 @@
 }
 
 .menu-icon {
-  width: 18px;
-  height: 18px;
+  font-size: 1rem;
   flex-shrink: 0;
 }
 
@@ -195,6 +194,5 @@
 }
 
 .mode-icon {
-  width: 16px;
-  height: 16px;
+  font-size: 1rem;
 }

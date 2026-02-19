@@ -24,9 +24,7 @@
       </button>
       <button class="filter-btn">
         {{ statusFiltro }}
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
+        <i class="pi pi-chevron-down"></i>
       </button>
     </div>
   </div>
@@ -36,27 +34,33 @@
     <table class="data-table">
       <thead>
         <tr>
-          <th *ngFor="let col of columnas">{{ col.label }}</th>
+          @for (col of columnas; track col.label) {
+            <th>{{ col.label }}</th>
+          }
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="clientes.length === 0" class="empty-row">
-          <td [attr.colspan]="columnas.length" class="empty-message">
-            No hay clientes para mostrar
-          </td>
-        </tr>
-        <tr *ngFor="let cliente of clientes">
-          <td>{{ cliente.id }}</td>
-          <td>{{ cliente.nombre }}</td>
-          <td>
-            <span class="status-badge" [class]="'status-' + cliente.status.toLowerCase()">
-              {{ cliente.status }}
-            </span>
-          </td>
-          <td>{{ cliente.telefono }}</td>
-          <td>{{ cliente.pais }}</td>
-          <td>{{ cliente.correo }}</td>
-        </tr>
+        @if (clientes.length === 0) {
+          <tr class="empty-row">
+            <td [attr.colspan]="columnas.length" class="empty-message">
+              No hay clientes para mostrar
+            </td>
+          </tr>
+        }
+        @for (cliente of clientes; track cliente.id) {
+          <tr>
+            <td>{{ cliente.id }}</td>
+            <td>{{ cliente.nombre }}</td>
+            <td>
+              <span class="status-badge" [class]="'status-' + cliente.status.toLowerCase()">
+                {{ cliente.status }}
+              </span>
+            </td>
+            <td>{{ cliente.telefono }}</td>
+            <td>{{ cliente.pais }}</td>
+            <td>{{ cliente.correo }}</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
