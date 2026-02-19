@@ -3,10 +3,8 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-products',
-  standalone: true,
   imports: [CommonModule],
   template: `<h1>Products Module</h1>`,
-  styles: []
+  styles: [],
 })
-export class ProductsComponent {
-}
+export class ProductsComponent {}

@@ -12,10 +12,9 @@ interface Cliente {
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
   readonly pageTitle = 'Todos los clientes';
@@ -24,15 +23,15 @@ export class DashboardComponent {
   readonly totalTabla = 'Total tabla';
   readonly statusFiltro = 'Filtrar Status';
   readonly mostrando = 'Showing 1-5 of 0';
-  
+
   readonly clientes: Cliente[] = []; // Tabla vacía inicialmente
-  
+
   readonly columnas = [
     { key: 'id', label: 'ID' },
     { key: 'nombre', label: 'NOMBRE' },
     { key: 'status', label: 'STATUS' },
     { key: 'telefono', label: 'TELEFONO' },
     { key: 'pais', label: 'PAIS' },
-    { key: 'correo', label: 'CORREO' }
+    { key: 'correo', label: 'CORREO' },
   ];
 }

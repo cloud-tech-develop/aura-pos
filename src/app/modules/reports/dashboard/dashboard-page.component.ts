@@ -3,10 +3,8 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard-page',
-  standalone: true,
   imports: [CommonModule],
   template: `<h1>Reports Dashboard Module</h1>`,
-  styles: []
+  styles: [],
 })
-export class DashboardPageComponent {
-}
+export class DashboardPageComponent {}
