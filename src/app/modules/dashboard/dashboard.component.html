@@ -1,0 +1,68 @@
+<div class="dashboard">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="title-section">
+      <h1 class="page-title">{{ pageTitle }}</h1>
+      <nav class="breadcrumb">
+        {{ breadcrumb }}
+      </nav>
+    </div>
+  </div>
+  
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label class="filter-label">Asignar Agente</label>
+      <select class="filter-select">
+        <option value="">Seleccionar agente...</option>
+      </select>
+    </div>
+    
+    <div class="filter-actions">
+      <button class="filter-btn">
+        {{ totalTabla }}
+      </button>
+      <button class="filter-btn">
+        {{ statusFiltro }}
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Data Table -->
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th *ngFor="let col of columnas">{{ col.label }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="clientes.length === 0" class="empty-row">
+          <td [attr.colspan]="columnas.length" class="empty-message">
+            No hay clientes para mostrar
+          </td>
+        </tr>
+        <tr *ngFor="let cliente of clientes">
+          <td>{{ cliente.id }}</td>
+          <td>{{ cliente.nombre }}</td>
+          <td>
+            <span class="status-badge" [class]="'status-' + cliente.status.toLowerCase()">
+              {{ cliente.status }}
+            </span>
+          </td>
+          <td>{{ cliente.telefono }}</td>
+          <td>{{ cliente.pais }}</td>
+          <td>{{ cliente.correo }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Pagination -->
+  <div class="pagination">
+    <span class="pagination-info">{{ mostrando }}</span>
+  </div>
+</div>

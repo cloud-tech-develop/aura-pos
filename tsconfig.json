@@ -13,7 +13,42 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@environment/*": [
+        "./src/environments/*"
+      ],
+      "@store/*": [
+        "./src/app/store/*"
+      ],
+      "@core/*": [
+        "./src/app/core/*"
+      ],
+      "@shared/*": [
+        "./src/app/shared/*"
+      ],
+      "@module-admin/*": [
+        "./src/app/modules/admin/*"
+      ],
+      "@module-customers/*": [
+        "./src/app/modules/customers/*"
+      ],
+      "@module-dashboard/*": [
+        "./src/app/modules/dashboard/*"
+      ],
+      "@module-inventory/*": [
+        "./src/app/modules/inventory/*"
+      ],
+      "@module-reports/*": [
+        "./src/app/modules/reports/*"
+      ],
+      "@module-sales/*": [
+        "./src/app/modules/sales/*"
+      ],
+      "@module-settings/*": [
+        "./src/app/modules/settings/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
