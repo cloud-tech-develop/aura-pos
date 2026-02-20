@@ -14,6 +14,12 @@ import { environment } from '@environment/environment';
 import { selfXSSWarning } from '@shared/utils';
 import { authInterceptor } from '@core/interceptors';
 
+import { provideStore } from '@ngrx/store';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeuix/themes/aura';
+
+import { ConfirmationService, MessageService } from 'primeng/api';
+
 if (environment.production) {
   enableProdMode();
   if (window) {
@@ -31,5 +37,16 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
+    providePrimeNG({
+      theme: {
+        preset: Aura,
+        options: {
+          darkModeSelector: '.app-dark',
+        },
+      },
+    }),
+    provideStore(),
+    ConfirmationService,
+    MessageService,
   ],
 };

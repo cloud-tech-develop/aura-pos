@@ -11,11 +11,17 @@ npm run watch               # Build with watch mode
 npm run build               # Production build (optimized)
 npm run build -- --configuration development  # Dev build
 
-# Testing
+# Testing (Unit)
 npm test                    # Run all unit tests (Karma + Jasmine)
 npm test -- --include='**/theme.service.spec.ts'  # Single test file
 npm test -- --include='**/header.component.spec.ts' --watch=false  # Single test once
 ng test --include='**/sales/**'  # All tests in sales module
+
+# Testing (E2E with Playwright)
+npm run e2e              # Run all e2e tests
+npm run e2e:ui          # Run e2e tests with UI
+npm run e2e:headed      # Run e2e with visible browser
+npm run e2e:report      # Show HTML report
 
 # Note: No ESLint configured. Code style enforced via Prettier + TypeScript strict mode
 ```
