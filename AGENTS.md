@@ -38,8 +38,9 @@ import { ThemeService } from '../../../core/services/theme.service';
 
 **Available path aliases:**
 - `@environment/*` - Environment configs
-- `@store/*` - State management
-- `@core/*` - Core services, models
+- `@store/*` - State management (NgRx SignalStore)
+- `@services/*` - Global services
+- `@core/*` - Core interfaces (exported from `@core/interfaces/index.ts`)
 - `@shared/*` - Shared components, utils
 - `@module-{name}/*` - Module-specific code (admin, customers, dashboard, inventory, reports, sales, settings)
 
@@ -191,8 +192,18 @@ src/app/modules/{module-name}/
 
 **Core/Shared structure:**
 ```
-src/app/core/          # Singleton services, models
-src/app/shared/        # Shared components, directives, pipes
+src/app/
+├── core/
+│   ├── constants/     # App constants (exported in index.ts)
+│   ├── guards/        # Route guards (exported in index.ts)
+│   ├── interceptors/  # HTTP interceptors (exported in index.ts)
+│   ├── interfaces/    # TypeScript interfaces (exported in index.ts)
+│   ├── mocks/         # Mock data for development (exported in index.ts)
+│   ├── pipes/         # Custom pipes (exported in index.ts)
+│   └── validators/    # Form validators (exported in index.ts)
+├── services/          # Global services
+├── shared/            # Shared components, directives, pipes
+└── store/             # NgRx SignalStore state management
 ```
 
 ## Lazy Loading Pattern

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ThemeService } from '../../../core/services/theme.service';
-import { ColorPalette, ThemeMode, COLOR_PALETTES } from '../../../core/models/theme.model';
+import { ThemeService } from '@services/theme.service';
+import { ColorPalette, ThemeMode, COLOR_PALETTES } from '@core/interfaces';
 
 @Component({
   selector: 'app-theme-panel',
