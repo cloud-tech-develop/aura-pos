@@ -4,7 +4,7 @@ import { UserSessionStore } from '@store/user.session';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const sessionStore = inject(UserSessionStore);
-  const token = sessionStore.userToken();
+  const token = sessionStore.getToken();
 
   if (token) {
     const authReq = req.clone({
