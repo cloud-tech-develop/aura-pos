@@ -56,9 +56,9 @@ export const UserSessionStore = signalStore(
   withComputed((store) => ({
     currentUser: computed(() => store.user()),
     isLoggedIn: computed(() => store.isAuthenticated()),
-    userToken: computed(() => store.token()),
-    userModules: computed(() => store.user()?.modules ?? []),
-    userRole: computed(() => store.user()?.role ?? null),
+    getToken: computed(() => store.token()),
+    getModules: computed(() => store.user()?.modules ?? []),
+    getRole: computed(() => store.user()?.role ?? null),
   })),
   withMethods((store) => {
     const storageService = inject(StorageService);

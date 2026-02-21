@@ -99,9 +99,9 @@ async logout(): Promise<void> {
 // Señales de solo lectura
 const isLoggedIn = this.sessionStore.isLoggedIn();
 const currentUser = this.sessionStore.currentUser();
-const userToken = this.sessionStore.userToken();
-const userModules = this.sessionStore.userModules();
-const userRole = this.sessionStore.userRole();
+const getToken = this.sessionStore.userToken();
+const getModules = this.sessionStore.userModules();
+const getRole = this.sessionStore.userRole();
 ```
 
 ### Verificar permisos
