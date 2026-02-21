@@ -1,4 +1,4 @@
-@import "primeicons/primeicons.css";
+@import 'primeicons/primeicons.css';
 
 @tailwind base;
 @tailwind components;
@@ -147,7 +147,7 @@
   --content-text: #1e293b;
 
   --border-color: #e2e8f0;
-  
+
   /* Texto */
   --text-primary: #1e293b;
   --text-secondary: #64748b;
@@ -186,11 +186,73 @@
   --content-text: #e2e8f0;
 
   --border-color: #1e293b;
-  
+
   /* Texto */
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
+}
+
+@layer base {
+  :root body {
+    --p-datatable-header-cell-background: var(--primary-500);
+    --p-datatable-header-cell-color: white;
+    --p-checkbox-checked-border-color: var(--primary-600);
+    --p-checkbox-checked-color: var(--primary-600);
+    --p-checkbox-checked-icon-color: var(--primary-600);
+    --p-checkbox-checked-background: var(--primary-600);
+    --p-select-focus-border-color: var(--primary-600);
+    --p-select-focus-ring-color: var(--primary-600);
+    --p-checkbox-checked-hover-background: var(--primary-300);
+    --p-checkbox-checked-hover-border-color: var(--primary-300);
+    --p-radiobutton-checked-border-color: var(--primary-600);
+    --p-radiobutton-checked-background: var(--primary-600);
+    --p-radiobutton-checked-icon-color: var(--primary-600);
+    --p-radiobutton-checked-hover-border-color: var(--primary-600);
+    --p-radiobutton-checked-hover-background: var(--primary-600);
+    --p-radiobutton-checked-hover-icon-color: var(--primary-600);
+    --p-button-primary-background: var(--primary-500);
+    --p-button-primary-border-color: var(--primary-500);
+    --p-button-primary-hover-background: var(--primary-600);
+    --p-button-primary-hover-border-color: var(--primary-600);
+    --p-button-primary-active-background: var(--primary-700);
+    --p-button-primary-active-border-color: var(--primary-700);
+    --p-button-text-primary-color: var(--primary-500);
+    --p-button-text-primary-hover-color: var(--primary-600);
+    --p-button-text-primary-active-color: var(--primary-700);
+    --p-button-text-primary-active-background: var(--primary-100);
+    --p-button-text-primary-hover-background: var(--primary-50);
+    --p-button-outlined-primary-border-color: var(--primary-100);
+    --p-button-outlined-primary-color: var(--primary-500);
+    --p-button-outlined-primary-active-background: var(--primary-100);
+    --p-button-outlined-primary-hover-background: var(--primary-50);
+    --p-inputtext-focus-border-color: var(--primary-500);
+    --p-datepicker-date-selected-background: var(--primary-600);
+    --p-breadcrumb-item-icon-color: var(--primary-500) !important;
+    --p-chip-background: var(--primary-500) !important;
+    --p-chip-color: #ffffff !important;
+    --p-chip-remove-icon-color: inherit !important;
+    --p-popover-background: #f1f5f9 !important;
+    --p-datepicker-dropdown-background: var(--primary-500) !important;
+    --p-datepicker-dropdown-color: #ffffff !important;
+    --p-toggleswitch-checked-background: var(--primary-500);
+    --p-toggleswitch-checked-hover-background: var(--primary-600);
+    --p-progressbar-value-background: var(--primary-500);
+    --p-progressbar-label-color: #ffffff;
+    --fc-button-bg-color: var(--primary-500);
+    --fc-button-border-color: var(--primary-500);
+    --fc-button-active-bg-color: var(--primary-600);
+    --fc-button-active-border-color: var(--primary-600);
+    --p-breadcrumb-item-color: var(--primary-500);
+    --p-text-hover-color: var(--primary-500);
+  }
+
+  .dark {
+    table tbody tr:hover {
+      background-color: var(--primary-300) !important;
+      color: black !important;
+    }
+  }
 }
 
 /* ============================================
@@ -203,9 +265,16 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -239,8 +308,13 @@ body {
 }
 
 /* Transiciones suaves para cambios de tema */
-*, *::before, *::after {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 /* Focus visible */
@@ -297,7 +371,21 @@ body {
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
 }
 
-/* Cards */
+table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+table tbody tr:hover {
+  background-color: var(--primary-50) !important;
+}
+
+p-table {
+  background-color: var(--surface-0);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
 .card {
   background-color: var(--surface-0);
   border: 1px solid var(--border-color);
