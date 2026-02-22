@@ -3,6 +3,11 @@ import { MainLayoutComponent } from '@shared/components/main-layout/main-layout.
 
 export const routes: Routes = [
   {
+    path: 'auth',
+    loadChildren: () =>
+      import('@module-auth/auth-routing.module').then((m) => m.AuthRoutingModule),
+  },
+  {
     path: '',
     component: MainLayoutComponent,
     children: [

@@ -250,6 +250,30 @@ src/app/
 - No `@HostBinding`/`@HostListener` decorators (use `host` object instead)
 - Use `NgOptimizedImage` for all static images
 
+## Agent Ecosystem
+
+The project utilizes a specialized agent architecture to manage development and quality assurance effectively.
+
+### Specialized Agents
+
+| Agent | Responsibility | Key Skills / Tools |
+| :--- | :--- | :--- |
+| **Primary Manager** | Orchestrates the workflow between sub-agents and user. | Delegation, Strategy, Skill selection. |
+| **QA Agent** | Requirements, Epics, User Stories, and Acceptance Criteria. | Requirement analysis, Docs templates. |
+| **DEV Agent** | Implementation of features and bug fixes in Angular. | Clean Architecture, PrimeNG, Services. |
+| **TEST Agent** | Automated Unit and E2E testing. | Karma, Jasmine, Playwright, Regression. |
+| **UI Optimizer** | Validates, optimizes, and rewrites the UI if necessary. | UI validation, Optimization, Rewriting. |
+
+### Development Workflow
+
+For complex tasks, the following lifecycle is recommended:
+
+1.  **Requirement Definition**: `@qa-agent` documents the feature objectives and acceptance criteria in the `docs/templates/` folder.
+2.  **Implementation**: `@dev-agent` builds the component or service following the architectural patterns (separating API logic from business logic).
+3.  **Automated Testing**: `@test-agent` generates coverage and integration tests.
+4.  **UI Optimization**: `@ui-optimizer` validates, optimizes, and rewrites the UI if necessary.
+5.  **Final Validation**: `@qa-agent` verifies the results against the initial requirements.
+
 ## References
 
 - Cursor rules: `.cursor/rules/cursor.mdc`
@@ -257,3 +281,4 @@ src/app/
 - Prettier config: `package.json` (prettier section)
 - TypeScript config: `tsconfig.json`
 - Angular config: `angular.json`
+- Workflows: `.agent/workflows/`

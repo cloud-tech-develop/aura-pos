@@ -3,7 +3,7 @@
 
 # 🐞 Template para Bugs
 
-`/docs/bugs/BUG-template.md`
+`/docs/templates/BUG-template.md`
 
 ```md
 # BUG-XXX - {Título}

@@ -50,6 +50,9 @@
       ],
       "@module-settings/*": [
         "./src/app/modules/settings/*"
+      ],
+      "@module-auth/*": [
+        "./src/app/modules/auth/*"
       ]
     }
   },

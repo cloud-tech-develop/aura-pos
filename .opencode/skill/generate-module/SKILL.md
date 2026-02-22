@@ -46,8 +46,11 @@ src/app/modules/{moduleName}/
 │   │       ├── index-{feature}.html
 │   │       └── index-{feature}.css
 │   ├── interfaces/
+│   │   ├── {feature}.interface.ts
 │   │   └── index.ts
 │   └── services/
+│       ├── {feature}-api.service.ts
+│       ├── {feature}.service.ts
 │       └── index.ts
 ```
 
@@ -57,6 +60,9 @@ src/app/modules/{moduleName}/
 - Routing class: `{Module}RoutingModule`
 - Component class: `Index{Feature}` (no "Component" suffix)
 - Component selector: `app-index-{feature}`
+- Interface file: `{feature}.interface.ts`
+- Service file: `{feature}.service.ts` (It has business logic)
+- API service file: `{feature}-api.service.ts` (It has HTTP request logic)
 - Path alias: `@module-{module}/*`
 
 ## Validation
