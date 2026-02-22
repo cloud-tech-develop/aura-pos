@@ -29,9 +29,9 @@ export const moduleGuard = (moduleName: string): CanActivateFn => {
     const sessionStore = inject(UserSessionStore);
     const router = inject(Router);
 
-    if (sessionStore.hasModule(moduleName)) {
-      return true;
-    }
+    // if (sessionStore.hasModule(moduleName)) {
+    //   return true;
+    // }
 
     return router.createUrlTree(['/unauthorized']);
   };

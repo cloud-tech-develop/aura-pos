@@ -12,6 +12,37 @@ interface ErrorParams {
   value?: unknown;
 }
 
+/**
+ * Componente para mostrar errores de validación
+ *
+ * @example Ejemplo Basico
+ * ```html
+ * <validator-errors
+ *   [control]="frm.get('name')"
+ *   [label]="'forms.name.label' | translate"
+ * />
+ * ```
+ *
+ * @example Ejemplo Completo
+ * ```html
+ * <validator-errors
+ *   [control]="frm.get('name')"
+ *   [label]="'forms.name.label' | translate"
+ *   [required]="'forms.name.error1' | translate"
+ *   [maxlength]="'forms.name.error2' | translate"
+ *   [minlength]="'forms.name.error3' | translate"
+ *   [pattern]="'forms.name.error4' | translate"
+ *   [email]="'forms.name.error5' | translate"
+ *   [min]="'forms.name.error6' | translate"
+ *   [max]="'forms.name.error7' | translate"
+ *   [unique]="'forms.name.error8' | translate"
+ *   [omitErrors]="['required']"
+ *   [customErrors]="[{ type: 'custom', message: 'forms.name.error9' }]"
+ *   [customErrorType]="'custom'"
+ *   [customErrorMessage]="'forms.name.error10'"
+ * />
+ * ```
+ */
 @Component({
   selector: 'validator-errors',
   imports: [TranslateModule],

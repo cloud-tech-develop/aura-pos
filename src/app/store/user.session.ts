@@ -57,8 +57,7 @@ export const UserSessionStore = signalStore(
     currentUser: computed(() => store.user()),
     isLoggedIn: computed(() => store.isAuthenticated()),
     getToken: computed(() => store.token()),
-    getModules: computed(() => store.user()?.modules ?? []),
-    getRole: computed(() => store.user()?.role ?? null),
+    getRole: computed(() => store.user()?.rol ?? null),
   })),
   withMethods((store) => {
     const storageService = inject(StorageService);
@@ -123,15 +122,15 @@ export const UserSessionStore = signalStore(
         }
       },
 
-      hasModule(module: string): boolean {
-        const modules = store.user()?.modules ?? [];
-        return modules.includes(module);
-      },
+      // hasModule(module: string): boolean {
+      //   const modules = store.user()?.modules ?? [];
+      //   return modules.includes(module);
+      // },
 
-      hasPermission(permission: string): boolean {
-        const permissions = store.user()?.permissions ?? [];
-        return permissions.includes(permission);
-      },
+      // hasPermission(permission: string): boolean {
+      //   const permissions = store.user()?.permissions ?? [];
+      //   return permissions.includes(permission);
+      // },
 
       async syncState(): Promise<void> {
         const loadedState = await loadFromStorage(storageService);

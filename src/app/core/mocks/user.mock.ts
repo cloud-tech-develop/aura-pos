@@ -2,31 +2,52 @@ import { User } from '@core/interfaces/user.interface';
 
 export const MOCK_USERS: User[] = [
   {
-    id: '1',
-    email: 'admin@aura.com',
-    name: 'Admin User',
-    role: 'admin',
-    modules: ['dashboard', 'sales', 'inventory', 'customers', 'reports', 'settings', 'admin'],
-    avatar: 'avatar-admin.png',
-    permissions: ['*'],
+    token:
+      'eyJhbGciOiJIUzI1NiJ9.eyJlbXByZXNhSWQiOjEsInN1Y3VybSIsImlhdCI6MTc3MTc0MTQ1OSwiZXhwIjoxNzcyMDAwNjU5fQ..mock-token',
+    tipoToken: 'Bearer',
+    usuarioId: 1,
+    username: 'superadmin@gmail.com',
+    nombreCompleto: 'Super Admin',
+    rol: 'SUPER_ADMIN',
+    sucursales: [
+      {
+        id: 1,
+        nombre: 'Sede Centro',
+        esDefault: null,
+      },
+    ],
   },
   {
-    id: '2',
-    email: 'manager@aura.com',
-    name: 'Manager User',
-    role: 'manager',
-    modules: ['dashboard', 'sales', 'inventory', 'customers', 'reports'],
-    avatar: 'avatar-manager.png',
-    permissions: ['sales.read', 'sales.write', 'inventory.read', 'inventory.write'],
+    token:
+      'eyJhbGciOiJIUzI1NiJ9.eyJlbXByZXNhSWQiOjEsInN1Y3VybSIsImlhdCI6MTc3MTc0MTQ1OSwiZXhwIjoxNzcyMDAwNjU5fQ..mock-token',
+    tipoToken: 'Bearer',
+    usuarioId: 2,
+    username: 'admin@gmail.com',
+    nombreCompleto: 'Admin Pérez',
+    rol: 'ADMIN',
+    sucursales: [
+      {
+        id: 2,
+        nombre: 'Sede 2',
+        esDefault: null,
+      },
+    ],
   },
   {
-    id: '3',
-    email: 'cashier@aura.com',
-    name: 'Cashier User',
-    role: 'cashier',
-    modules: ['sales', 'customers'],
-    avatar: 'avatar-cashier.png',
-    permissions: ['sales.read', 'sales.write', 'customers.read'],
+    token:
+      'eyJhbGciOiJIUzI1NiJ9.eyJlbXByZXNhSWQiOjEsInN1Y3VybSIsImlhdCI6MTc3MTc0MTQ1OSwiZXhwIjoxNzcyMDAwNjU5fQ..mock-token',
+    tipoToken: 'Bearer',
+    usuarioId: 3,
+    username: 'cajero@gmail.com',
+    nombreCompleto: 'Cajero Pérez',
+    rol: 'CAJERO',
+    sucursales: [
+      {
+        id: 3,
+        nombre: 'Sede 3',
+        esDefault: null,
+      },
+    ],
   },
 ];
 

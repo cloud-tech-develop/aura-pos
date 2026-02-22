@@ -40,6 +40,12 @@ When reviewing a module, you MUST check and address:
   - Are ARIA labels properly applied and color contrasts adequate?
   - Is the code DRY, properly modularized, and using TypeScript with proper typing?
 
+- **Forms & Validation**:
+  - Are all forms implemented using **Reactive Forms** (`FormGroup`, `FormControl`)?
+  - Is the **`<validator-errors>`** component used to handle and display validation messages for all form controls?
+  - Are validation messages correctly localized using the translation system?
+
+
 ## Optimization Strategies
 
 - Use Angular's **OnPush** change detection strategy where appropriate.

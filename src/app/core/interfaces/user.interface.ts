@@ -1,12 +1,20 @@
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  modules: string[];
-  avatar?: string;
-  permissions?: string[];
+export interface LoginData {
+  token: string;
+  tipoToken: string;
+  usuarioId: number;
+  username: string;
+  nombreCompleto: string;
+  rol: string;
+  sucursales: Sucursale[];
 }
+
+export interface Sucursale {
+  id: number;
+  nombre: string;
+  esDefault: any;
+}
+
+export interface User extends LoginData {}
 
 export interface AuthState {
   user: User | null;

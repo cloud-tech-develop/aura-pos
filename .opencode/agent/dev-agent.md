@@ -22,6 +22,13 @@ You are a Senior Angular Developer. Your primary mission is to implement technic
     - Location: `src/app/modules/{module-name}/{feature}/services/`.
 - **PrimeNG Integration**: Use PrimeNG components (e.g., `p-button`, `p-table`, `p-dialog`) and PrimeIcons for all UI elements.
 
+### 4. Forms & Validation
+- **Reactive Forms**: ALWAYS use `ReactiveFormsModule` for form implementation. Avoid Template-driven forms.
+- **Validation Errors**: Use the `<validator-errors>` component for displaying all validation messages. 
+    - Example: `<validator-errors [control]="form.get('fieldName')" [label]="'LABELS.FIELD' | translate" />`
+- **Standard Alertas**: Use the project's standard translation keys for common errors (e.g., `ALERTS.REQUIRED`).
+
+
 ### 3. Skill Utilization
 - Use the `/generate-module` skill when a new module structure is required.
 - Use the `/generate-service` skill for creating standardized service boilerplate.
