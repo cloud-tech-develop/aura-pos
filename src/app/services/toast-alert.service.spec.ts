@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastAlertService } from './toast-alert.service';
 
 describe('ToastAlertService', () => {
   let service: ToastAlertService;
   let toastrServiceSpy: jasmine.SpyObj<ToastrService>;
+  let translateService: TranslateService;
 
   beforeEach(() => {
     toastrServiceSpy = jasmine.createSpyObj('ToastrService', [
@@ -16,13 +18,24 @@ describe('ToastAlertService', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        TranslateModule.forRoot(),
       ],
       providers: [
         { provide: ToastrService, useValue: toastrServiceSpy },
-        ToastAlertService
+        ToastAlertService,
       ],
     });
+
+    translateService = TestBed.inject(TranslateService);
+    translateService.setDefaultLang('en');
+    translateService.use('en');
+
+    // Mock translations
+    translateService.set('TOAST.SUCCESS', 'Ok');
+    translateService.set('TOAST.ERROR', 'Error!');
+    translateService.set('TOAST.WARNING', 'Atención!');
+    translateService.set('TOAST.INFO', 'Alerta!');
 
     service = TestBed.inject(ToastAlertService);
   });

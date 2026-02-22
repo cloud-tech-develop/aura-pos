@@ -1,44 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  AbstractControl,
-  FormControl,
-  ReactiveFormsModule,
-  ValidationErrors,
-} from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ValidatorErrors } from './validator-errors.component';
 
 describe('ValidatorErrors', () => {
   let component: ValidatorErrors;
   let fixture: ComponentFixture<ValidatorErrors>;
-
-  const createMockControl = (
-    errors: ValidationErrors | null,
-    touched: boolean = false,
-  ): AbstractControl => {
-    const control = new FormControl('', { validators: [] });
-    if (errors) {
-      control.setErrors(errors);
-    }
-    if (touched) {
-      control.markAsTouched();
-    } else {
-      control.markAsUntouched();
-    }
-    return control;
-  };
-
-  // Helper to set input using componentRef.setInput (Angular 16+)
-  const setInput = (
-    fixture: ComponentFixture<ValidatorErrors>,
-    name: string,
-    value: unknown,
-  ): void => {
-    (fixture.componentRef as unknown as { setInput(name: string, value: unknown): void }).setInput(
-      name,
-      value,
-    );
-  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -47,473 +14,368 @@ describe('ValidatorErrors', () => {
 
     fixture = TestBed.createComponent(ValidatorErrors);
     component = fixture.componentInstance;
+  });
+
+  function createControlWithErrors(errors: Record<string, unknown>): FormControl {
+    const control = new FormControl('test value', { validators: Validators.required });
+    Object.keys(errors).forEach((key) => {
+      control.setErrors({ ...control.errors, [key]: errors[key] });
+    });
+    control.markAsTouched();
+    return control;
+  }
+
+  function setInput(name: string, value: unknown): void {
+    fixture.componentRef.setInput(name, value);
     fixture.detectChanges();
+  }
+
+  describe('should create', () => {
+    it('should create component instance', () => {
+      expect(component).toBeTruthy();
+    });
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('errorKey', () => {
+    it('should return null when control is null', () => {
+      setInput('control', null);
+      expect(component.errorKey).toBeNull();
+    });
+
+    it('should return null when control has no errors', () => {
+      const control = new FormControl('test');
+      control.markAsTouched();
+      setInput('control', control);
+      expect(component.errorKey).toBeNull();
+    });
+
+    it('should return null when control is untouched', () => {
+      const control = new FormControl('', { validators: Validators.required });
+      setInput('control', control);
+      expect(component.errorKey).toBeNull();
+    });
+
+    it('should return first error key when control has errors and is touched', () => {
+      const control = new FormControl('');
+      control.setErrors({ required: true });
+      control.markAsTouched();
+      setInput('control', control);
+      expect(component.errorKey).toBe('required');
+    });
+
+    it('should return first error when multiple errors exist', () => {
+      const control = new FormControl('');
+      control.setErrors({ required: true, minlength: { requiredLength: 3 } });
+      control.markAsTouched();
+      setInput('control', control);
+      expect(component.errorKey).toBe('required');
+    });
   });
 
-  describe('Error required', () => {
-    it('should show error when control is touched and has required error', () => {
-      const control = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', 'Nombre');
-      fixture.detectChanges();
+  describe('errorParams', () => {
+    it('should return control name when no specific params', () => {
+      setInput('label', 'Email');
+      const control = new FormControl('');
+      control.setErrors({ required: true });
+      control.markAsTouched();
+      setInput('control', control);
+      expect(component.errorParams).toEqual({ control: 'Email' });
+    });
 
-      expect(component.errorKey()).toBe('required');
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.errorMessage()).toBe('ALERTS.REQUIRED');
-      expect(component.errorParams()).toEqual({ control: 'Nombre' });
+    it('should include min value for min error', () => {
+      setInput('label', 'Age');
+      const control = new FormControl('');
+      control.setErrors({ min: { min: 18 } });
+      control.markAsTouched();
+      setInput('control', control);
+      expect(component.errorParams).toEqual({ control: 'Age', value: 18 });
+    });
 
+    it('should include max value for max error', () => {
+      setInput('label', 'Age');
+      const control = new FormControl('');
+      control.setErrors({ max: { max: 100 } });
+      control.markAsTouched();
+      setInput('control', control);
+      expect(component.errorParams).toEqual({ control: 'Age', value: 100 });
+    });
+
+    it('should include requiredLength for maxlength error', () => {
+      setInput('label', 'Username');
+      const control = new FormControl('');
+      control.setErrors({ maxlength: { requiredLength: 50 } });
+      control.markAsTouched();
+      setInput('control', control);
+      expect(component.errorParams).toEqual({ control: 'Username', value: 50 });
+    });
+
+    it('should include requiredLength for minlength error', () => {
+      setInput('label', 'Username');
+      const control = new FormControl('');
+      control.setErrors({ minlength: { requiredLength: 3 } });
+      control.markAsTouched();
+      setInput('control', control);
+      expect(component.errorParams).toEqual({ control: 'Username', value: 3 });
+    });
+
+    it('should return empty control when control is null', () => {
+      setInput('control', null);
+      setInput('label', 'Test');
+      expect(component.errorParams).toEqual({ control: 'Test' });
+    });
+  });
+
+  describe('error rendering', () => {
+    it('should not render error when control is null', () => {
+      setInput('control', null);
       const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeTruthy();
+      expect(compiled.querySelector('.text-red-500')).toBeNull();
     });
 
-    it('should not show error when control is not touched', () => {
-      const control = createMockControl({ required: true }, false);
-      setInput(fixture, 'control', control);
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBeNull();
-      expect(component.shouldShowError()).toBe(false);
-    });
-
-    it('should use custom required message when provided', () => {
-      const control = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'required', 'El campo nombre es obligatorio');
-      fixture.detectChanges();
-
-      expect(component.errorMessage()).toBe('El campo nombre es obligatorio');
-    });
-  });
-
-  describe('Error maxlength', () => {
-    it('should show error when text exceeds maxlength', () => {
-      const control = createMockControl(
-        { maxlength: { requiredLength: 10, actualLength: 15 } },
-        true,
-      );
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', 'Username');
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('maxlength');
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.errorMessage()).toBe('ALERTS.MAJOR');
-      expect(component.errorParams()).toEqual({ control: 'Username', value: 10 });
-
+    it('should not render error when control has no errors', () => {
+      const control = new FormControl('test');
+      control.markAsTouched();
+      setInput('control', control);
       const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeTruthy();
+      expect(compiled.querySelector('.text-red-500')).toBeNull();
     });
 
-    it('should use custom maxlength message when provided', () => {
-      const control = createMockControl(
-        { maxlength: { requiredLength: 10, actualLength: 15 } },
-        true,
-      );
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'maxlength', 'Máximo 10 caracteres permitidos');
-      fixture.detectChanges();
-
-      expect(component.errorMessage()).toBe('Máximo 10 caracteres permitidos');
-    });
-  });
-
-  describe('Error minlength', () => {
-    it('should show error when text is shorter than minlength', () => {
-      const control = createMockControl(
-        { minlength: { requiredLength: 5, actualLength: 3 } },
-        true,
-      );
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', 'Password');
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('minlength');
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.errorMessage()).toBe('ALERTS.MINOR');
-      expect(component.errorParams()).toEqual({ control: 'Password', value: 5 });
-
+    it('should not render error when control is untouched', () => {
+      const control = new FormControl('', { validators: Validators.required });
+      setInput('control', control);
       const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeTruthy();
+      expect(compiled.querySelector('.text-red-500')).toBeNull();
     });
 
-    it('should use custom minlength message when provided', () => {
-      const control = createMockControl(
-        { minlength: { requiredLength: 5, actualLength: 3 } },
-        true,
-      );
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'minlength', 'Mínimo 5 caracteres requeridos');
-      fixture.detectChanges();
-
-      expect(component.errorMessage()).toBe('Mínimo 5 caracteres requeridos');
-    });
-  });
-
-  describe('Error email', () => {
-    it('should show error when email is invalid', () => {
-      const control = createMockControl({ email: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', 'Email');
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('email');
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.errorMessage()).toBe('ALERTS.INVALID_EMAIL');
-      expect(component.errorParams()).toEqual({ control: 'Email' });
-
+    it('should render required error when control has required error and is touched', () => {
+      const control = new FormControl('');
+      control.setErrors({ required: true });
+      control.markAsTouched();
+      setInput('control', control);
       const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeTruthy();
+      expect(compiled.querySelector('.text-red-500')).toBeTruthy();
     });
 
-    it('should use custom email message when provided', () => {
-      const control = createMockControl({ email: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'email', 'Ingrese un correo electrónico válido');
-      fixture.detectChanges();
-
-      expect(component.errorMessage()).toBe('Ingrese un correo electrónico válido');
-    });
-  });
-
-  describe('Error pattern', () => {
-    it('should show error when pattern does not match', () => {
-      const control = createMockControl({ pattern: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', 'Código');
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('pattern');
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.errorMessage()).toBe('ALERTS.PATTERN');
-      expect(component.errorParams()).toEqual({ control: 'Código' });
-
+    it('should render maxlength error when control has maxlength error', () => {
+      const control = new FormControl('');
+      control.setErrors({ maxlength: { requiredLength: 10 } });
+      control.markAsTouched();
+      setInput('control', control);
       const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeTruthy();
+      expect(compiled.querySelector('.text-red-500')).toBeTruthy();
     });
 
-    it('should use custom pattern message when provided', () => {
-      const control = createMockControl({ pattern: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'pattern', 'El formato del código es inválido');
-      fixture.detectChanges();
-
-      expect(component.errorMessage()).toBe('El formato del código es inválido');
-    });
-  });
-
-  describe('Error min', () => {
-    it('should show error when value is less than min', () => {
-      const control = createMockControl({ min: { min: 10, actual: 5 } }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', 'Edad');
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('min');
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.errorMessage()).toBe('ALERTS.MIN_VALUE');
-      expect(component.errorParams()).toEqual({ control: 'Edad', value: 10 });
-
+    it('should render minlength error when control has minlength error', () => {
+      const control = new FormControl('');
+      control.setErrors({ minlength: { requiredLength: 3 } });
+      control.markAsTouched();
+      setInput('control', control);
       const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeTruthy();
+      expect(compiled.querySelector('.text-red-500')).toBeTruthy();
     });
 
-    it('should use custom min message when provided', () => {
-      const control = createMockControl({ min: { min: 10, actual: 5 } }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'min', 'El valor mínimo es 10');
-      fixture.detectChanges();
-
-      expect(component.errorMessage()).toBe('El valor mínimo es 10');
-    });
-  });
-
-  describe('Error max', () => {
-    it('should show error when value exceeds max', () => {
-      const control = createMockControl({ max: { max: 100, actual: 150 } }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', 'Cantidad');
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('max');
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.errorMessage()).toBe('ALERTS.MAX_VALUE');
-      expect(component.errorParams()).toEqual({ control: 'Cantidad', value: 100 });
-
+    it('should render pattern error when control has pattern error', () => {
+      const control = new FormControl('');
+      control.setErrors({ pattern: true });
+      control.markAsTouched();
+      setInput('control', control);
       const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeTruthy();
+      expect(compiled.querySelector('.text-red-500')).toBeTruthy();
     });
 
-    it('should use custom max message when provided', () => {
-      const control = createMockControl({ max: { max: 100, actual: 150 } }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'max', 'El valor máximo es 100');
-      fixture.detectChanges();
-
-      expect(component.errorMessage()).toBe('El valor máximo es 100');
-    });
-  });
-
-  describe('Error unique', () => {
-    it('should show error for unique validation', () => {
-      const control = createMockControl({ unique: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', 'Usuario');
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('unique');
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.errorMessage()).toBe('ALERTS.UNIQUE');
-      expect(component.errorParams()).toEqual({ control: 'Usuario' });
-
+    it('should render email error when control has email error', () => {
+      const control = new FormControl('');
+      control.setErrors({ email: true });
+      control.markAsTouched();
+      setInput('control', control);
       const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeTruthy();
+      expect(compiled.querySelector('.text-red-500')).toBeTruthy();
     });
 
-    it('should use custom unique message when provided', () => {
-      const control = createMockControl({ unique: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'unique', 'Este valor ya existe');
-      fixture.detectChanges();
+    it('should render min error when control has min error', () => {
+      const control = new FormControl('');
+      control.setErrors({ min: { min: 18 } });
+      control.markAsTouched();
+      setInput('control', control);
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.text-red-500')).toBeTruthy();
+    });
 
-      expect(component.errorMessage()).toBe('Este valor ya existe');
+    it('should render max error when control has max error', () => {
+      const control = new FormControl('');
+      control.setErrors({ max: { max: 100 } });
+      control.markAsTouched();
+      setInput('control', control);
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.text-red-500')).toBeTruthy();
+    });
+
+    it('should render unique error when control has unique error', () => {
+      const control = new FormControl('');
+      control.setErrors({ unique: true });
+      control.markAsTouched();
+      setInput('control', control);
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.text-red-500')).toBeTruthy();
     });
   });
 
-  describe('Custom errors', () => {
-    it('should show custom error from customErrors array', () => {
-      const customErrors = [{ type: 'customError', message: 'Error personalizado' }];
-      const control = createMockControl({ customError: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'customErrors', customErrors);
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('customError');
-      expect(component.isCustomError()).toBe(true);
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.getCustomErrorMessage('customError')).toBe('Error personalizado');
+  describe('custom error messages', () => {
+    it('should render custom required message when provided', () => {
+      const control = new FormControl('');
+      control.setErrors({ required: true });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('required', 'Custom required message');
+      setInput('label', 'Field');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Custom required message');
     });
 
-    it('should show custom error using customErrorType and customErrorMessage', () => {
-      const control = createMockControl({ myError: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'customErrorType', 'myError');
-      setInput(fixture, 'customErrorMessage', 'Mi mensaje de error personalizado');
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('myError');
-      expect(component.isCustomError()).toBe(true);
-      expect(component.shouldShowError()).toBe(true);
-      expect(component.singleCustomErrorMessage()).toBe('Mi mensaje de error personalizado');
+    it('should render custom maxlength message when provided', () => {
+      const control = new FormControl('');
+      control.setErrors({ maxlength: { requiredLength: 10 } });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('maxlength', 'Custom maxlength message');
+      setInput('label', 'Field');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Custom maxlength message');
     });
 
-    it('should return empty string for unknown custom error type', () => {
-      const customErrors: { type: string; message: string }[] = [];
-      setInput(fixture, 'customErrors', customErrors);
-
-      expect(component.getCustomErrorMessage('unknownError')).toBe('');
+    it('should render custom minlength message when provided', () => {
+      const control = new FormControl('');
+      control.setErrors({ minlength: { requiredLength: 3 } });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('minlength', 'Custom minlength message');
+      setInput('label', 'Field');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Custom minlength message');
     });
 
-    it('should use default error message when custom error not found', () => {
-      const control = createMockControl({ unknownError: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'customErrors', []);
-      fixture.detectChanges();
+    it('should render custom pattern message when provided', () => {
+      const control = new FormControl('');
+      control.setErrors({ pattern: true });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('pattern', 'Custom pattern message');
+      setInput('label', 'Field');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Custom pattern message');
+    });
 
-      expect(component.isCustomError()).toBe(true);
-      expect(component.errorMessage()).toBe('');
+    it('should render custom email message when provided', () => {
+      const control = new FormControl('');
+      control.setErrors({ email: true });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('email', 'Custom email message');
+      setInput('label', 'Field');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Custom email message');
+    });
+
+    it('should render custom min message when provided', () => {
+      const control = new FormControl('');
+      control.setErrors({ min: { min: 18 } });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('min', 'Custom min message');
+      setInput('label', 'Field');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Custom min message');
+    });
+
+    it('should render custom max message when provided', () => {
+      const control = new FormControl('');
+      control.setErrors({ max: { max: 100 } });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('max', 'Custom max message');
+      setInput('label', 'Field');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Custom max message');
+    });
+
+    it('should render custom unique message when provided', () => {
+      const control = new FormControl('');
+      control.setErrors({ unique: true });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('unique', 'Custom unique message');
+      setInput('label', 'Field');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Custom unique message');
     });
   });
 
   describe('omitErrors', () => {
-    it('should not show error when key is in omitErrors list', () => {
-      const control = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'omitErrors', ['required']);
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('required');
-      expect(component.shouldShowError()).toBe(false);
-
-      const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeFalsy();
-    });
-
-    it('should show error when key is not in omitErrors list', () => {
-      const control = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'omitErrors', ['maxlength', 'minlength']);
-      fixture.detectChanges();
-
-      expect(component.shouldShowError()).toBe(true);
-    });
-
-    it('should allow multiple errors to be omitted', () => {
-      const control = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'omitErrors', ['required', 'email', 'pattern']);
-      fixture.detectChanges();
-
-      expect(component.shouldShowError()).toBe(false);
-    });
-  });
-
-  describe('No error when untouched', () => {
-    it('should not show error when control is untouched', () => {
-      const control = createMockControl({ required: true }, false);
-      setInput(fixture, 'control', control);
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBeNull();
-      expect(component.shouldShowError()).toBe(false);
-
-      const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeFalsy();
-    });
-
-    it('should not show any error when control has no errors', () => {
-      const control = createMockControl(null, true);
-      setInput(fixture, 'control', control);
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBeNull();
-      expect(component.shouldShowError()).toBe(false);
-    });
-
-    it('should not show any error when control is null', () => {
-      setInput(fixture, 'control', null);
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBeNull();
-      expect(component.shouldShowError()).toBe(false);
-      expect(component.errorMessage()).toBe('');
-    });
-  });
-
-  describe('Error priority (first error)', () => {
-    it('should show first error key when multiple errors exist', () => {
-      const control = createMockControl({ required: true, maxlength: true, email: true }, true);
-      setInput(fixture, 'control', control);
-      fixture.detectChanges();
-
-      // The first error key should be returned
-      const errorKey = component.errorKey();
-      expect(errorKey).not.toBeNull();
-      expect(['required', 'maxlength', 'email']).toContain(errorKey!);
-    });
-  });
-
-  describe('Signal reactivity', () => {
-    it('should update errorKey when control errors change', () => {
-      // First set control with no errors
-      const controlWithoutErrors = createMockControl(null, true);
-      setInput(fixture, 'control', controlWithoutErrors);
-      fixture.detectChanges();
-      expect(component.errorKey()).toBeNull();
-
-      // Now update the control reference with errors
-      const controlWithErrors = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', controlWithErrors);
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBe('required');
-    });
-
-    it('should update shouldShowError when omitErrors changes', () => {
-      const control = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', control);
-      fixture.detectChanges();
-
-      expect(component.shouldShowError()).toBe(true);
-
-      setInput(fixture, 'omitErrors', ['required']);
-      fixture.detectChanges();
-
-      expect(component.shouldShowError()).toBe(false);
-    });
-
-    it('should update errorParams when label changes', () => {
-      const control = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', 'Nombre');
-      fixture.detectChanges();
-
-      expect(component.errorParams()).toEqual({ control: 'Nombre' });
-
-      setInput(fixture, 'label', 'Apellido');
-      fixture.detectChanges();
-
-      expect(component.errorParams()).toEqual({ control: 'Apellido' });
-    });
-  });
-
-  describe('Template rendering', () => {
-    it('should not render span when shouldShowError is false', () => {
-      const control = createMockControl({ required: true }, false);
-      setInput(fixture, 'control', control);
-      fixture.detectChanges();
-
-      const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('span.text-red-500')).toBeFalsy();
-    });
-
-    it('should render span with correct class when shouldShowError is true', () => {
-      const control = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', control);
-      fixture.detectChanges();
-
-      const compiled = fixture.nativeElement as HTMLElement;
-      const span = compiled.querySelector('span.text-red-500');
-      expect(span).toBeTruthy();
-    });
-
-    it('should use customErrorMessage for custom errors when provided', () => {
-      const control = createMockControl({ customError: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'customErrorType', 'customError');
-      setInput(fixture, 'customErrorMessage', 'Mensaje custom');
-      setInput(fixture, 'customErrors', [{ type: 'customError', message: 'Del array' }]);
-      fixture.detectChanges();
-
-      // customErrorMessage takes precedence when key matches customErrorType
-      expect(component.singleCustomErrorMessage()).toBe('Mensaje custom');
-    });
-  });
-
-  describe('Edge cases', () => {
-    it('should handle control with empty errors object', () => {
+    it('should not render required error when it is in omitErrors list', () => {
       const control = new FormControl('');
+      control.setErrors({ required: true });
       control.markAsTouched();
-      // Control with empty errors object (after validation runs but passes)
-      Object.defineProperty(control, 'errors', { value: null, writable: true });
-      setInput(fixture, 'control', control);
-      fixture.detectChanges();
-
-      expect(component.errorKey()).toBeNull();
+      setInput('control', control);
+      setInput('omitErrors', ['required']);
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.text-red-500')).toBeNull();
     });
 
-    it('should handle label with empty string', () => {
-      const control = createMockControl({ required: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'label', '');
-      fixture.detectChanges();
+    it('should not render maxlength error when it is in omitErrors list', () => {
+      const control = new FormControl('');
+      control.setErrors({ maxlength: { requiredLength: 10 } });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('omitErrors', ['maxlength']);
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.text-red-500')).toBeNull();
+    });
+  });
 
-      expect(component.errorParams()).toEqual({ control: '' });
+  describe('custom errors', () => {
+    it('should render custom error when customErrorType matches', () => {
+      const control = new FormControl('');
+      control.setErrors({ custom: true });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('customErrorType', 'custom');
+      setInput('customErrorMessage', 'Custom error message');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Custom error message');
     });
 
-    it('should prioritize specific custom message over array message', () => {
-      const control = createMockControl({ myCustomError: true }, true);
-      setInput(fixture, 'control', control);
-      setInput(fixture, 'customErrorType', 'myCustomError');
-      setInput(fixture, 'customErrorMessage', 'Mensaje específico');
-      setInput(fixture, 'customErrors', [{ type: 'myCustomError', message: 'Mensaje del array' }]);
-      fixture.detectChanges();
+    it('should render custom errors from array', () => {
+      const control = new FormControl('');
+      control.setErrors({ customError: true });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('customErrors', [{ type: 'customError', message: 'Array custom error' }]);
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Array custom error');
+    });
 
-      // When customErrorType matches the error key, use singleCustomErrorMessage
-      expect(component.singleCustomErrorMessage()).toBe('Mensaje específico');
+    it('should not render custom error when type does not match', () => {
+      const control = new FormControl('');
+      control.setErrors({ otherError: true });
+      control.markAsTouched();
+      setInput('control', control);
+      setInput('customErrorType', 'custom');
+      setInput('customErrorMessage', 'Custom error message');
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).not.toContain('Custom error message');
+    });
+  });
+
+  describe('errorsDefault', () => {
+    it('should contain all standard error types', () => {
+      expect(component.errorsDefault).toContain('required');
+      expect(component.errorsDefault).toContain('maxlength');
+      expect(component.errorsDefault).toContain('minlength');
+      expect(component.errorsDefault).toContain('pattern');
+      expect(component.errorsDefault).toContain('email');
+      expect(component.errorsDefault).toContain('min');
+      expect(component.errorsDefault).toContain('max');
+      expect(component.errorsDefault).toContain('unique');
     });
   });
 });
