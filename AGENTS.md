@@ -250,6 +250,123 @@ src/app/
 - No `@HostBinding`/`@HostListener` decorators (use `host` object instead)
 - Use `NgOptimizedImage` for all static images
 
+## Internationalization (i18n)
+
+This project uses **ngx-translate** for runtime internationalization with support for dynamic language switching.
+
+### Structure
+
+```
+
+├── public/
+│   └── assets/
+│       └── i18n/
+│           ├── en.json          # English 
+│           └── es.json          # Spanish (default)
+├── src/  # Angular source code
+│   └── app/
+│       └── services/
+│           └── translation.service.ts  # Translation service with signals
+```
+
+### Configuration
+
+The i18n is configured in `app.config.ts`:
+- `provideTranslateHttpLoader()` - Configures the HTTP loader for translation files
+- Translation files are loaded from `assets/i18n/`
+- Default languages: `en` (English), `es` (Spanish)
+
+### Translation Service
+
+The `TranslationService` provides signals for language management:
+
+```typescript
+import { TranslationService } from '@services/translation.service';
+
+@Component({...})
+export class MyComponent {
+  private i18n = inject(TranslationService);
+
+  // Signal con el idioma actual
+  readonly currentLang = this.i18n.currentLanguage;
+
+  // Cambiar idioma
+  setLanguage(lang: 'en' | 'es'): void {
+    this.i18n.setLanguage(lang);
+  }
+}
+```
+
+### Usage in Templates
+
+**Basic translation:**
+```html
+<!-- Pipe approach (recommended for simple cases) -->
+<h1>{{ 'HOME.TITLE' | translate }}</h1>
+<button>{{ 'COMMON.SAVE' | translate }}</button>
+```
+
+**With parameters:**
+```html
+<!-- Translation file: { "HELLO": "Hello {{name}}!" } -->
+<p>{{ 'HELLO' | translate:{ name: 'John' } }}</p>
+```
+
+### Usage in TypeScript
+
+```typescript
+import { TranslationService } from '@services/translation.service';
+import { computed, inject } from '@angular/core';
+
+@Component({...})
+export class MyComponent {
+  private i18n = inject(TranslationService);
+
+  // Inmediate translation (for computed values)
+  readonly pageTitle = this.i18n.get('HOME.TITLE');
+
+  // Reactive translation with computed
+  readonly welcomeMessage = computed(() => 
+    this.i18n.get('HELLO', { name: this.userName() })
+  );
+}
+```
+
+### Adding New Languages
+
+1. Create a new JSON file in `src/assets/i18n/` (e.g., `fr.json`)
+2. Add the language to `TranslationService.availableLanguages`
+3. Use the language switcher to change
+
+### Translation File Structure
+
+Use nested keys for organization:
+
+```json
+{
+  "COMMON": {
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "DELETE": "Delete"
+  },
+  "NAV": {
+    "DASHBOARD": "Dashboard",
+    "SALES": "Sales"
+  },
+  "MODULE_NAME": {
+    "FEATURE": "Feature text"
+  }
+}
+```
+
+### Best Practices
+
+- Use semantic keys: `COMMON.SAVE` not `SAVE_BUTTON`
+- Group by feature/module
+- Use parameters for dynamic values: `{{ 'MSG' | translate:{ count: 5 } }}`
+- Avoid concatenating translations
+- Keep translations in sync across all language files
+
 ## Agent Ecosystem
 
 The project utilizes a specialized agent architecture to manage development and quality assurance effectively.

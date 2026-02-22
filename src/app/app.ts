@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ThemeService } from './services/theme.service';
+import { ThemeService } from '@services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +9,5 @@ import { ThemeService } from './services/theme.service';
   styleUrl: './app.css',
 })
 export class App {
-  private themeService = inject(ThemeService);
-  protected readonly title = signal('aura-pos');
+  private themeService = inject(ThemeService); // NO BORRAR
 }

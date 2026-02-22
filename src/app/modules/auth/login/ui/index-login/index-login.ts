@@ -7,7 +7,6 @@ import { ToastAlertService } from '@services/toast-alert.service';
 
 @Component({
   selector: 'app-index-login',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
   templateUrl: './index-login.html',

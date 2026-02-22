@@ -37,6 +37,24 @@
         class="user-dropdown" 
         (click)="$event.stopPropagation()"
       >
+        <!-- Language Switcher -->
+        <div class="dropdown-section">
+          <span class="dropdown-label">{{ 'SETTINGS.LANGUAGE' | translate }}</span>
+          <div class="language-buttons">
+            @for (lang of languages; track lang.code) {
+              <button
+                class="lang-btn"
+                [class.active]="currentLang() === lang.code"
+                (click)="setLanguage(lang.code)"
+              >
+                {{ lang.name }}
+              </button>
+            }
+          </div>
+        </div>
+        
+        <div class="dropdown-divider"></div>
+        
         <app-theme-panel></app-theme-panel>
       </div>
     }

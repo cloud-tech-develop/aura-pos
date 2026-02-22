@@ -8,6 +8,8 @@ import {
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
+import { CustomTranslateLoader } from '@services/custom-translate-loader';
 
 import { routes } from './app.routes';
 import { environment } from '@environment/environment';
@@ -37,6 +39,13 @@ export const appConfig: ApplicationConfig = {
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
+    }),
+    provideTranslateService({
+      loader: {
+        provide: TranslateLoader,
+        useClass: CustomTranslateLoader,
+      },
+      defaultLanguage: 'es',
     }),
     providePrimeNG({
       theme: {
