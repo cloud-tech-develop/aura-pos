@@ -1,63 +1,69 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
   <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md">
-    <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">Sign In</h1>
-    
-    @if (errorMessage()) {
-      <div class="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded">
-        {{ errorMessage() }}
-      </div>
-    }
+    <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
+      {{ 'AUTH.LOGIN.TITLE' | translate }}
+    </h1>
 
-    <form (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email Field -->
       <div class="mb-4">
         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Email
+          {{ 'AUTH.LOGIN.EMAIL' | translate }}
         </label>
         <input
+          pInputText
           type="email"
           id="email"
-          [ngModel]="email()"
-          (ngModelChange)="email.set($event)"
-          name="email"
-          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-          placeholder="Enter your email"
+          [invalid]="loginForm.get('email') | controlHasInvalid"
+          formControlName="email"
+          class="w-full"
+          [placeholder]="'AUTH.LOGIN.EMAIL' | translate"
+        />
+        <validator-errors
+          [control]="loginForm.get('email')"
+          [label]="'AUTH.LOGIN.EMAIL' | translate"
         />
       </div>
 
+      <!-- Password Field -->
       <div class="mb-6">
-        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Password
+        <label
+          for="password"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+        >
+          {{ 'AUTH.LOGIN.PASSWORD' | translate }}
         </label>
-        <input
-          type="password"
+        <p-password
           id="password"
-          [ngModel]="password()"
-          (ngModelChange)="password.set($event)"
-          name="password"
-          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-          placeholder="Enter your password"
+          formControlName="password"
+          [invalid]="loginForm.get('password') | controlHasInvalid"
+          [feedback]="false"
+          [toggleMask]="true"
+          [placeholder]="'AUTH.LOGIN.PASSWORD' | translate"
+        />
+        <validator-errors
+          [control]="loginForm.get('password')"
+          [label]="'AUTH.LOGIN.PASSWORD' | translate"
         />
       </div>
 
-      <button
+      <!-- Submit Button -->
+      <p-button
         type="submit"
+        [loading]="isLoading()"
+        [label]="'AUTH.LOGIN.SUBMIT' | translate"
+        styleClass="w-full"
         [disabled]="isLoading()"
-        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        @if (isLoading()) {
-          <span>Signing in...</span>
-        } @else {
-          <span>Sign In</span>
-        }
-      </button>
+      />
     </form>
 
+    <!-- Change Password Link -->
     <div class="mt-4 text-center">
       <a
         routerLink="/auth/password-change"
         class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400"
       >
-        Change Password
+        {{ 'AUTH.CHANGE_PASSWORD' | translate }}
       </a>
     </div>
   </div>

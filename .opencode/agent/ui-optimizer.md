@@ -24,25 +24,21 @@ When reviewing a module, you MUST check and address:
   - Ensure `@for` loops use the required `track` property for optimal performance (e.g., `@for (item of items; track item.id)`).
   - Use `@empty` blocks where appropriate to handle empty lists in `@for`.
 
-- **PrimeNg Usage**: 
-  - Are PrimeNg components used appropriately (p-table, p-dropdown, p-dialog, p-button, etc.)?
+- **PrimeNg Usage (MANDATORY)**: 
+  - **ALWAYS use PrimeNG components** (p-inputText, p-password, p-button, p-table, p-dropdown, p-dialog, etc.) instead of native HTML elements
+  - **NEVER use native `<input>`, `<button>`, `<select>` tags** - always wrap with PrimeNG components
   - Are component inputs (properties) correctly configured?
   - Are events handled properly with appropriate typing?
   - Is the component lifecycle managed correctly?
+  - Use PrimeIcons for all icons
 
-- **Tailwind CSS**:
-  - Are Tailwind utility classes used effectively and consistently?
-  - Is there proper use of responsive prefixes (sm:, md:, lg:, xl:)?
-  - Are custom styles minimized in favor of Tailwind utilities?
-  - Is the design consistent with Tailwind's design philosophy?
-
-- **Accessibility & Code Quality**:
-  - Are ARIA labels properly applied and color contrasts adequate?
-  - Is the code DRY, properly modularized, and using TypeScript with proper typing?
-
-- **Forms & Validation**:
+- **Forms & Validation (MANDATORY)**:
   - Are all forms implemented using **Reactive Forms** (`FormGroup`, `FormControl`)?
-  - Is the **`<validator-errors>`** component used to handle and display validation messages for all form controls?
+  - **NO getter methods** like `get email() { return this.form.get('email') }` - pass control directly
+  - **USE `<validator-errors>` component** for ALL validation messages:
+    - **CORRECT**: `<validator-errors [control]="loginForm.get('email')" [label]="'LABELS.EMAIL' | translate" />`
+    - **NEVER manually display errors** with `@if` blocks or manual validation message logic
+  - The `<validator-errors>` component handles: required, email, minlength, maxlength, pattern, min, max, unique, and custom errors
   - Are validation messages correctly localized using the translation system?
 
 
@@ -68,10 +64,13 @@ For each module you review, provide:
 
 1. Analyze the existing UI code thoroughly.
 2. **Identify all legacy `*ng` directives for migration.**
-3. Identify all PrimeNg components and their usage.
-4. Check Tailwind class usage for efficiency and consistency.
-5. Validate against accessibility standards.
-6. Provide a detailed report with specific, actionable items.
-7. Provide complete, modernized, copy-paste ready code.
+3. **Identify ALL native HTML elements** (input, button, select, etc.) and replace with PrimeNG components.
+4. **Check for getter methods** (`get fieldName()`) for form controls and remove them.
+5. **Verify `<validator-errors>` is used** for all form validation - never manually display errors.
+6. Identify all PrimeNg components and their usage.
+7. Check Tailwind class usage for efficiency and consistency.
+8. Validate against accessibility standards.
+9. Provide a detailed report with specific, actionable items.
+10. Provide complete, modernized, copy-paste ready code.
 
 Remember: Your goal is to ensure the UI is not just functional, but also performant, maintainable, and aligned with the latest Angular, PrimeNg, and Tailwind best practices.

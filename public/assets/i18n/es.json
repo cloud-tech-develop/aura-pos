@@ -13,7 +13,20 @@
     "ADMIN": "Administración"
   },
   "AUTH": {
-    "LOGIN": "Iniciar Sesión",
+    "LOGIN": {
+      "TITLE": "Iniciar Sesión",
+      "EMAIL": "Correo electrónico",
+      "PASSWORD": "Contraseña",
+      "SUBMIT": "Iniciar Sesión",
+      "ERROR_INVALID_CREDENTIALS": "Credenciales inválidas",
+      "ERROR_NETWORK": "Error de conexión. Intente más tarde",
+      "ERROR_SERVER": "Error del servidor. Intente más tarde",
+      "ERROR_USER_INACTIVE": "Usuario inactivo o bloqueado",
+      "VALIDATION_EMAIL_REQUIRED": "El correo electrónico es requerido",
+      "VALIDATION_EMAIL_INVALID": "El correo electrónico debe tener un formato válido",
+      "VALIDATION_PASSWORD_REQUIRED": "La contraseña es requerida",
+      "SUCCESS": "Bienvenido al sistema"
+    },
     "LOGOUT": "Cerrar Sesión",
     "EMAIL": "Correo Electrónico",
     "PASSWORD": "Contraseña",

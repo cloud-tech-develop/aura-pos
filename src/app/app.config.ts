@@ -45,7 +45,7 @@ export const appConfig: ApplicationConfig = {
         provide: TranslateLoader,
         useClass: CustomTranslateLoader,
       },
-      defaultLanguage: 'es',
+      fallbackLang: 'es',
     }),
     providePrimeNG({
       theme: {

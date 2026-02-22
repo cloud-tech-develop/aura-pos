@@ -13,7 +13,20 @@
     "ADMIN": "Admin"
   },
   "AUTH": {
-    "LOGIN": "Login",
+    "LOGIN": {
+      "TITLE": "Sign In",
+      "EMAIL": "Email",
+      "PASSWORD": "Password",
+      "SUBMIT": "Sign In",
+      "ERROR_INVALID_CREDENTIALS": "Invalid credentials",
+      "ERROR_NETWORK": "Connection error. Please try again later",
+      "ERROR_SERVER": "Server error. Please try again later",
+      "ERROR_USER_INACTIVE": "User inactive or blocked",
+      "VALIDATION_EMAIL_REQUIRED": "Email is required",
+      "VALIDATION_EMAIL_INVALID": "Email must be a valid format",
+      "VALIDATION_PASSWORD_REQUIRED": "Password is required",
+      "SUCCESS": "Welcome to the system"
+    },
     "LOGOUT": "Logout",
     "EMAIL": "Email",
     "PASSWORD": "Password",

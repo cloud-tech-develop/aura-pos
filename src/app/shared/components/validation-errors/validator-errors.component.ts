@@ -47,7 +47,6 @@ interface ErrorParams {
   selector: 'validator-errors',
   imports: [TranslateModule],
   templateUrl: './validator-errors.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ValidatorErrors {
   /** Control del formulario `[control]="frm.get('name')"` */
@@ -88,107 +87,30 @@ export class ValidatorErrors {
     'min',
     'max',
     'unique',
-  ] as const;
+  ];
+
+  get errorKey(): string | null {
+    if (!this.control() || !this.control()?.errors) return null;
+    if (this.control()?.untouched) return null;
+    // Obtiene el primer error
+    return Object.keys(this.control()?.errors || {})[0];
+  }
 
   /**
-   * Signal reactivo que obtiene la clave del primer error de validación
+   * Getter de los errores de la validacion
    */
-  readonly errorKey = computed<string | null>(() => {
-    const control = this.control();
-    if (!control || !control.errors) return null;
-    if (control.untouched) return null;
-    return Object.keys(control.errors)[0];
-  });
-
-  /**
-   * Signal reactivo que indica si es un error personalizado
-   */
-  readonly isCustomError = computed<boolean>(() => {
-    const key = this.errorKey();
-    return key ? !this.errorsDefault.includes(key as (typeof this.errorsDefault)[number]) : false;
-  });
-
-  /**
-   * Signal reactivo que verifica si el error actual debe mostrarse
-   */
-  readonly shouldShowError = computed<boolean>(() => {
-    const key = this.errorKey();
-    const omitted = this.omitErrors();
-    return key !== null && !omitted.includes(key);
-  });
-
-  /**
-   * Signal reactivo que genera los parámetros de traducción
-   */
-  readonly errorParams = computed<ErrorParams>(() => {
-    const ctrl = this.control();
-    const lbl = this.label();
-    const key = this.errorKey();
-
-    if (!ctrl) return { control: lbl };
-    if (!key) return { control: lbl };
-
-    const errors = ctrl.errors;
-    if (!errors) return { control: lbl };
-
-    if (key === 'min') return { control: lbl, value: errors['min'].min };
-    if (key === 'max') return { control: lbl, value: errors['max'].max };
-    if (key === 'maxlength') return { control: lbl, value: errors['maxlength'].requiredLength };
-    if (key === 'minlength') return { control: lbl, value: errors['minlength'].requiredLength };
-
-    return { control: lbl };
-  });
-
-  /**
-   * Obtiene el mensaje de error según el tipo de validación
-   */
-  readonly errorMessage = computed<string>(() => {
-    const key = this.errorKey();
-    if (!key) return '';
-
-    const params = this.errorParams();
-
-    switch (key) {
-      case 'required':
-        return this.required() || 'ALERTS.REQUIRED';
-      case 'maxlength':
-        return this.maxlength() || 'ALERTS.MAJOR';
-      case 'minlength':
-        return this.minlength() || 'ALERTS.MINOR';
-      case 'pattern':
-        return this.pattern() || 'ALERTS.PATTERN';
-      case 'email':
-        return this.email() || 'ALERTS.INVALID_EMAIL';
-      case 'min':
-        return this.min() || 'ALERTS.MIN_VALUE';
-      case 'max':
-        return this.max() || 'ALERTS.MAX_VALUE';
-      case 'unique':
-        return this.unique() || 'ALERTS.UNIQUE';
-      default:
-        // Custom error - buscar en customErrors
-        const customErr = this.customErrors().find((e) => e.type === key);
-        return customErr?.message || '';
-    }
-  });
-
-  /**
-   * Signal para el error personalizado individual
-   */
-  readonly singleCustomErrorMessage = computed<string>(() => {
-    const key = this.errorKey();
-    const customType = this.customErrorType();
-    if (key === customType) {
-      return this.customErrorMessage();
-    }
-    return '';
-  });
-
-  /**
-   * Obtiene el mensaje de un error custom por su tipo
-   */
-  getCustomErrorMessage(type: string): string {
-    const customErr = this.customErrors().find((e) => e.type === type);
-    return customErr?.message || '';
+  get errorParams(): {
+    control: string;
+    value?: unknown;
+  } {
+    const errors = this.control()?.errors || {};
+    if (!errors) return { control: this.label() };
+    if (this.errorKey === 'min') return { control: this.label(), value: errors['min'].min };
+    if (this.errorKey === 'max') return { control: this.label(), value: errors['max'].max };
+    if (this.errorKey === 'maxlength')
+      return { control: this.label(), value: errors['maxlength'].requiredLength };
+    if (this.errorKey === 'minlength')
+      return { control: this.label(), value: errors['minlength'].requiredLength };
+    return { control: this.label() };
   }
 }

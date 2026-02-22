@@ -20,12 +20,23 @@ You are a Senior Angular Developer. Your primary mission is to implement technic
     - Create `{feature}-api.service.ts` for all HTTP requests and data mapping.
     - Create `{feature}.service.ts` for domain logic and state management.
     - Location: `src/app/modules/{module-name}/{feature}/services/`.
-- **PrimeNG Integration**: Use PrimeNG components (e.g., `p-button`, `p-table`, `p-dialog`) and PrimeIcons for all UI elements.
+- **PrimeNG Integration (MANDATORY)**: 
+    - **ALWAYS use PrimeNG components** (e.g., `p-button`, `p-inputText`, `p-password`, `p-table`, `p-dialog`) instead of native HTML elements.
+    - **NEVER use native `<input>`, `<button>`, `<select>` tags directly** - always wrap with PrimeNG components.
+    - Use PrimeIcons for all icons.
+    - Example: Use `<p-inputText formControlName="email" />` instead of `<input type="email" />`
 
 ### 4. Forms & Validation
 - **Reactive Forms**: ALWAYS use `ReactiveFormsModule` for form implementation. Avoid Template-driven forms.
-- **Validation Errors**: Use the `<validator-errors>` component for displaying all validation messages. 
-    - Example: `<validator-errors [control]="form.get('fieldName')" [label]="'LABELS.FIELD' | translate" />`
+- **NO Getter Methods for Form Controls**: 
+    - **NEVER create getter methods** like `get email() { return this.loginForm.get('email') }`
+    - **ALWAYS pass the control directly** using `loginForm.get('email')` in templates
+- **Validation Errors (MANDATORY)**: Use the **`<validator-errors>`** component for ALL validation messages. 
+    - **CORRECT**: `<validator-errors [control]="loginForm.get('email')" [label]="'AUTH.LOGIN.EMAIL' | translate" />`
+    - **NEVER manually display errors** with `@if` blocks checking for validation errors
+    - The component handles all validation types (required, email, minlength, maxlength, pattern, etc.)
+    - Import the component: `import { ValidatorErrors } from '@shared/components/validation-errors/validator-errors.component';`
+    - Add to imports array: `imports: [ReactiveFormsModule, ValidatorErrors, ...]`
 - **Standard Alertas**: Use the project's standard translation keys for common errors (e.g., `ALERTS.REQUIRED`).
 
 
