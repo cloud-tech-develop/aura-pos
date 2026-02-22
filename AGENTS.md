@@ -367,6 +367,73 @@ Use nested keys for organization:
 - Avoid concatenating translations
 - Keep translations in sync across all language files
 
+## Toast Notifications (ToastAlertService)
+
+This project uses **ngx-toastr** for toast notifications with internationalization support.
+
+### Service Location
+
+```
+src/app/services/toast-alert.service.ts
+```
+
+### Usage
+
+```typescript
+import { ToastAlertService } from '@services/toast-alert.service';
+
+@Component({...})
+export class MyComponent {
+  private toast = inject(ToastAlertService);
+
+  onSuccess(): void {
+    this.toast.success('MESSAGE_KEY', 'TOAST.SUCCESS');
+  }
+
+  onError(): void {
+    this.toast.error('Error al guardar', 'TOAST.ERROR');
+  }
+
+  onWarning(): void {
+    this.toast.warning('Advertencia', 'TOAST.WARNING');
+  }
+
+  onInfo(): void {
+    this.toast.info('Información', 'TOAST.INFO');
+  }
+}
+```
+
+### Method Signature
+
+| Method | Description | Default Title Key |
+|--------|-------------|-------------------|
+| `success(message, titleKey, time?)` | Success toast | `TOAST.SUCCESS` |
+| `error(message, titleKey, time?)` | Error toast | `TOAST.ERROR` |
+| `warning(message, titleKey, time?)` | Warning toast | `TOAST.WARNING` |
+| `info(message, titleKey, time?)` | Info toast | `TOAST.INFO` |
+
+### Translation Keys
+
+Add toast titles to your translation files:
+
+```json
+{
+  "TOAST": {
+    "SUCCESS": "Success",
+    "ERROR": "Error",
+    "WARNING": "Warning",
+    "INFO": "Info"
+  }
+}
+```
+
+### Configuration
+
+The service uses these defaults:
+- `timeOut`: 5000ms (7000ms for error)
+- `positionClass`: `toast-top-right`
+
 ## Agent Ecosystem
 
 The project utilizes a specialized agent architecture to manage development and quality assurance effectively.

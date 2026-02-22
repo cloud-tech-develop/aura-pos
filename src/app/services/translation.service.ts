@@ -15,7 +15,7 @@ export class TranslationService {
   readonly currentLanguage = signal<AppLanguage>('en');
   readonly availableLanguages: AppLanguage[] = ['en', 'es'];
 
-  private readonly STORAGE_KEY = 'aura-pos-language';
+  private readonly STORAGE_KEY = 'applanguage';
 
   constructor() {
     this.initLanguages();

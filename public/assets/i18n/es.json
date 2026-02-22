@@ -153,5 +153,21 @@
     "NETWORK_ERROR": "Error de red. Por favor intente de nuevo.",
     "SALE_COMPLETED": "Venta completada exitosamente",
     "SALE_ERROR": "Error al procesar la venta"
+  },
+  "ALERTS": {
+    "REQUIRED": "El campo {{control}} es requerido",
+    "MAJOR": "El campo {{control}} excede el máximo de {{value}} caracteres",
+    "MINOR": "El campo {{control}} debe tener al menos {{value}} caracteres",
+    "PATTERN": "El campo {{control}} tiene un formato inválido",
+    "INVALID_EMAIL": "El campo {{control}} debe ser un correo válido",
+    "MIN_VALUE": "El campo {{control}} debe ser mayor o igual a {{value}}",
+    "MAX_VALUE": "El campo {{control}} debe ser menor o igual a {{value}}",
+    "UNIQUE": "El valor del campo {{control}} ya existe"
+  },
+  "TOAST": {
+    "SUCCESS": "Éxito",
+    "ERROR": "Error",
+    "WARNING": "Advertencia",
+    "INFO": "Información"
   }
 }

@@ -1,0 +1,9 @@
+@if (shouldShowError() && errorKey()) {
+  <span class="text-red-500">
+    @if (isCustomError()) {
+      {{ customErrorMessage() || getCustomErrorMessage(errorKey()!) | translate: errorParams() }}
+    } @else {
+      {{ errorMessage() | translate: errorParams() }}
+    }
+  </span>
+}

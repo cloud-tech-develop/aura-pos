@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 const config = {
   timeOut: 5000,
@@ -11,29 +12,34 @@ const config = {
 })
 export class ToastAlertService {
   #toastServ = inject(ToastrService);
+  #i18n = inject(TranslateService);
 
-  success(message: string, title: string = 'Ok', time: number = 5000): void {
+  success(message: string, titleKey: string = 'TOAST.SUCCESS', time: number = 5000): void {
+    const title = this.#i18n.instant(titleKey);
     this.#toastServ.success(message, title, {
       timeOut: time,
       positionClass: config.positionClass,
     });
   }
 
-  error(message: string, title: string = 'Error!', time: number = 7000): void {
+  error(message: string, titleKey: string = 'TOAST.ERROR', time: number = 7000): void {
+    const title = this.#i18n.instant(titleKey);
     this.#toastServ.error(message, title, {
       timeOut: time,
       positionClass: config.positionClass,
     });
   }
 
-  info(message: string, title: string = 'Alerta!', time: number = 5000) {
+  info(message: string, titleKey: string = 'TOAST.INFO', time: number = 5000): void {
+    const title = this.#i18n.instant(titleKey);
     this.#toastServ.info(message, title, {
       timeOut: time,
       positionClass: config.positionClass,
     });
   }
 
-  warning(message: string, title: string = 'Atención!', time: number = 5000) {
+  warning(message: string, titleKey: string = 'TOAST.WARNING', time: number = 5000): void {
+    const title = this.#i18n.instant(titleKey);
     this.#toastServ.warning(message, title, {
       timeOut: time,
       positionClass: config.positionClass,
