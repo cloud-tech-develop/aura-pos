@@ -14,6 +14,7 @@
           pInputText
           type="email"
           id="email"
+          data-testid="login-email-input"
           [invalid]="loginForm.get('email') | controlHasInvalid"
           formControlName="email"
           class="w-full"
@@ -35,6 +36,7 @@
         </label>
         <p-password
           id="password"
+          data-testid="login-password-input"
           formControlName="password"
           [invalid]="loginForm.get('password') | controlHasInvalid"
           [feedback]="false"
@@ -50,10 +52,11 @@
       <!-- Submit Button -->
       <p-button
         type="submit"
+        data-testid="login-submit-button"
         [loading]="isLoading()"
+        [disabled]="isLoading()"
         [label]="'AUTH.LOGIN.SUBMIT' | translate"
         styleClass="w-full"
-        [disabled]="isLoading()"
       />
     </form>
 
@@ -61,6 +64,7 @@
     <div class="mt-4 text-center">
       <a
         routerLink="/auth/password-change"
+        data-testid="login-change-password-link"
         class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400"
       >
         {{ 'AUTH.CHANGE_PASSWORD' | translate }}

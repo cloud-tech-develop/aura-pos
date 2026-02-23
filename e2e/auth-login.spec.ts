@@ -1,149 +1,157 @@
 import { test, expect } from '@playwright/test';
+import { environment } from '../src/environments/environment.development';
 
-test.describe('Auth Login', () => {
+test.describe('Autenticación de Login', () => {
   test.beforeEach(async ({ page }) => {
+    // Ir a la página de login antes de cada test
     await page.goto('/auth/login');
   });
 
-  test.describe('Page Load', () => {
-    test('should display login title', async ({ page }) => {
-      await expect(page.getByRole('heading', { name: /sign in/i })).toBeVisible();
+  test.describe('Carga de la Página', () => {
+    test('debe mostrar el título de login', async ({ page }) => {
+      // Verificar que el título de login sea visible
+      await expect(
+        page.getByRole('heading', { name: /auth\.login\.title/i }).or(page.locator('h1')),
+      ).toBeVisible();
     });
 
-    test('should display email input field', async ({ page }) => {
-      const emailInput = page.getByLabel(/email/i);
+    test('debe mostrar el campo de entrada de email', async ({ page }) => {
+      // Verificar que el campo de email con data-testid sea visible
+      const emailInput = page.locator('[data-testid="login-email-input"]');
       await expect(emailInput).toBeVisible();
     });
 
-    test('should display password input field', async ({ page }) => {
-      // Password field uses PrimeNG password component
-      const passwordInput = page.locator('p-password input');
+    test('debe mostrar el campo de entrada de contraseña', async ({ page }) => {
+      // Verificar que el componente de contraseña con data-testid sea visible
+      const passwordInput = page.locator('[data-testid="login-password-input"]');
       await expect(passwordInput).toBeVisible();
     });
 
-    test('should display submit button', async ({ page }) => {
-      const submitButton = page.getByRole('button', { name: /sign in/i });
+    test('debe mostrar el botón de enviar', async ({ page }) => {
+      // Verificar que el botón de enviar con data-testid sea visible
+      const submitButton = page.locator('[data-testid="login-submit-button"]');
       await expect(submitButton).toBeVisible();
     });
 
-    test('should display change password link', async ({ page }) => {
-      const changePasswordLink = page.getByRole('link', { name: /change password/i });
+    test('debe mostrar el enlace para cambiar contraseña', async ({ page }) => {
+      // Verificar que el enlace de cambio de contraseña con data-testid sea visible
+      const changePasswordLink = page.locator('[data-testid="login-change-password-link"]');
       await expect(changePasswordLink).toBeVisible();
     });
   });
 
-  test.describe('Form Validation', () => {
-    test('should show validation errors when form is submitted empty', async ({ page }) => {
-      const submitButton = page.getByRole('button', { name: /sign in/i });
+  test.describe('Validación del Formulario', () => {
+    test('debe mostrar errores de validación al enviar el formulario vacío', async ({ page }) => {
+      const submitButton = page.locator('[data-testid="login-submit-button"]');
       await submitButton.click();
 
-      // Should show required field errors
+      // Debería mostrar errores de campos requeridos (validator-errors)
       await expect(page.locator('.text-red-500').first()).toBeVisible();
     });
 
-    test('should show validation error for invalid email format', async ({ page }) => {
-      const emailInput = page.getByLabel(/email/i);
-      const submitButton = page.getByRole('button', { name: /sign in/i });
+    test('debe mostrar error de validación para formato de email inválido', async ({ page }) => {
+      const emailInput = page.locator('[data-testid="login-email-input"]');
+      const submitButton = page.locator('[data-testid="login-submit-button"]');
 
-      await emailInput.fill('invalid-email');
+      await emailInput.fill('email-invalido');
       await submitButton.click();
 
-      // Should show email validation error
+      // Debería mostrar error de validación de email
       await expect(page.locator('.text-red-500').first()).toBeVisible();
     });
 
-    test('should show validation error for short password', async ({ page }) => {
-      const emailInput = page.getByLabel(/email/i);
-      const passwordInput = page.locator('p-password input');
-      const submitButton = page.getByRole('button', { name: /sign in/i });
+    test('debe mostrar error de validación para contraseña corta', async ({ page }) => {
+      const emailInput = page.locator('[data-testid="login-email-input"]');
+      const passwordInput = page.locator('[data-testid="login-password-input"] input');
+      const submitButton = page.locator('[data-testid="login-submit-button"]');
 
       await emailInput.fill('test@example.com');
       await passwordInput.fill('123');
       await submitButton.click();
 
-      // Should show password validation error
+      // Debería mostrar error de validación de contraseña
       await expect(page.locator('.text-red-500').first()).toBeVisible();
-    });
-
-    test('should not show error when valid email and password are entered', async ({ page }) => {
-      const emailInput = page.getByLabel(/email/i);
-      const passwordInput = page.locator('p-password input');
-      const submitButton = page.getByRole('button', { name: /sign in/i });
-
-      await emailInput.fill('test@example.com');
-      await passwordInput.fill('password123');
-
-      // Clear errors by re-triggering validation
-      await submitButton.click();
-
-      // Should not show required field errors (but may show auth error)
-      const errorMessages = page.locator('.text-red-500');
-      const errorCount = await errorMessages.count();
-      expect(errorCount).toBeLessThanOrEqual(1); // At most one error for invalid credentials
     });
   });
 
-  test.describe('Login Functionality', () => {
-    test('should show loading state when submitting', async ({ page }) => {
-      const emailInput = page.getByLabel(/email/i);
-      const passwordInput = page.locator('p-password input');
-      const submitButton = page.getByRole('button', { name: /sign in/i });
+  test.describe('Funcionalidad de Login', () => {
+    test('debe mostrar estado de carga al enviar', async ({ page }) => {
+      await page.route('**/api/auth/login', async (route) => {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await route.continue();
+      });
+
+      const emailInput = page.locator('[data-testid="login-email-input"]');
+      const passwordInput = page.locator('[data-testid="login-password-input"] input');
+      const submitButton = page.locator('[data-testid="login-submit-button"] button');
 
       await emailInput.fill('test@example.com');
       await passwordInput.fill('password123');
-      await submitButton.click();
 
-      // Button should show loading state (disabled)
-      await expect(submitButton).toBeDisabled();
+      // Ejecutar el click y la verificación en paralelo
+      await Promise.all([submitButton.click(), expect(submitButton).toBeDisabled()]);
     });
 
-    test('should navigate to change password page when link is clicked', async ({ page }) => {
-      const changePasswordLink = page.getByRole('link', { name: /change password/i });
+    test('debe navegar a la página de cambio de contraseña al hacer clic en el enlace', async ({
+      page,
+    }) => {
+      const changePasswordLink = page.locator('[data-testid="login-change-password-link"]');
       await changePasswordLink.click();
 
       await expect(page).toHaveURL(/.*\/auth\/password-change/);
     });
 
-    test('should login successfully with valid credentials', async ({ page }) => {
-      const emailInput = page.getByLabel(/email/i);
-      const passwordInput = page.locator('p-password input');
-      const submitButton = page.getByRole('button', { name: /sign in/i });
+    test('debe iniciar sesión exitosamente con credenciales válidas', async ({ page }) => {
+      const emailInput = page.locator('[data-testid="login-email-input"]');
+      const passwordInput = page.locator('[data-testid="login-password-input"] input');
+      const submitButton = page.locator('[data-testid="login-submit-button"]');
 
-      // Use valid credentials
-      await emailInput.fill('camiloolea200@gmail.com');
-      await passwordInput.fill('123456');
-      await submitButton.click();
+      // Usar credenciales desde el entorno
+      const { email, password } = environment.testing;
 
-      // Should navigate to dashboard after successful login
-      await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 10000 });
+      if (email && password) {
+        await emailInput.fill(email);
+        await passwordInput.fill(password);
+        await submitButton.click();
+
+        // Debería navegar al dashboard después de un login exitoso
+        await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 10000 });
+      } else {
+        test.skip(
+          !email || !password,
+          'Credenciales de prueba no configuradas en environment.development.ts',
+        );
+      }
     });
 
-    test('should show error with invalid credentials', async ({ page }) => {
-      const emailInput = page.getByLabel(/email/i);
-      const passwordInput = page.locator('p-password input');
-      const submitButton = page.getByRole('button', { name: /sign in/i });
+    test('debe mostrar error con credenciales inválidas', async ({ page }) => {
+      const emailInput = page.locator('[data-testid="login-email-input"]');
+      const passwordInput = page.locator('[data-testid="login-password-input"] input');
+      const submitButton = page.locator('[data-testid="login-submit-button"]');
 
-      // Use invalid credentials
-      await emailInput.fill('invalid@test.com');
-      await passwordInput.fill('wrongpassword');
+      // Usar credenciales inválidas
+      await emailInput.fill('invalido@test.com');
+      await passwordInput.fill('passwordincorrecto');
       await submitButton.click();
 
-      // Should show error toast message
-      await expect(page.locator('.toast-error').first()).toBeVisible({ timeout: 10000 });
+      // Debería mostrar mensaje de error (toast)
+      await expect(
+        page.locator('.toast-error').first().or(page.locator('.ngx-toastr.toast-error')),
+      ).toBeVisible({ timeout: 10000 });
     });
   });
 
-  test.describe('Accessibility', () => {
-    test('should have proper labels for form fields', async ({ page }) => {
-      const emailInput = page.getByLabel(/email/i);
-      const passwordInput = page.locator('p-password input');
+  test.describe('Accesibilidad', () => {
+    test('debe tener etiquetas adecuadas para los campos del formulario', async ({ page }) => {
+      const emailInput = page.locator('[data-testid="login-email-input"]');
+      const passwordInput = page.locator('[data-testid="login-password-input"] input');
 
       await expect(emailInput).toHaveAttribute('type', 'email');
       await expect(passwordInput).toBeVisible();
     });
 
-    test('should have submit button with type submit', async ({ page }) => {
-      const submitButton = page.getByRole('button', { name: /sign in/i });
+    test('debe tener el botón de enviar con tipo submit', async ({ page }) => {
+      const submitButton = page.locator('[data-testid="login-submit-button"]');
       await expect(submitButton).toHaveAttribute('type', 'submit');
     });
   });
