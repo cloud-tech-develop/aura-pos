@@ -20,7 +20,7 @@ interface MenuItem {
 export class SidebarComponent {
   private router = inject(Router);
 
-  readonly logoText = 'Aura POS';
+  readonly logoText = 'Aura POS - V2';
   readonly version = 'v1.0.0';
 
   readonly menuSections: { title: string; items: MenuItem[] }[] = [
