@@ -1,9 +1,5 @@
 export const environment = {
-  production: true,
-  atmosphere: 'production',
-  apiUrl: 'http://localhost:3000/api',
-  testing: {
-    email: '',
-    password: '',
-  },
+  PRODUCTION: false,
+  API_URL: 'http://localhost:3000',
+  ATMOSPHERE: 'development',
 };

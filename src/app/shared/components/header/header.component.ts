@@ -24,6 +24,7 @@ export class HeaderComponent {
   readonly tabs: Tab[] = [
     { id: 'inicio', label: 'Inicio', route: '/dashboard' },
     { id: 'equipo', label: 'Equipo', route: '/team' },
+    { id: 'sellers', label: 'Vendedores', route: '/sellers' },
     { id: 'admin', label: 'Admin', route: '/admin' },
     { id: 'config', label: 'Config', route: '/settings' },
   ];

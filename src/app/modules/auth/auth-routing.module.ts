@@ -3,6 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: 'logout',
+    loadComponent: () =>
+      import('@module-auth/logout/ui/index-logout/index-logout').then(
+        (m) => m.IndexLogout,
+      ),
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('@module-auth/login/ui/index-login/index-login').then((m) => m.IndexLogin),

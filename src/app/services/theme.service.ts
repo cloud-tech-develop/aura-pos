@@ -1,6 +1,7 @@
 import { Injectable, signal, effect, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '@environment/environment';
 import {
   ColorPalette,
   ThemeMode,
@@ -22,8 +23,8 @@ export class ThemeService {
   readonly currentMode = signal<ThemeMode>('dark');
   readonly isLoading = signal<boolean>(false);
 
-  // API endpoint (ajustar según tu backend)
-  private readonly API_URL = '/api/user/preferences/theme';
+  // API endpoint
+  private readonly API_URL = `${environment.API_URL}/user/preferences/theme`;
 
   constructor() {
     // Efecto para aplicar cambios de tema automáticamente

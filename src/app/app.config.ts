@@ -12,7 +12,7 @@ import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { CustomTranslateLoader } from '@services/custom-translate-loader';
 
 import { routes } from './app.routes';
-import { environment } from '@environment/environment';
+import { IS_PRODUCTION } from '@core/environment';
 import { selfXSSWarning } from '@shared/utils';
 import { authInterceptor } from '@core/interceptors';
 
@@ -23,7 +23,7 @@ import Aura from '@primeuix/themes/aura';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { provideToastr } from 'ngx-toastr';
 
-if (environment.production) {
+if (IS_PRODUCTION) {
   enableProdMode();
   if (window) {
     selfXSSWarning();

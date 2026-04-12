@@ -8,6 +8,7 @@
     "SALES": "Sales",
     "INVENTORY": "Inventory",
     "CUSTOMERS": "Customers",
+    "SELLERS": "Sellers",
     "REPORTS": "Reports",
     "SETTINGS": "Settings",
     "ADMIN": "Admin"
@@ -28,6 +29,7 @@
       "SUCCESS": "Welcome to the system"
     },
     "LOGOUT": "Logout",
+    "LOGOUT_LOADING": "Logging out...",
     "EMAIL": "Email",
     "PASSWORD": "Password",
     "REMEMBER_ME": "Remember me",
@@ -182,5 +184,24 @@
     "ERROR": "Error",
     "WARNING": "Warning",
     "INFO": "Info"
+  },
+  "SELLERS": {
+    "TITLE": "Sellers",
+    "ADD_NEW": "Add Seller",
+    "EDIT_TITLE": "Edit Seller",
+    "CREATE_TITLE": "New Seller",
+    "NAME": "Name",
+    "NAME_PLACEHOLDER": "Full name",
+    "EMAIL": "Email",
+    "EMAIL_PLACEHOLDER": "email@example.com",
+    "PHONE": "Phone",
+    "PHONE_PLACEHOLDER": "+1234567890",
+    "COMMISSION": "Commission",
+    "COMMISSION_PLACEHOLDER": "0-100",
+    "STATUS": "Status",
+    "ACTIONS": "Actions",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "EMPTY": "No sellers found"
   }
 }

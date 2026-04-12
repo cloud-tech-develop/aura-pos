@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '@services/theme.service';
 import { ColorPalette, ThemeMode, COLOR_PALETTES } from '@core/interfaces';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-theme-panel',
@@ -11,6 +12,7 @@ import { ColorPalette, ThemeMode, COLOR_PALETTES } from '@core/interfaces';
 })
 export class ThemePanelComponent {
   private themeService = inject(ThemeService);
+  private router = inject(Router);
 
   // Exponer signals para el template
   readonly currentPalette = this.themeService.currentPalette;
@@ -31,5 +33,9 @@ export class ThemePanelComponent {
    */
   onModeChange(mode: ThemeMode): void {
     this.themeService.setMode(mode);
+  }
+
+  onLogout() {
+    this.router.navigate(['/auth/login']);
   }
 }

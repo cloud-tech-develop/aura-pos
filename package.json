@@ -3,14 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "prestart": "tsx scripts/generate-env.ts",
     "start": "ng serve",
-    "start:dev": "ng serve --configuration development",
-    "start:prod": "ng serve --configuration production",
-    "start:local": "ng serve --configuration local",
-    "build": "ng build",
-    "build:dev": "ng build --configuration development",
-    "build:prod": "ng build --configuration production",
-    "build:local": "ng build --configuration local",
+    "prebuild": "tsx scripts/generate-env.ts",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "e2e": "playwright test",
@@ -58,6 +54,7 @@
     "@playwright/test": "^1.58.2",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.24",
+    "dotenv": "^17.4.1",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -67,6 +64,7 @@
     "playwright": "^1.58.2",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
+    "tsx": "^4.21.0",
     "typescript": "~5.9.2"
   }
 }

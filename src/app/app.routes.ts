@@ -51,6 +51,11 @@ export const routes: Routes = [
           import('@module-sales/sales-routing.module').then((m) => m.SalesRoutingModule),
       },
       {
+        path: 'sellers',
+        loadChildren: () =>
+          import('@module-sellers/sellers-routing.module').then((m) => m.SellersRoutingModule),
+      },
+      {
         path: 'settings',
         loadComponent: () =>
           import('@module-settings/settings.component').then((m) => m.SettingsComponent),

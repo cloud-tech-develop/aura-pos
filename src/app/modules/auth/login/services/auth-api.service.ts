@@ -10,7 +10,7 @@ import { environment } from '@environment/environment';
 })
 export class AuthApiService {
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.API_URL;
 
   login(credentials: LoginRequest): Observable<{
     error: boolean;
@@ -22,7 +22,7 @@ export class AuthApiService {
       msg: 'Error undefined',
       data: undefined as LoginData | undefined,
     };
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials).pipe(
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
       map((r) => {
         res.msg = r.message;
         if (r.error) {

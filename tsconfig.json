@@ -15,9 +15,6 @@
     "target": "ES2022",
     "module": "preserve",
     "paths": {
-      "@environment/*": [
-        "./src/environments/*"
-      ],
       "@store/*": [
         "./src/app/store/*"
       ],
@@ -53,6 +50,12 @@
       ],
       "@module-auth/*": [
         "./src/app/modules/auth/*"
+      ],
+      "@module-sellers/*": [
+        "./src/app/modules/sellers/*"
+      ],
+      "@environment/*": [
+        "./src/environments/*"
       ]
     }
   },
