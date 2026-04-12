@@ -12,6 +12,7 @@ import { UserSessionStore } from '@store/user.session';
 import { TranslationService } from '@services/translation.service';
 import { ValidatorErrors } from '@shared/components/validation-errors/validator-errors.component';
 import { ControlHasInvalidPipe } from '@core/pipes';
+import { DASHBOARD } from '@core/constants';
 
 @Component({
   selector: 'app-index-login',
@@ -33,7 +34,7 @@ export class IndexLogin {
   private router = inject(Router);
   private service = inject(AuthService);
   private toast = inject(ToastAlertService);
-  private userSessionStore = inject(UserSessionStore);
+  private session = inject(UserSessionStore);
   private i18n = inject(TranslationService);
   private fb = inject(FormBuilder);
 
@@ -53,27 +54,23 @@ export class IndexLogin {
     this.isLoading.set(true);
     const { email, password } = this.loginForm.value;
 
-    this.service.login({ username: email, password: password ?? '' }).subscribe({
+    this.service.login({ email, password }).subscribe({
       next: (response) => {
         this.isLoading.set(false);
-        if (response.error) {
-          this.toast.error(response.msg);
+        if (!response.data) {
+          this.toast.error(response.msg || 'Error al iniciar sesión');
           return;
         }
         // Login exitoso - guardar sesión
         const user = {
-          token: response.data!.token,
-          tipoToken: response.data!.tipoToken,
-          usuarioId: response.data!.usuarioId,
-          username: response.data!.username,
-          nombreCompleto: response.data!.nombreCompleto,
-          rol: response.data!.rol,
-          sucursales: response.data!.sucursales,
+          ...response.data.user,
+          token: response.data.token,
+          enterprise: response.data.enterprise,
         };
 
-        this.userSessionStore.login(user, response.data!.token);
+        this.session.login(user, response.data.token);
         this.toast.success(this.i18n.get('AUTH.LOGIN.SUCCESS'));
-        this.router.navigate(['/dashboard']);
+        this.router.navigate([DASHBOARD]);
       },
     });
   }

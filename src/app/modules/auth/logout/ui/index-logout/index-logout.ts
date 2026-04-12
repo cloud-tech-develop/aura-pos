@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
+import { AUTH } from '@core/constants';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserSessionStore } from '@store/user.session';
 
@@ -21,16 +22,10 @@ export class IndexLogout implements OnInit {
   private readonly store = inject(UserSessionStore);
   private readonly router = inject(Router);
 
-  async ngOnInit(): Promise<void> {
-    // Establecer loading mientras cierra sesión
+  ngOnInit(): void {
     this.store.setLoading(true);
-
-    try {
-      // Cerrar sesión en el store
-      await this.store.logout();
-    } finally {
-      // Redirigir al login
-      this.router.navigate(['/auth/logout']);
-    }
+    this.store.logout().then(() => {
+      this.router.navigate([AUTH.ROOT, AUTH.LOGIN]);
+    });
   }
 }

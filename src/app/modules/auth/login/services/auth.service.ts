@@ -10,7 +10,6 @@ export class AuthService {
   private authApiService = inject(AuthApiService);
 
   login(credentials: LoginRequest): Observable<{
-    error: boolean;
     msg: string;
     data?: LoginData;
   }> {

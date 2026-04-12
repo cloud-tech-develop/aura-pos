@@ -1,7 +1,12 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { UserSessionStore } from '@store/user.session';
+import { AUTH, DASHBOARD } from '@core/constants';
 
+/**
+ * Permite el acceso a usuarios autenticados
+ * @returns
+ */
 export const authGuard: CanActivateFn = () => {
   const sessionStore = inject(UserSessionStore);
   const router = inject(Router);
@@ -10,18 +15,23 @@ export const authGuard: CanActivateFn = () => {
     return true;
   }
 
-  return router.createUrlTree(['/login']);
+  return router.navigate([AUTH.ROOT, AUTH.LOGIN]);
 };
 
-export const guestGuard: CanActivateFn = () => {
+/**
+ * No permite el acceso a usuarios autenticados a la pantalla de login
+ * @returns boolean
+ */
+export const loginGuestGuard: CanActivateFn = () => {
   const sessionStore = inject(UserSessionStore);
   const router = inject(Router);
 
-  if (!sessionStore.isLoggedIn()) {
-    return true;
+  console.log('isLoggedIn', sessionStore.isLoggedIn());
+  if (sessionStore.isLoggedIn()) {
+    return router.navigate([DASHBOARD]);
   }
 
-  return router.createUrlTree(['/dashboard']);
+  return true;
 };
 
 export const moduleGuard = (moduleName: string): CanActivateFn => {
@@ -33,6 +43,6 @@ export const moduleGuard = (moduleName: string): CanActivateFn => {
     //   return true;
     // }
 
-    return router.createUrlTree(['/unauthorized']);
+    return true;
   };
 };

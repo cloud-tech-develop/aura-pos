@@ -1,20 +1,27 @@
 export interface LoginData {
   token: string;
-  tipoToken: string;
-  usuarioId: number;
-  username: string;
-  nombreCompleto: string;
-  rol: string;
-  sucursales: Sucursale[];
+  enterprise: Enterprise;
+  user: UserInfo;
 }
 
-export interface Sucursale {
+export interface Enterprise {
   id: number;
-  nombre: string;
-  esDefault: any;
+  slug: string;
+  tenant_id: number;
 }
 
-export interface User extends LoginData {}
+export interface UserInfo {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  roles: string[];
+}
+
+export interface User extends UserInfo {
+  token: string;
+  enterprise: Enterprise;
+}
 
 export interface AuthState {
   user: User | null;

@@ -7,7 +7,7 @@ import { AUTH_STORAGE_KEY } from '@core/constants';
 
 const DEFAULT_STORAGE_CONFIG: StorageServiceConfig = {
   type: 'indexedDB',
-  dbName: 'aura-pos-db',
+  dbName: 'AURA-POS-V2',
   storeName: 'aura-pos-store',
 };
 
@@ -57,7 +57,7 @@ export const UserSessionStore = signalStore(
     currentUser: computed(() => store.user()),
     isLoggedIn: computed(() => store.isAuthenticated()),
     getToken: computed(() => store.token()),
-    getRole: computed(() => store.user()?.rol ?? null),
+    getRole: computed(() => store.user()?.roles?.[0] ?? null),
   })),
   withMethods((store) => {
     const storageService = inject(StorageService);
@@ -80,13 +80,7 @@ export const UserSessionStore = signalStore(
       },
 
       async logout(): Promise<void> {
-        const newState: AuthState = {
-          user: null,
-          token: null,
-          isAuthenticated: false,
-          isLoading: false,
-        };
-        patchState(store, newState);
+        patchState(store, { ...initialAuthState });
         await removeFromStorage(storageService);
       },
 

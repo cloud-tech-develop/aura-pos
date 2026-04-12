@@ -1,9 +1,8 @@
-import { LoginData, ResponseBase } from '@core/interfaces';
+import { LoginData } from '@core/interfaces/user.interface';
 
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
-export interface LoginResponse extends ResponseBase<LoginData> {}
 export type { LoginData };

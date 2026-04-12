@@ -2,52 +2,43 @@ import { User } from '@core/interfaces/user.interface';
 
 export const MOCK_USERS: User[] = [
   {
-    token:
-      'eyJhbGciOiJIUzI1NiJ9.eyJlbXByZXNhSWQiOjEsInN1Y3VybSIsImlhdCI6MTc3MTc0MTQ1OSwiZXhwIjoxNzcyMDAwNjU5fQ..mock-token',
-    tipoToken: 'Bearer',
-    usuarioId: 1,
-    username: 'superadmin@gmail.com',
-    nombreCompleto: 'Super Admin',
-    rol: 'SUPER_ADMIN',
-    sucursales: [
-      {
-        id: 1,
-        nombre: 'Sede Centro',
-        esDefault: null,
-      },
-    ],
+    id: 1,
+    email: 'superadmin@cloudtecno.com',
+    first_name: 'Admin',
+    last_name: 'Cloud Tecno SAS',
+    roles: ['SUPERADMIN'],
+    token: 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJlbnRlcnByaXNlX2lkIjoxLCJ0ZW5hbnRfaWQiOjEsInNsdWciOiJjbG91ZF90ZWNubyIsImVtYWlsIjoic3VwZXItYWRtaW5AY2xvdWR0ZWNuby5jb20iLCJyb2xlcyI6WyJTVVBFUkFETUlOIl0sImlhdCI6MTc3NTk2OTMzOSwiZXhwIjoxNzc2MDU1NzM5fQ.mDhM2ZHrmAbsFux9EokVhRkyoRhK2RhBSaGBAWtd-dk',
+    enterprise: {
+      id: 1,
+      slug: 'cloud_tecno',
+      tenant_id: 1,
+    },
   },
   {
-    token:
-      'eyJhbGciOiJIUzI1NiJ9.eyJlbXByZXNhSWQiOjEsInN1Y3VybSIsImlhdCI6MTc3MTc0MTQ1OSwiZXhwIjoxNzcyMDAwNjU5fQ..mock-token',
-    tipoToken: 'Bearer',
-    usuarioId: 2,
-    username: 'admin@gmail.com',
-    nombreCompleto: 'Admin Pérez',
-    rol: 'ADMIN',
-    sucursales: [
-      {
-        id: 2,
-        nombre: 'Sede 2',
-        esDefault: null,
-      },
-    ],
+    id: 2,
+    email: 'admin@gmail.com',
+    first_name: 'Admin',
+    last_name: 'Pérez',
+    roles: ['ADMIN'],
+    token: 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJlbnRlcnByaXNlX2lkIjoxLCJ0ZW5hbnRfaWQiOjEsInNsdWciOiJjbG91ZF90ZWNubyIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNzc1OTY5MzM5LCJleHAiOjE3NzYwNTU3Mzl9.mock-token',
+    enterprise: {
+      id: 1,
+      slug: 'cloud_tecno',
+      tenant_id: 1,
+    },
   },
   {
-    token:
-      'eyJhbGciOiJIUzI1NiJ9.eyJlbXByZXNhSWQiOjEsInN1Y3VybSIsImlhdCI6MTc3MTc0MTQ1OSwiZXhwIjoxNzcyMDAwNjU5fQ..mock-token',
-    tipoToken: 'Bearer',
-    usuarioId: 3,
-    username: 'cajero@gmail.com',
-    nombreCompleto: 'Cajero Pérez',
-    rol: 'CAJERO',
-    sucursales: [
-      {
-        id: 3,
-        nombre: 'Sede 3',
-        esDefault: null,
-      },
-    ],
+    id: 3,
+    email: 'cajero@gmail.com',
+    first_name: 'Cajero',
+    last_name: 'Pérez',
+    roles: ['CAJERO'],
+    token: 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozLCJlbnRlcnByaXNlX2lkIjoxLCJ0ZW5hbnRfaWQiOjEsInNsdWciOiJjbG91ZF90ZWNubyIsImVtYWlsIjoiY2FqZXJvQGdtYWlsLmNvbSIsInJvbGVzIjpbIkNBSkVSTyJdLCJpYXQiOjE3NzU5NjkzMzksImV4cCI6MTc3NjA1NTczOX0.mock_token',
+    enterprise: {
+      id: 1,
+      slug: 'cloud_tecno',
+      tenant_id: 1,
+    },
   },
 ];
 

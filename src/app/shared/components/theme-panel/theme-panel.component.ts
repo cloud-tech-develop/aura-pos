@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ThemeService } from '@services/theme.service';
 import { ColorPalette, ThemeMode, COLOR_PALETTES } from '@core/interfaces';
 import { Router } from '@angular/router';
+import { AUTH } from '@core/constants';
 
 @Component({
   selector: 'app-theme-panel',
@@ -36,6 +37,6 @@ export class ThemePanelComponent {
   }
 
   onLogout() {
-    this.router.navigate(['/auth/login']);
+    this.router.navigate([AUTH.ROOT, AUTH.LOGOUT]);
   }
 }
