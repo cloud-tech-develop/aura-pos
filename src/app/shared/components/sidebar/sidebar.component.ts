@@ -1,81 +1,43 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-
-interface MenuItem {
-  id: string;
-  label: string;
-  icon?: string;
-  route?: string;
-  children?: MenuItem[];
-  expanded?: boolean;
-}
+import { MenuItem, MenuSectionItem } from '@core/interfaces';
+import { MENU_SECTIONS } from '@core/constants';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements AfterViewInit {
   private router = inject(Router);
 
   readonly logoText = 'Aura POS - V2';
   readonly version = 'v1.0.0';
 
-  readonly menuSections: { title: string; items: MenuItem[] }[] = [
-    {
-      title: 'Inicio',
-      items: [
-        {
-          id: 'dashboard',
-          label: 'Dashboard',
-          icon: 'chart',
-          route: '/dashboard',
-        },
-      ],
-    },
-    {
-      title: 'Ventas',
-      items: [
-        { id: 'sales', label: 'Punto de Venta', icon: 'cart', route: '/sales' },
-        { id: 'customers', label: 'Clientes', icon: 'users', route: '/customers' },
-      ],
-    },
-    {
-      title: 'Inventario',
-      items: [
-        { id: 'inventory', label: 'Productos', icon: 'box', route: '/inventory' },
-        { id: 'reports', label: 'Reportes', icon: 'report', route: '/reports' },
-      ],
-    },
-    {
-      title: 'Equipo',
-      items: [
-        { id: 'team', label: 'Equipo', icon: 'users', route: '/team' },
-        { id: 'chat', label: 'Chat', icon: 'chat', route: '/team/chat' },
-      ],
-    },
-    {
-      title: 'Admin',
-      items: [
-        {
-          id: 'admin',
-          label: 'Administración',
-          icon: 'admin',
-          route: '/admin',
-          children: [
-            { id: 'users', label: 'Usuarios', route: '/admin/users' },
-            { id: 'roles', label: 'Roles', route: '/admin/roles' },
-          ],
-        },
-      ],
-    },
-    {
-      title: 'Config',
-      items: [{ id: 'settings', label: 'Configuración', icon: 'settings', route: '/settings' }],
-    },
-  ];
+  readonly menuSections: MenuSectionItem[] = MENU_SECTIONS;
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.openIf(this.menuSections));
+  }
+
+  openIf(sections: MenuSectionItem[]): void {
+    sections.forEach((section) => {
+      const routes = section.items.map((item) => '/' + item.route);
+      section.expanded = routes.includes(this.router.url);
+      if (section.expanded) {
+        section.items.forEach((item) => {
+          item.expanded = true;
+        });
+      }
+    });
+  }
+
+  toggleSection(section: MenuSectionItem): void {
+    section.expanded = !section.expanded;
+  }
 
   toggleExpand(item: MenuItem): void {
     if (item.children) {
@@ -91,6 +53,6 @@ export class SidebarComponent {
 
   isActive(route: string | undefined): boolean {
     if (!route) return false;
-    return this.router.url.startsWith(route);
+    return this.router.url === '/' + route;
   }
 }

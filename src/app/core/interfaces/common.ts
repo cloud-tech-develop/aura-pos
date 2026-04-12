@@ -32,3 +32,18 @@ export interface error {
 export interface ErrorsResponse {
   errors: error[];
 }
+
+export interface MenuItem {
+  id: string;
+  label: string;
+  icon?: string;
+  route?: string;
+  children?: MenuItem[];
+  expanded?: boolean;
+}
+
+export interface MenuSectionItem {
+  title: string;
+  items: MenuItem[];
+  expanded?: boolean;
+}

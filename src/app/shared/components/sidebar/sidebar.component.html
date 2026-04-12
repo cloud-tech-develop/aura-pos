@@ -11,58 +11,66 @@
       <i class="pi pi-angle-left"></i>
     </button>
   </div>
-  
+
   <!-- Menu Items -->
   <nav class="sidebar-nav">
     @for (section of menuSections; track section) {
-      @if (section.title) {
-        <h6 class="section-title">{{ section.title }}</h6>
-      }
-      
-      <ul class="menu-list">
-        @for (item of section.items; track item.route) {
-          <li class="menu-item-wrapper">
-            <div 
-              class="menu-item"
-              [class.active]="isActive(item.route)"
-              [class.has-children]="item.children"
-              [class.expanded]="item.expanded"
-              (click)="item.children ? toggleExpand(item) : navigate(item.route)"
-            >
-              <div class="menu-item-content">
-                @if (item.icon) {
-                  <i class="pi" [ngClass]="'pi-' + item.icon"></i>
-                }
-                <span class="menu-label">{{ item.label }}</span>
-              </div>
-              
-              @if (item.children) {
-                <i 
-                  class="pi pi-chevron-down expand-icon"
-                  [class.expanded]="item.expanded"
-                ></i>
-              }
-            </div>
-            
-            @if (item.children && item.expanded) {
-              <ul class="submenu">
-                @for (child of item.children; track child.route) {
-                  <li 
-                    class="submenu-item"
-                    [class.active]="isActive(child.route)"
-                    (click)="navigate(child.route)"
-                  >
-                    {{ child.label }}
-                  </li>
-                }
-              </ul>
+      <div class="section-wrapper">
+        @if (section.title) {
+          <div
+            class="section-header"
+            [class.expanded]="section.expanded"
+            (click)="toggleSection(section)"
+          >
+            <h6 class="section-title">{{ section.title | translate }}</h6>
+            @if (section.items.length > 0) {
+              <i class="pi pi-chevron-down section-icon" [class.expanded]="section.expanded"></i>
             }
-          </li>
+          </div>
         }
-      </ul>
+
+        <ul class="menu-list" [class.collapsed]="!section.expanded">
+          @for (item of section.items; track item.route) {
+            <li class="menu-item-wrapper">
+              <div
+                class="menu-item"
+                [class.active]="isActive(item.route)"
+                [class.has-children]="item.children"
+                [class.expanded]="item.expanded"
+                (click)="item.children ? toggleExpand(item) : navigate(item.route)"
+              >
+                <div class="menu-item-content">
+                  @if (item.icon) {
+                    <i class="pi" [ngClass]="'pi-' + item.icon"></i>
+                  }
+                  <span class="menu-label">{{ item.label | translate }}</span>
+                </div>
+
+                @if (item.children) {
+                  <i class="pi pi-chevron-down expand-icon" [class.expanded]="item.expanded"></i>
+                }
+              </div>
+
+              @if (item.children && item.expanded) {
+                <ul class="submenu">
+                  @for (child of item.children; track child.route) {
+                    <li
+                      class="submenu-item"
+                      [class.active]="isActive(child.route)"
+                      (click)="navigate(child.route)"
+                    >
+                      {{ child.label }}
+                    </li>
+                  }
+                </ul>
+              }
+            </li>
+          }
+        </ul>
+      </div>
     }
   </nav>
-  
+
   <!-- Version Footer -->
   <div class="sidebar-footer">
     <div class="version">

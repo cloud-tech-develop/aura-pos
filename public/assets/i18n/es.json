@@ -4,13 +4,21 @@
     "LOADING": "Cargando..."
   },
   "NAV": {
-    "DASHBOARD": "Panel",
-    "SALES": "Ventas",
-    "INVENTORY": "Inventario",
-    "CUSTOMERS": "Clientes",
-    "SELLERS": "Vendedores",
-    "REPORTS": "Reportes",
-    "SETTINGS": "Configuración",
+    "PRIMARY": {
+      "TITLE": "Principal",
+      "DASHBOARD": "Dashboard",
+      "POS": "POS"
+    },
+    "CATALOG": {
+      "TITLE": "Catálogo",
+      "PRODUCTS": "Productos",
+      "CATEGORIES": "Categorías",
+      "BRANDS": "Marcas",
+      "UNITS": "Unidades",
+      "PRESENTATIONS": "Presentaciones",
+      "COMPOSITIONS": "Composiciones",
+      "LABELS": "Etiquetas"
+    },
     "ADMIN": "Administración"
   },
   "AUTH": {

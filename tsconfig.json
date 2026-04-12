@@ -54,6 +54,9 @@
       "@module-sellers/*": [
         "./src/app/modules/sellers/*"
       ],
+      "@module-catalog/*": [
+        "./src/app/modules/catalog/*"
+      ],
       "@environment/*": [
         "./src/environments/*"
       ]

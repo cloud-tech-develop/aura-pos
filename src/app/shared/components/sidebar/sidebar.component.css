@@ -83,13 +83,40 @@
   margin-bottom: 0.5rem;
 }
 
+/* Section Header */
+.section-wrapper {
+  margin-bottom: 0.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.section-header:hover .section-title {
+  color: var(--sidebar-text);
+}
+
+.section-header .section-icon {
+  font-size: 0.75rem;
+  color: var(--sidebar-text-muted);
+  transition: transform 0.2s ease;
+}
+
+.section-header .section-icon.expanded {
+  transform: rotate(180deg);
+}
+
 .section-title {
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--sidebar-text-muted);
-  padding: 0.5rem 1.25rem;
   margin: 0;
 }
 
@@ -97,6 +124,12 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.menu-list.collapsed {
+  max-height: 0;
 }
 
 .menu-item-wrapper {
