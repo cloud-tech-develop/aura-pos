@@ -1,6 +1,5 @@
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { computed, inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { computed, inject } from '@angular/core';
 import { User, AuthState, initialAuthState } from '@core/interfaces/user.interface';
 import { StorageService, StorageServiceConfig, StorageType } from '@services/storage.service';
 import { AUTH_STORAGE_KEY } from '@core/constants';
@@ -26,10 +25,6 @@ export function getStorageConfig(): StorageServiceConfig {
 }
 
 async function loadFromStorage(storageService: StorageService): Promise<AuthState> {
-  if (!isPlatformBrowser(inject(PLATFORM_ID))) {
-    return initialAuthState;
-  }
-
   const saved = await storageService.getItem<AuthState>(AUTH_STORAGE_KEY, storageConfig);
   if (saved) {
     return {
@@ -57,7 +52,7 @@ export const UserSessionStore = signalStore(
     currentUser: computed(() => store.user()),
     isLoggedIn: computed(() => store.isAuthenticated()),
     getToken: computed(() => store.token()),
-    getRole: computed(() => store.user()?.roles?.[0] ?? null),
+    getRoles: computed(() => store.user()?.roles ?? []),
   })),
   withMethods((store) => {
     const storageService = inject(StorageService);

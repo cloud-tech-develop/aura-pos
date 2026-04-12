@@ -4,6 +4,8 @@ import {
   provideZonelessChangeDetection,
   isDevMode,
   enableProdMode,
+  APP_INITIALIZER,
+  inject,
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -22,6 +24,7 @@ import Aura from '@primeuix/themes/aura';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { provideToastr } from 'ngx-toastr';
+import { UserSessionStore } from '@store/user.session';
 
 if (IS_PRODUCTION) {
   enableProdMode();
@@ -59,5 +62,13 @@ export const appConfig: ApplicationConfig = {
     provideToastr(),
     ConfirmationService,
     MessageService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory:
+        (store = inject(UserSessionStore)) =>
+        () =>
+          store.init(),
+      multi: true,
+    },
   ],
 };
