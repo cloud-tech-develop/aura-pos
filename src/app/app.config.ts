@@ -12,9 +12,9 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { CustomTranslateLoader } from '@services/custom-translate-loader';
+import { environment } from '@environment/environment';
 
 import { routes } from './app.routes';
-import { IS_PRODUCTION } from '@core/environment';
 import { selfXSSWarning } from '@shared/utils';
 import { authInterceptor } from '@core/interceptors';
 
@@ -26,7 +26,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { provideToastr } from 'ngx-toastr';
 import { UserSessionStore } from '@store/user.session';
 
-if (IS_PRODUCTION) {
+if (environment.ATMOSPHERE === 'production') {
   enableProdMode();
   if (window) {
     selfXSSWarning();
