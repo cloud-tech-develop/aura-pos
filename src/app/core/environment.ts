@@ -1,22 +1,5 @@
 import { environment } from '@environment/environment';
 
-/**
-
-  SOCKET_URL: 'http://localhost:8081',
-
-  DEFAULT_LANGUAGE: 'es',
-  DEFAULT_THEME: 'dark',
-  DEFAULT_CURRENCY: 'COP',
-  DEFAULT_TIMEZONE: 'America/Bogota',
-  DEFAULT_DATE_FORMAT: 'dd/MM/yyyy',
-  DEFAULT_TIME_FORMAT: 'HH:mm:ss',
-  DEFAULT_DATE_TIME_FORMAT: 'dd/MM/yyyy HH:mm:ss',
-  DEFAULT_NUMBERING_FORMAT: '#,##0.00',
-  DEFAULT_DECIMAL_PLACES: 2,
-  DEFAULT_THOUSAND_SEPARATOR: ',',
-  DEFAULT_DECIMAL_SEPARATOR: '.',
- */
-
 export const IS_PRODUCTION = environment.PRODUCTION;
 export const API_URL = environment.API_URL;
 export const ATMOSPHERE = environment.ATMOSPHERE;
