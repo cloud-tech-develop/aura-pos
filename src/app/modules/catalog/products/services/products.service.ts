@@ -57,19 +57,24 @@ export class ProductsService {
     return this.productsApiService.delete(id);
   }
 
-  paginate(params: ProductPaginationRequest): Observable<{
+  page(params: ProductPaginationRequest): Observable<{
     error: boolean;
     msg: string;
     data?: ProductListResponse;
   }> {
     this.isLoading.set(true);
-    return this.productsApiService.paginate(params).pipe(
+    return this.productsApiService.page(params).pipe(
       tap((res) => {
         console.log({ res });
 
         if (!res.error && res.data) {
-          this.products.set(res.data.data);
-          this.pagination.set(res.data.pagination || null);
+          this.products.set(res.data.items);
+          this.pagination.set({
+            page: res.data.page,
+            limit: res.data.limit,
+            total: res.data.total,
+            totalPages: res.data.totalPages,
+          });
         }
         this.isLoading.set(false);
       }),

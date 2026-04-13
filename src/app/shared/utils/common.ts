@@ -1,3 +1,5 @@
+import { FormGroup } from '@angular/forms';
+
 export function selfXSSWarning() {
   setTimeout(() => {
     console.log(
@@ -9,4 +11,20 @@ export function selfXSSWarning() {
       'font-weight:bold; font: 2em Arial; color: #e11d48;',
     );
   });
+}
+
+/**
+ * Optiene los errores de un formulario con los nombres de los campos
+ * @param form FormGroup to get errors from
+ * @returns Array of errors
+ */
+export function getFormErrors(form: FormGroup) {
+  return Object.entries(form.controls)
+    .map(([key, control]) => {
+      if (control.errors) {
+        return { [key]: control.errors };
+      }
+      return null;
+    })
+    .filter((error) => error !== null);
 }

@@ -4,7 +4,7 @@
     description="Gestiona el catálogo completo de productos y servicios"
     titleIcon="shopping-bag"
     buttonText="Nuevo Producto"
-    (buttonAction)="createProduct()"
+    (buttonAction)="showDialog.set(true)"
   ></app-index-header>
 
   <p-card>
@@ -52,12 +52,7 @@
           </td>
           <td>
             <div class="flex gap-2">
-              <button
-                pButton
-                icon="pi pi-pencil"
-                class="p-button-text p-button-sm"
-                (click)="editProduct(product)"
-              ></button>
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"></button>
               <button
                 pButton
                 icon="pi pi-trash"
@@ -89,157 +84,10 @@
     [draggable]="false"
     (onHide)="hideDialog()"
   >
-    <form [formGroup]="productForm" class="flex flex-col h-full">
-      <p-tabs value="0" class="flex-1">
-        <p-tablist>
-          <p-tab value="0">
-            <i class="pi pi-info-circle mr-2"></i>
-            <span>Básico</span>
-          </p-tab>
-          <p-tab value="1">
-            <i class="pi pi-dollar mr-2"></i>
-            <span>Impuestos</span>
-          </p-tab>
-          <p-tab value="2">
-            <i class="pi pi-box mr-2"></i>
-            <span>Inventario</span>
-          </p-tab>
-          <p-tab value="3">
-            <i class="pi pi-th-large mr-2"></i>
-            <span>Presentaciones</span>
-          </p-tab>
-          <p-tab value="4">
-            <i class="pi pi-money-bill mr-2"></i>
-            <span>Precios</span>
-          </p-tab>
-        </p-tablist>
-
-        <p-tabpanels>
-          <p-tabpanel value="0">
-            <div class="flex flex-col gap-6 py-4">
-              <!-- Image Upload Box -->
-              <div class="flex flex-col items-center gap-3">
-                <div class="w-40 h-40 border-2 border-dashed border-surface-300 rounded-2xl flex flex-col items-center justify-center text-surface-400 bg-surface-50/50">
-                  <i class="pi pi-image text-5xl mb-2 text-surface-300"></i>
-                  <span class="text-sm font-medium">Sin imagen</span>
-                </div>
-                <button pButton type="button" label="Subir imagen" icon="pi pi-upload" class="p-button-outlined p-button-success p-button-sm"></button>
-                <span class="text-xs text-surface-500 font-medium">
-                  <i class="pi pi-info-circle mr-1"></i> JPG, PNG, WebP, GIF o AVIF máx. 10 MB
-                </span>
-              </div>
-
-              <!-- Estado -->
-              <div class="border border-surface-200 rounded-xl p-4 flex justify-between items-center bg-surface-50/30">
-                <div class="flex flex-col">
-                  <span class="font-bold text-surface-800 text-sm">Estado</span>
-                  <span class="text-xs text-surface-500">{{ productForm.get('status')?.value ? 'Activo' : 'Inactivo' }}</span>
-                </div>
-                <p-toggleswitch formControlName="status" class="p-green-500"></p-toggleswitch>
-              </div>
-
-              <!-- Name -->
-              <div class="flex flex-col gap-2">
-                <label for="name" class="font-bold text-surface-700 text-xs">Nombre del producto <span class="text-red-500">*</span></label>
-                <input pInputText id="name" formControlName="name" placeholder="Ej: Coca-Cola 500ml, Arroz Diana 1kg..." class="w-full" />
-              </div>
-
-              <!-- SKU & Barcode -->
-              <div class="grid grid-cols-2 gap-4">
-                <div class="flex flex-col gap-2">
-                  <label for="sku" class="font-bold text-surface-700 text-xs">SKU <span class="text-surface-400 font-normal">(opcional)</span></label>
-                  <input pInputText id="sku" formControlName="sku" placeholder="Ej: BEB-001" />
-                </div>
-                <div class="flex flex-col gap-2">
-                  <label for="barcode" class="font-bold text-surface-700 text-xs">Código de barras <span class="text-surface-400 font-normal">(opcional)</span></label>
-                  <input pInputText id="barcode" formControlName="barcode" placeholder="Ej: 7750955051842" />
-                </div>
-              </div>
-
-              <!-- Category & Brand -->
-              <div class="grid grid-cols-2 gap-4">
-                <div class="flex flex-col gap-2">
-                  <label for="category_id" class="font-bold text-surface-700 text-xs">Categoría</label>
-                  <p-select id="category_id" formControlName="category_id" [options]="[]" placeholder="Sin categoría" styleClass="w-full" [showClear]="true"></p-select>
-                </div>
-                <div class="flex flex-col gap-2">
-                  <label for="brand_id" class="font-bold text-surface-700 text-xs">Marca</label>
-                  <p-select id="brand_id" formControlName="brand_id" [options]="[]" placeholder="Sin marca" styleClass="w-full" [showClear]="true"></p-select>
-                </div>
-              </div>
-
-              <!-- Unit & Type -->
-              <div class="grid grid-cols-2 gap-4">
-                <div class="flex flex-col gap-2">
-                  <label for="unit_id" class="font-bold text-surface-700 text-xs">Unidad de medida <span class="text-red-500">*</span></label>
-                  <p-select id="unit_id" formControlName="unit_id" [options]="[]" placeholder="Seleccionar unidad..." styleClass="w-full"></p-select>
-                </div>
-                <div class="flex flex-col gap-2">
-                  <label for="product_type" class="font-bold text-surface-700 text-xs">Tipo de producto <span class="text-red-500">*</span></label>
-                  <p-select id="product_type" formControlName="product_type" [options]="[{label: 'Estándar', value: 'Estándar'}]" placeholder="Estándar" styleClass="w-full"></p-select>
-                </div>
-              </div>
-
-              <!-- Visible in POS -->
-              <div class="flex items-center gap-3 pt-2">
-                <p-toggleswitch formControlName="visible_in_pos" class="p-green-500"></p-toggleswitch>
-                <div class="flex items-center gap-1">
-                  <span class="font-bold text-surface-700 text-sm">Visible en POS</span>
-                  <i class="pi pi-info-circle text-surface-400 text-sm"></i>
-                  <span class="text-xs text-surface-400">Desactívalo si es un insumo o ingrediente que no se vende directamente</span>
-                </div>
-              </div>
-
-              <!-- Description -->
-              <div class="flex flex-col gap-2 pt-2">
-                <label for="description" class="font-bold text-surface-700 text-xs">Descripción <span class="text-surface-400 font-normal">(opcional)</span></label>
-                <textarea pTextarea id="description" formControlName="description" rows="3" placeholder="Descripción del producto..." class="w-full resize-y"></textarea>
-                <span class="text-xs text-surface-400 text-right">{{ productForm.get('description')?.value?.length || 0 }}/500</span>
-              </div>
-            </div>
-          </p-tabpanel>
-
-          <p-tabpanel value="1">
-            <div class="py-8 text-center text-surface-500">Configuración de impuestos (En construcción)</div>
-          </p-tabpanel>
-
-          <p-tabpanel value="2">
-            <div class="py-8 text-center text-surface-500">Configuración de inventario (En construcción)</div>
-          </p-tabpanel>
-
-          <p-tabpanel value="3">
-            <div class="py-8 text-center text-surface-500">Configuración de presentaciones (En construcción)</div>
-          </p-tabpanel>
-
-          <p-tabpanel value="4">
-            <div class="py-8 text-center text-surface-500 flex flex-col gap-6">
-              <div class="grid grid-cols-2 gap-4 text-left">
-                <div class="flex flex-col gap-2">
-                  <label for="cost_price" class="font-bold text-surface-700 text-xs">Costo *</label>
-                  <p-inputNumber id="cost_price" formControlName="cost_price" mode="currency" currency="COP" locale="es-CO" placeholder="0.00" styleClass="w-full" class="w-full"></p-inputNumber>
-                </div>
-        
-                <div class="flex flex-col gap-2">
-                  <label for="sale_price" class="font-bold text-surface-700 text-xs">Venta *</label>
-                  <p-inputNumber id="sale_price" formControlName="sale_price" mode="currency" currency="COP" locale="es-CO" placeholder="0.00" styleClass="w-full" class="w-full"></p-inputNumber>
-                </div>
-              </div>
-            </div>
-          </p-tabpanel>
-        </p-tabpanels>
-      </p-tabs>
-    </form>
-
-    <ng-template pTemplate="footer">
-      <div class="flex justify-end gap-2">
-        <button pButton label="Cancelar" class="p-button-text" (click)="hideDialog()"></button>
-        <button
-          pButton
-          [label]="isEditing() ? 'Actualizar' : 'Crear'"
-          [loading]="isSaving()"
-          (click)="saveProduct()"
-        ></button>
-      </div>
-    </ng-template>
+    <app-create-product-modal
+      [isEditing]="isEditing()"
+      (closeModal)="hideDialog()"
+      (reloadTable)="loadProducts()"
+    />
   </p-dialog>
 </div>

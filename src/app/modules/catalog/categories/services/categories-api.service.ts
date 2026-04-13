@@ -10,12 +10,12 @@ import { Category, CategoryRequest, CategoryResponse, CategoryListResponse } fro
 })
 export class CategoriesApiService {
   private http = inject(HttpClient);
-  private apiUrl = environment.API_URL;
+  private apiUrl = environment.API_URL + '/catalog/categories';
 
   getAll(): Observable<{ error: boolean; msg: string; data?: Category[] }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Category[] | undefined };
 
-    return this.http.get<CategoryListResponse>(`${this.apiUrl}/categories`).pipe(
+    return this.http.get<CategoryListResponse>(`${this.apiUrl}`).pipe(
       map((r) => {
         res.msg = r.message;
         if (r.error) return res;
@@ -30,7 +30,7 @@ export class CategoriesApiService {
   getById(id: string): Observable<{ error: boolean; msg: string; data?: Category }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Category | undefined };
 
-    return this.http.get<CategoryResponse>(`${this.apiUrl}/categories/${id}`).pipe(
+    return this.http.get<CategoryResponse>(`${this.apiUrl}/${id}`).pipe(
       map((r) => {
         res.msg = r.message;
         if (r.error) return res;
@@ -45,7 +45,7 @@ export class CategoriesApiService {
   create(payload: CategoryRequest): Observable<{ error: boolean; msg: string; data?: Category }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Category | undefined };
 
-    return this.http.post<CategoryResponse>(`${this.apiUrl}/categories`, payload).pipe(
+    return this.http.post<CategoryResponse>(`${this.apiUrl}`, payload).pipe(
       map((r) => {
         res.msg = r.message;
         if (r.error) return res;
@@ -57,10 +57,13 @@ export class CategoriesApiService {
     );
   }
 
-  update(id: string, payload: CategoryRequest): Observable<{ error: boolean; msg: string; data?: Category }> {
+  update(
+    id: string,
+    payload: CategoryRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Category }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Category | undefined };
 
-    return this.http.put<CategoryResponse>(`${this.apiUrl}/categories/${id}`, payload).pipe(
+    return this.http.put<CategoryResponse>(`${this.apiUrl}/${id}`, payload).pipe(
       map((r) => {
         res.msg = r.message;
         if (r.error) return res;
@@ -75,7 +78,7 @@ export class CategoriesApiService {
   delete(id: string): Observable<{ error: boolean; msg: string }> {
     const res = { error: true, msg: 'Error undefined' };
 
-    return this.http.delete<CategoryResponse>(`${this.apiUrl}/categories/${id}`).pipe(
+    return this.http.delete<CategoryResponse>(`${this.apiUrl}/${id}`).pipe(
       map((r) => {
         res.msg = r.message;
         res.error = r.error;

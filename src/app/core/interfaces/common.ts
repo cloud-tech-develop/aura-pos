@@ -18,7 +18,7 @@ export type OptionType = {
 };
 
 export interface ResponseBase<T> {
-  error: boolean;
+  success: boolean;
   message: string;
   errors?: string[];
   data: T;

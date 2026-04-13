@@ -10,8 +10,10 @@ export interface Product {
   sale_price: number;
   tax_rate?: number;
   min_stock?: number;
+  current_stock?: number;
   image_url?: string;
   status: ProductStatus;
+  enterprise_id?: number;
   created_at?: string;
   updated_at?: string;
 }
@@ -53,10 +55,11 @@ export interface ProductResponse {
 }
 
 export interface ProductListResponse {
-  message: string;
-  success: boolean;
-  data: Product[];
-  pagination?: ProductPagination;
+  items: Product[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 // Pagination
@@ -76,4 +79,12 @@ export interface ProductPaginationRequest {
   search?: string;
   category_id?: number;
   brand_id?: number;
+}
+
+export interface ProductPageResponse {
+  items: Product[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
