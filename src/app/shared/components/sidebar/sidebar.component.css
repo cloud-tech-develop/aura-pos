@@ -10,6 +10,11 @@
   border-right: 1px solid var(--sidebar-border);
   display: flex;
   flex-direction: column;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 72px;
 }
 
 /* Header */
@@ -19,6 +24,11 @@
   justify-content: space-between;
   padding: 1rem;
   border-bottom: 1px solid var(--sidebar-border);
+}
+
+.sidebar.collapsed .sidebar-header {
+  padding: 1rem 0.5rem;
+  justify-content: center;
 }
 
 .logo {
@@ -37,6 +47,8 @@
   justify-content: center;
   color: white;
   font-size: 1.125rem;
+  flex-shrink: 0;
+  margin-left: 12px;
 }
 
 .logo-icon i {
@@ -47,6 +59,8 @@
   font-weight: 700;
   font-size: 1.125rem;
   color: var(--sidebar-text);
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .collapse-btn {
@@ -61,6 +75,7 @@
   color: var(--sidebar-text-muted);
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .collapse-btn:hover {
@@ -130,6 +145,47 @@
 
 .menu-list.collapsed {
   max-height: 0;
+}
+
+.sidebar.collapsed .menu-list {
+  display: none;
+}
+
+/* Collapsed Mode - Icons Only */
+.menu-list-collapsed {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu-item-collapsed {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--sidebar-text-muted);
+  transition: all 0.2s ease;
+  margin-bottom: 0.25rem;
+}
+
+.menu-item-collapsed:hover {
+  background-color: var(--sidebar-hover);
+  color: var(--sidebar-text);
+}
+
+.menu-item-collapsed.active {
+  background-color: var(--sidebar-active);
+  color: var(--primary-500);
+}
+
+.menu-item-collapsed i {
+  font-size: 1.25rem;
 }
 
 .menu-item-wrapper {

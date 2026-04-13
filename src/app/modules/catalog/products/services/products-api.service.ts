@@ -5,27 +5,41 @@ import { environment } from '@environment/environment';
 import { httpErrorHandler } from '@shared/utils';
 import {
   Product,
-  ProductRequest,
+  CreateProductRequest,
+  UpdateProductRequest,
   ProductResponse,
   ProductListResponse,
   ProductPaginationRequest,
-  ProductPaginationResponse,
+  ProductPagination,
 } from '../interfaces';
+
+interface ApiResponse<T> {
+  message: string;
+  success: boolean;
+  data?: T;
+}
+
+interface ApiListResponse {
+  message: string;
+  success: boolean;
+  data: Product[];
+  pagination?: ProductPagination;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsApiService {
   private http = inject(HttpClient);
-  private apiUrl = environment.API_URL;
+  private apiUrl = environment.API_URL + '/catalog/products';
 
   getAll(): Observable<{ error: boolean; msg: string; data?: Product[] }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Product[] | undefined };
 
-    return this.http.get<ProductListResponse>(`${this.apiUrl}/products`).pipe(
+    return this.http.get<ApiListResponse>(`${this.apiUrl}`).pipe(
       map((r) => {
         res.msg = r.message;
-        if (r.error) return res;
+        if (!r.success) return res;
         res.data = r.data;
         res.error = false;
         return res;
@@ -34,13 +48,13 @@ export class ProductsApiService {
     );
   }
 
-  getById(id: string): Observable<{ error: boolean; msg: string; data?: Product }> {
+  getById(id: number): Observable<{ error: boolean; msg: string; data?: Product }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Product | undefined };
 
-    return this.http.get<ProductResponse>(`${this.apiUrl}/products/${id}`).pipe(
+    return this.http.get<ApiResponse<Product>>(`${this.apiUrl}/${id}`).pipe(
       map((r) => {
         res.msg = r.message;
-        if (r.error) return res;
+        if (!r.success) return res;
         res.data = r.data;
         res.error = false;
         return res;
@@ -49,13 +63,15 @@ export class ProductsApiService {
     );
   }
 
-  create(payload: ProductRequest): Observable<{ error: boolean; msg: string; data?: Product }> {
+  create(
+    payload: CreateProductRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Product }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Product | undefined };
 
-    return this.http.post<ProductResponse>(`${this.apiUrl}/products`, payload).pipe(
+    return this.http.post<ApiResponse<Product>>(`${this.apiUrl}`, payload).pipe(
       map((r) => {
         res.msg = r.message;
-        if (r.error) return res;
+        if (!r.success) return res;
         res.data = r.data;
         res.error = false;
         return res;
@@ -64,13 +80,16 @@ export class ProductsApiService {
     );
   }
 
-  update(id: string, payload: ProductRequest): Observable<{ error: boolean; msg: string; data?: Product }> {
+  update(
+    id: number,
+    payload: UpdateProductRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Product }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Product | undefined };
 
-    return this.http.put<ProductResponse>(`${this.apiUrl}/products/${id}`, payload).pipe(
+    return this.http.put<ApiResponse<Product>>(`${this.apiUrl}/${id}`, payload).pipe(
       map((r) => {
         res.msg = r.message;
-        if (r.error) return res;
+        if (!r.success) return res;
         res.data = r.data;
         res.error = false;
         return res;
@@ -79,13 +98,13 @@ export class ProductsApiService {
     );
   }
 
-  delete(id: string): Observable<{ error: boolean; msg: string }> {
+  delete(id: number): Observable<{ error: boolean; msg: string }> {
     const res = { error: true, msg: 'Error undefined' };
 
-    return this.http.delete<ProductResponse>(`${this.apiUrl}/products/${id}`).pipe(
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`).pipe(
       map((r) => {
         res.msg = r.message;
-        res.error = r.error;
+        res.error = !r.success;
         return res;
       }),
       catchError(httpErrorHandler),
@@ -94,31 +113,25 @@ export class ProductsApiService {
 
   paginate(
     params: ProductPaginationRequest,
-  ): Observable<{
-    error: boolean;
-    msg: string;
-    data?: { products: Product[]; total: number; page: number; limit: number; totalPages: number };
-  }> {
+  ): Observable<{ error: boolean; msg: string; data?: ProductListResponse }> {
     const res = {
       error: true,
       msg: 'Error undefined',
-      data: undefined as
-        | { products: Product[]; total: number; page: number; limit: number; totalPages: number }
-        | undefined,
+      data: undefined as ProductListResponse | undefined,
     };
 
-    let httpParams = new HttpParams();
-    if (params.page !== undefined) httpParams = httpParams.set('page', params.page.toString());
-    if (params.limit !== undefined) httpParams = httpParams.set('limit', params.limit.toString());
-    if (params.search) httpParams = httpParams.set('search', params.search);
-    if (params.categoryId) httpParams = httpParams.set('categoryId', params.categoryId);
-    if (params.brandId) httpParams = httpParams.set('brandId', params.brandId);
-
-    return this.http.get<ProductPaginationResponse>(`${this.apiUrl}/products/paginate`, { params: httpParams }).pipe(
+    return this.http.post<ApiListResponse>(`${this.apiUrl}/page`, params).pipe(
       map((r) => {
+        console.log({ r });
+
         res.msg = r.message;
-        if (r.error) return res;
-        res.data = r.data;
+        if (!r.success) return res;
+        res.data = {
+          message: r.message,
+          success: r.success,
+          data: r.data,
+          pagination: r.pagination,
+        };
         res.error = false;
         return res;
       }),

@@ -21,6 +21,38 @@
     },
     "ADMIN": "Admin"
   },
+  "PRODUCTS": {
+    "TITLE": "Products",
+    "ADD": "Add Product",
+    "ADD_PRODUCT": "Add Product",
+    "EDIT_PRODUCT": "Edit Product",
+    "NO_PRODUCTS": "No products found",
+    "EMPTY": "No products found",
+    "FILTER_STATUS": "Filter by status"
+  },
+  "HEADERS": {
+    "NAME": "Name",
+    "CATEGORY": "Category",
+    "BRAND": "Brand",
+    "COST": "Cost",
+    "SKU": "SKU",
+    "PRICE": "Price",
+    "STATUS": "Status",
+    "ACTIONS": "Actions",
+    "CODE": "Code",
+    "QUANTITY": "Quantity",
+    "DESCRIPTION": "Description",
+    "UNIT": "Unit",
+    "STOCK": "Stock",
+    "PROFIT": "Profit",
+    "MIN_STOCK": "Min Stock",
+    "MAX_STOCK": "Max Stock",
+    "BARCODE": "Barcode",
+    "PRESENTATION": "Presentation",
+    "PRODUCT": "Product",
+    "COMPOSITION": "Composition",
+    "LABEL": "Label"
+  },
   "AUTH": {
     "LOGIN": {
       "TITLE": "Sign In",

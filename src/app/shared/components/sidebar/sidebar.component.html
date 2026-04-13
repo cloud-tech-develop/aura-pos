@@ -1,14 +1,20 @@
-<aside class="sidebar">
+<aside class="sidebar" [class.collapsed]="isCollapsed()">
   <!-- Logo Header -->
   <div class="sidebar-header">
     <div class="logo">
       <div class="logo-icon">
         <i class="pi pi-building"></i>
       </div>
-      <span class="logo-text">{{ logoText }}</span>
+      @if (!isCollapsed()) {
+        <span class="logo-text">{{ logoText }}</span>
+      }
     </div>
-    <button class="collapse-btn">
-      <i class="pi pi-angle-left"></i>
+    <button class="collapse-btn" (click)="toggleCollapse()">
+      <i
+        class="pi"
+        [class.pi-angle-left]="!isCollapsed()"
+        [class.pi-angle-right]="isCollapsed()"
+      ></i>
     </button>
   </div>
 
@@ -16,7 +22,7 @@
   <nav class="sidebar-nav">
     @for (section of menuSections; track section) {
       <div class="section-wrapper">
-        @if (section.title) {
+        @if (section.title && !isCollapsed()) {
           <div
             class="section-header"
             [class.expanded]="section.expanded"
@@ -29,44 +35,62 @@
           </div>
         }
 
-        <ul class="menu-list" [class.collapsed]="!section.expanded">
-          @for (item of section.items; track item.route) {
-            <li class="menu-item-wrapper">
-              <div
-                class="menu-item"
-                [class.active]="isActive(item.route)"
-                [class.has-children]="item.children"
-                [class.expanded]="item.expanded"
-                (click)="item.children ? toggleExpand(item) : navigate(item.route)"
-              >
-                <div class="menu-item-content">
-                  @if (item.icon) {
-                    <i class="pi" [ngClass]="'pi-' + item.icon"></i>
+        @if (isCollapsed()) {
+          <!-- Collapsed mode: show icons only -->
+          <ul class="menu-list-collapsed">
+            <li
+              class="menu-item-collapsed"
+              [class.active]="section.expanded"
+              [title]="section.title | translate"
+            >
+              <i
+                class="pi"
+                [ngClass]="'pi-' + section.icon"
+                (click)="toggleCollapse(); openSection(section)"
+              ></i>
+            </li>
+          </ul>
+        } @else {
+          <!-- Expanded mode: show full menu -->
+          <ul class="menu-list" [class.collapsed]="!section.expanded">
+            @for (item of section.items; track item.route) {
+              <li class="menu-item-wrapper">
+                <div
+                  class="menu-item"
+                  [class.active]="isActive(item.route)"
+                  [class.has-children]="item.children"
+                  [class.expanded]="item.expanded"
+                  (click)="item.children ? toggleExpand(item) : navigate(item.route)"
+                >
+                  <div class="menu-item-content">
+                    @if (item.icon) {
+                      <i class="pi" [ngClass]="'pi-' + item.icon"></i>
+                    }
+                    <span class="menu-label">{{ item.label | translate }}</span>
+                  </div>
+
+                  @if (item.children) {
+                    <i class="pi pi-chevron-down expand-icon" [class.expanded]="item.expanded"></i>
                   }
-                  <span class="menu-label">{{ item.label | translate }}</span>
                 </div>
 
-                @if (item.children) {
-                  <i class="pi pi-chevron-down expand-icon" [class.expanded]="item.expanded"></i>
+                @if (item.children && item.expanded) {
+                  <ul class="submenu">
+                    @for (child of item.children; track child.route) {
+                      <li
+                        class="submenu-item"
+                        [class.active]="isActive(child.route)"
+                        (click)="navigate(child.route)"
+                      >
+                        {{ child.label }}
+                      </li>
+                    }
+                  </ul>
                 }
-              </div>
-
-              @if (item.children && item.expanded) {
-                <ul class="submenu">
-                  @for (child of item.children; track child.route) {
-                    <li
-                      class="submenu-item"
-                      [class.active]="isActive(child.route)"
-                      (click)="navigate(child.route)"
-                    >
-                      {{ child.label }}
-                    </li>
-                  }
-                </ul>
-              }
-            </li>
-          }
-        </ul>
+              </li>
+            }
+          </ul>
+        }
       </div>
     }
   </nav>
@@ -75,7 +99,9 @@
   <div class="sidebar-footer">
     <div class="version">
       <i class="pi pi-info-circle"></i>
-      <span>{{ version }}</span>
+      @if (!isCollapsed()) {
+        <span>{{ version }}</span>
+      }
     </div>
   </div>
 </aside>

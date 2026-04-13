@@ -44,6 +44,7 @@ export interface MenuItem {
 
 export interface MenuSectionItem {
   title: string;
+  icon: string;
   items: MenuItem[];
   expanded?: boolean;
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, signal } from '@angular/core';
+import { AfterViewInit, Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MenuItem, MenuSectionItem } from '@core/interfaces';
@@ -16,11 +16,15 @@ export class SidebarComponent implements AfterViewInit {
 
   readonly logoText = 'Aura POS - V2';
   readonly version = 'v1.0.0';
+  private readonly breakpoint = 768;
+
+  readonly isCollapsed = signal(false);
 
   readonly menuSections: MenuSectionItem[] = MENU_SECTIONS;
 
   ngAfterViewInit(): void {
     setTimeout(() => this.openIf(this.menuSections));
+    this.resize();
   }
 
   openIf(sections: MenuSectionItem[]): void {
@@ -35,11 +39,25 @@ export class SidebarComponent implements AfterViewInit {
     });
   }
 
+  toggleCollapse(): void {
+    this.isCollapsed.update((v) => !v);
+    if (this.isCollapsed()) {
+      this.openIf(this.menuSections);
+    }
+  }
+
   toggleSection(section: MenuSectionItem): void {
+    if (this.isCollapsed()) return;
     section.expanded = !section.expanded;
   }
 
+  openSection(section: MenuSectionItem): void {
+    if (this.isCollapsed()) return;
+    section.expanded = true;
+  }
+
   toggleExpand(item: MenuItem): void {
+    if (this.isCollapsed()) return;
     if (item.children) {
       item.expanded = !item.expanded;
     }
@@ -54,5 +72,14 @@ export class SidebarComponent implements AfterViewInit {
   isActive(route: string | undefined): boolean {
     if (!route) return false;
     return this.router.url === '/' + route;
+  }
+
+  @HostListener('window:resize')
+  resize(): void {
+    if (window.innerWidth < this.breakpoint) {
+      this.isCollapsed.set(true);
+    } else {
+      this.isCollapsed.set(false);
+    }
   }
 }

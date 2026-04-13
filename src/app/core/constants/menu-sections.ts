@@ -4,23 +4,25 @@ import { MenuSectionItem } from '@core/interfaces';
 export const MENU_SECTIONS: MenuSectionItem[] = [
   {
     title: 'NAV.PRIMARY.TITLE',
+    icon: 'home',
     items: [
       {
         id: 'dashboard',
         label: 'NAV.PRIMARY.DASHBOARD',
-        icon: 'chart',
+        icon: 'home',
         route: `${DASHBOARD}`,
       },
       {
         id: 'pos',
         label: 'NAV.PRIMARY.POS',
-        icon: 'chart',
+        icon: 'shopping-cart',
         route: `${POS}`,
       },
     ],
   },
   {
     title: 'NAV.CATALOG.TITLE',
+    icon: 'box',
     items: [
       {
         id: 'products',
@@ -68,21 +70,23 @@ export const MENU_SECTIONS: MenuSectionItem[] = [
   },
   {
     title: 'NAV.ADMIN',
+    icon: 'prime',
     items: [
       {
         id: 'admin',
         label: 'Administración',
-        icon: 'admin',
-        route: '/admin',
+        icon: 'prime',
+        route: 'admin',
         children: [
-          { id: 'users', label: 'Usuarios', route: '/admin/users' },
-          { id: 'roles', label: 'Roles', route: '/admin/roles' },
+          { id: 'users', label: 'Usuarios', route: 'admin/users' },
+          { id: 'roles', label: 'Roles', route: 'admin/roles' },
         ],
       },
     ],
   },
   {
     title: 'Config',
-    items: [{ id: 'settings', label: 'Configuración', icon: 'settings', route: '/settings' }],
+    icon: 'wrench',
+    items: [{ id: 'settings', label: 'Configuración', icon: 'wrench', route: 'settings' }],
   },
 ];

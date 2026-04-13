@@ -21,6 +21,38 @@
     },
     "ADMIN": "Administración"
   },
+  "PRODUCTS": {
+    "TITLE": "Productos",
+    "ADD": "Agregar Producto",
+    "ADD_PRODUCT": "Agregar Producto",
+    "EDIT_PRODUCT": "Editar Producto",
+    "NO_PRODUCTS": "No se encontraron productos",
+    "EMPTY": "No se encontraron productos",
+    "FILTER_STATUS": "Filtrar por estado"
+  },
+  "HEADERS": {
+    "NAME": "Nombre",
+    "CATEGORY": "Categoría",
+    "BRAND": "Marca",
+    "COST": "Costo",
+    "SKU": "SKU",
+    "PRICE": "Precio",
+    "STATUS": "Estado",
+    "ACTIONS": "Acciones",
+    "CODE": "Código",
+    "QUANTITY": "Cantidad",
+    "DESCRIPTION": "Descripción",
+    "UNIT": "Unidad",
+    "STOCK": "Stock",
+    "PROFIT": "Ganancia",
+    "MIN_STOCK": "Stock Mínimo",
+    "MAX_STOCK": "Stock Máximo",
+    "BARCODE": "Código de Barras",
+    "PRESENTATION": "Presentación",
+    "PRODUCT": "Producto",
+    "COMPOSITION": "Composición",
+    "LABEL": "Etiqueta"
+  },
   "AUTH": {
     "LOGIN": {
       "TITLE": "Iniciar Sesión",

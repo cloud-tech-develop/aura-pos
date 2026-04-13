@@ -1,78 +1,79 @@
 // Product interface for Catalog Module
 export interface Product {
-  id: string;
+  id: number;
+  sku: string;
   name: string;
   description?: string;
-  sku?: string;
-  barcode?: string;
-  categoryId?: string;
-  brandId?: string;
-  unitId?: string;
-  presentationId?: string;
-  price: number;
-  cost?: number;
-  stock?: number;
-  minStock?: number;
-  maxStock?: number;
-  imageUrl?: string;
-  isActive: boolean;
-  tags?: string[];
-  createdAt?: string;
-  updatedAt?: string;
+  category_id?: number;
+  brand_id?: number;
+  cost_price: number;
+  sale_price: number;
+  tax_rate?: number;
+  min_stock?: number;
+  image_url?: string;
+  status: ProductStatus;
+  created_at?: string;
+  updated_at?: string;
 }
 
-// Request interface for creating/updating products
-export interface ProductRequest {
+export type ProductStatus = 'ACTIVE' | 'INACTIVE' | 'DISCONTINUED';
+
+// Request interfaces for creating/updating products
+export interface CreateProductRequest {
+  sku: string;
   name: string;
   description?: string;
-  sku?: string;
-  barcode?: string;
-  categoryId?: string;
-  brandId?: string;
-  unitId?: string;
-  presentationId?: string;
-  price: number;
-  cost?: number;
-  stock?: number;
-  minStock?: number;
-  maxStock?: number;
-  imageUrl?: string;
-  isActive?: boolean;
-  tags?: string[];
+  category_id?: number;
+  brand_id?: number;
+  cost_price: number;
+  sale_price: number;
+  tax_rate?: number;
+  min_stock?: number;
+  image_url?: string;
+  status?: ProductStatus;
 }
 
-// Response from API
+export interface UpdateProductRequest {
+  name?: string;
+  description?: string;
+  category_id?: number;
+  brand_id?: number;
+  cost_price?: number;
+  sale_price?: number;
+  min_stock?: number;
+  image_url?: string;
+  status?: ProductStatus;
+}
+
+// API Response interfaces
 export interface ProductResponse {
   message: string;
-  error: boolean;
+  success: boolean;
   data?: Product;
 }
 
-// List response from API
 export interface ProductListResponse {
   message: string;
-  error: boolean;
-  data?: Product[];
+  success: boolean;
+  data: Product[];
+  pagination?: ProductPagination;
+}
+
+// Pagination
+export interface ProductPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }
 
 // Pagination request
 export interface ProductPaginationRequest {
   page?: number;
   limit?: number;
+  first?: number;
+  rows?: number;
   search?: string;
-  categoryId?: string;
-  brandId?: string;
-}
-
-// Pagination response
-export interface ProductPaginationResponse {
-  message: string;
-  error: boolean;
-  data?: {
-    products: Product[];
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
+  category_id?: number;
+  brand_id?: number;
 }

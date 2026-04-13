@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.page-icon i {
+  font-size: 1.15rem;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--primary-500);
+  margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .page-icon i {
+    display: none;
+  }
+}

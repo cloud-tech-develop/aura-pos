@@ -1,0 +1,20 @@
+<div class="w-full justify-between flex flex-wrap items-center gap-y-1">
+  <div class="flex items-center">
+    @if (titleIcon()) {
+      <div class="page-icon">
+        <i class="pi pi-{{ titleIcon() }}"></i>
+      </div>
+    }
+    <div class="flex flex-col">
+      <h1 class="text-2xl font-bold text-primary-500">{{ title() }}</h1>
+      <p class="text-sm text-secondary-400 max-w-[40vw]">{{ description() }}</p>
+    </div>
+  </div>
+  <div class="flex items-center justify-end ml-auto">
+    <p-button
+      [label]="buttonText()"
+      [icon]="'pi pi-' + buttonIcon()"
+      (click)="buttonAction.emit()"
+    />
+  </div>
+</div>
