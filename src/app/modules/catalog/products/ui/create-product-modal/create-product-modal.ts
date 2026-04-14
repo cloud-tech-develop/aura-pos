@@ -4,6 +4,7 @@ import {
   EventEmitter,
   inject,
   input,
+  OnInit,
   Output,
   signal,
 } from '@angular/core';
@@ -20,6 +21,9 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ValidatorErrors } from '@shared/components/validation-errors/validator-errors.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { getFormErrors } from '@shared/utils';
+import { CategoriesService } from '@module-catalog/categories/services';
+import { Category } from '@module-catalog/categories/interfaces';
+import { ListId } from '@core/interfaces';
 
 @Component({
   selector: 'app-create-product-modal',
@@ -39,15 +43,17 @@ import { getFormErrors } from '@shared/utils';
     ValidatorErrors,
   ],
 })
-export class CreateProductModal {
+export class CreateProductModal implements OnInit {
   @Output() reloadTable = new EventEmitter<void>();
   @Output() closeModal = new EventEmitter<void>();
 
   private fb = inject(FormBuilder);
   private service = inject(ProductsService);
+  private categoriesService = inject(CategoriesService);
 
   isEditing = input<boolean>(false);
   isSaving = signal<boolean>(false);
+  categoryList = signal<ListId[]>([]);
 
   readonly productForm: FormGroup = this.fb.group({
     status: [true],
@@ -66,6 +72,12 @@ export class CreateProductModal {
     min_stock: [0],
     image_url: [''],
   });
+
+  ngOnInit(): void {
+    this.categoriesService.list().subscribe((res) => {
+      this.categoryList.set(res.data || []);
+    });
+  }
 
   saveProduct() {
     this.productForm.markAllAsTouched();

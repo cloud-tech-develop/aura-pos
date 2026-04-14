@@ -31,6 +31,7 @@
     "FILTER_STATUS": "Filter by status"
   },
   "HEADERS": {
+    "ID": "ID",
     "NAME": "Name",
     "CATEGORY": "Category",
     "BRAND": "Brand",
@@ -50,6 +51,7 @@
     "BARCODE": "Barcode",
     "PRESENTATION": "Presentation",
     "PRODUCT": "Product",
+    "TAX": "Tax",
     "COMPOSITION": "Composition",
     "LABEL": "Label"
   },
@@ -217,7 +219,8 @@
     "INVALID_EMAIL": "The {{control}} field must be a valid email",
     "MIN_VALUE": "The {{control}} field must be greater than or equal to {{value}}",
     "MAX_VALUE": "The {{control}} field must be less than or equal to {{value}}",
-    "UNIQUE": "The {{control}} field value already exists"
+    "UNIQUE": "The {{control}} field value already exists",
+    "TABLE_EMPTY": "No records found"
   },
   "TOAST": {
     "SUCCESS": "Success",

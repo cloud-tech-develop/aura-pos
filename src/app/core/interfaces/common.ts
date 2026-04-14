@@ -48,3 +48,8 @@ export interface MenuSectionItem {
   items: MenuItem[];
   expanded?: boolean;
 }
+
+export interface ListId {
+  id: number;
+  name: string;
+}

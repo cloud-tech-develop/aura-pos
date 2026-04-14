@@ -62,7 +62,6 @@ import { CreateProductModal } from '../create-product-modal/create-product-modal
 })
 export class IndexProducts implements OnInit {
   private productsService = inject(ProductsService);
-  private fb = inject(FormBuilder);
   readonly params = signal<ProductPaginationRequest>({
     page: 1,
     limit: 10,

@@ -31,6 +31,7 @@
     "FILTER_STATUS": "Filtrar por estado"
   },
   "HEADERS": {
+    "ID": "ID",
     "NAME": "Nombre",
     "CATEGORY": "Categoría",
     "BRAND": "Marca",
@@ -50,6 +51,7 @@
     "BARCODE": "Código de Barras",
     "PRESENTATION": "Presentación",
     "PRODUCT": "Producto",
+    "TAX": "Impuesto",
     "COMPOSITION": "Composición",
     "LABEL": "Etiqueta"
   },
@@ -217,7 +219,8 @@
     "INVALID_EMAIL": "El campo {{control}} debe ser un correo válido",
     "MIN_VALUE": "El campo {{control}} debe ser mayor o igual a {{value}}",
     "MAX_VALUE": "El campo {{control}} debe ser menor o igual a {{value}}",
-    "UNIQUE": "El valor del campo {{control}} ya existe"
+    "UNIQUE": "El valor del campo {{control}} ya existe",
+    "TABLE_EMPTY": "No se encontraron registros"
   },
   "TOAST": {
     "SUCCESS": "Éxito",

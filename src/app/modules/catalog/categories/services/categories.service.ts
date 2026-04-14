@@ -1,7 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CategoriesApiService } from './categories-api.service';
 import { Category, CategoryRequest } from '../interfaces';
+import { ListId, PageData, PageParams } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -9,11 +10,11 @@ import { Category, CategoryRequest } from '../interfaces';
 export class CategoriesService {
   private categoriesApiService = inject(CategoriesApiService);
 
-  getAll(): Observable<{ error: boolean; msg: string; data?: Category[] }> {
-    return this.categoriesApiService.getAll();
+  list(): Observable<{ error: boolean; msg: string; data?: ListId[] }> {
+    return this.categoriesApiService.list();
   }
 
-  getById(id: string): Observable<{ error: boolean; msg: string; data?: Category }> {
+  getById(id: number): Observable<{ error: boolean; msg: string; data?: Category }> {
     return this.categoriesApiService.getById(id);
   }
 
@@ -21,11 +22,22 @@ export class CategoriesService {
     return this.categoriesApiService.create(payload);
   }
 
-  update(id: string, payload: CategoryRequest): Observable<{ error: boolean; msg: string; data?: Category }> {
+  update(
+    id: number,
+    payload: CategoryRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Category }> {
     return this.categoriesApiService.update(id, payload);
   }
 
-  delete(id: string): Observable<{ error: boolean; msg: string }> {
+  delete(id: number): Observable<{ error: boolean; msg: string }> {
     return this.categoriesApiService.delete(id);
+  }
+
+  page(payload: PageParams<null>): Observable<{
+    error: boolean;
+    msg: string;
+    data?: PageData<Category>;
+  }> {
+    return this.categoriesApiService.page(payload);
   }
 }

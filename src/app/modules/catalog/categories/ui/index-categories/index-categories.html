@@ -1,4 +1,112 @@
-<div class="container">
-  <h1>Categories</h1>
-  <p>Categories management module</p>
+<div class="categories-page flex flex-col gap-4">
+  <app-index-header
+    title="Categorías"
+    description="Organiza tus productos en grupos lógicos"
+    titleIcon="th-large"
+    buttonText="Nueva Categoría"
+    (buttonAction)="openCreateDialog()"
+  ></app-index-header>
+
+  <p-card>
+    <div class="mb-4 flex gap-4">
+      <p-iconfield iconPosition="left" styleClass="w-full max-w-md">
+        <p-inputicon styleClass="pi pi-search" />
+        <input
+          pInputText
+          type="text"
+          placeholder="Buscar categorías..."
+          [value]="searchQuery()"
+          (input)="searchQuery.set($any($event.target).value)"
+          (keyup.enter)="onSearch()"
+          class="w-full"
+        />
+      </p-iconfield>
+      <p-tag [value]="totalRecords() + ' Categorías'" severity="success"></p-tag>
+    </div>
+
+    <p-table
+      [value]="categories()"
+      [paginator]="true"
+      [rows]="rows()"
+      [totalRecords]="totalRecords()"
+      [loading]="isLoading()"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [lazy]="true"
+      (onLazyLoad)="loadCategories($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>{{ 'HEADERS.ID' | translate }}</th>
+          <th>{{ 'HEADERS.NAME' | translate }}</th>
+          <th>{{ 'HEADERS.TAX' | translate }} (%)</th>
+          <th>{{ 'HEADERS.STATUS' | translate }}</th>
+          <th>{{ 'HEADERS.DESCRIPTION' | translate }}</th>
+          <th>{{ 'COMMON.ACTIONS' | translate }}</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-category>
+        <tr>
+          <td>{{ category.id }}</td>
+          <td>
+            <span class="font-bold">{{ category.name }}</span>
+          </td>
+          <td>{{ category.default_tax_rate }}%</td>
+          <td>
+            <p-tag
+              [value]="category.active ? 'Activo' : 'Inactivo'"
+              [severity]="category.active ? 'success' : 'warn'"
+            ></p-tag>
+          </td>
+          <td>
+            <span class="text-surface-500">{{ category.description || '-' }}</span>
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <button
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-text p-button-sm"
+                (click)="openEditDialog(category)"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-text p-button-danger p-button-sm"
+                (click)="deleteCategory(category)"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="6" class="text-center p-4">
+            {{ 'ALERTS.TABLE_EMPTY' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <p-dialog
+    [visible]="showDialog()"
+    (visibleChange)="showDialog.set($event)"
+    [header]="isEditing() ? 'Editar Categoría' : 'Nueva Categoría'"
+    [modal]="true"
+    [style]="{ width: '40rem' }"
+    [closable]="true"
+    [draggable]="false"
+    (onHide)="hideDialog()"
+  >
+    @if (showDialog()) {
+      <app-create-category-modal
+        [isEditing]="isEditing()"
+        [category]="selectedCategory()"
+        (closeModal)="hideDialog()"
+        (reloadTable)="loadCategories()"
+      />
+    }
+  </p-dialog>
 </div>

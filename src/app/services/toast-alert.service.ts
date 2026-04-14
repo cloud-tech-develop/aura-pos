@@ -45,4 +45,12 @@ export class ToastAlertService {
       positionClass: config.positionClass,
     });
   }
+
+  show(type: 'success' | 'error' | 'info' | 'warning', message: string, time: number = 5000): void {
+    const title = this.#i18n.instant(`TOAST.${type.toUpperCase()}`);
+    this.#toastServ[type](message, title, {
+      timeOut: time,
+      positionClass: config.positionClass,
+    });
+  }
 }

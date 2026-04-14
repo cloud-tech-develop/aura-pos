@@ -115,8 +115,10 @@
               <p-select
                 id="category_id"
                 formControlName="category_id"
-                [options]="[]"
+                [options]="categoryList()"
                 placeholder="Sin categoría"
+                optionLabel="name"
+                optionValue="id"
                 class="w-full"
                 [showClear]="true"
               ></p-select>
