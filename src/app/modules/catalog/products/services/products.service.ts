@@ -8,33 +8,13 @@ import {
   ProductListResponse,
   ProductPaginationRequest,
 } from '../interfaces';
+import { PageData } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
   private productsApiService = inject(ProductsApiService);
-
-  readonly products = signal<Product[]>([]);
-  readonly isLoading = signal<boolean>(false);
-  readonly pagination = signal<{
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  } | null>(null);
-
-  getAll(): Observable<{ error: boolean; msg: string; data?: Product[] }> {
-    this.isLoading.set(true);
-    return this.productsApiService.getAll().pipe(
-      tap((res) => {
-        if (!res.error && res.data) {
-          this.products.set(res.data);
-        }
-        this.isLoading.set(false);
-      }),
-    );
-  }
 
   getById(id: number): Observable<{ error: boolean; msg: string; data?: Product }> {
     return this.productsApiService.getById(id);
@@ -60,24 +40,8 @@ export class ProductsService {
   page(params: ProductPaginationRequest): Observable<{
     error: boolean;
     msg: string;
-    data?: ProductListResponse;
+    data?: PageData<Product>;
   }> {
-    this.isLoading.set(true);
-    return this.productsApiService.page(params).pipe(
-      tap((res) => {
-        console.log({ res });
-
-        if (!res.error && res.data) {
-          this.products.set(res.data.items);
-          this.pagination.set({
-            page: res.data.page,
-            limit: res.data.limit,
-            total: res.data.total,
-            totalPages: res.data.totalPages,
-          });
-        }
-        this.isLoading.set(false);
-      }),
-    );
+    return this.productsApiService.page(params);
   }
 }

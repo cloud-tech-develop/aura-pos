@@ -6,13 +6,18 @@ import { TableLazyLoadEvent } from 'primeng/table';
  * @param event Evento de la tabla
  * @returns Parámetros formateados
  */
-export const formatPageParams = <T>(event?: TableLazyLoadEvent): PageParams<T> => {
-  const page = event ? (event.first || 0) / (event.rows || 10) + 1 : 1;
-  const limit = event?.rows || 10;
+export const formatPageParams = <T>(event: TableLazyLoadEvent): PageParams<T> => {
+  const page = (event.first || 0) / (event.rows || 10) + 1;
+  const limit = event.rows || 10;
+  const search = event.globalFilter as string;
+
+  console.log('globalFilter', event.globalFilter);
+  console.log('search', search);
+
   return {
     page,
     limit,
-    search: '',
+    search,
     sort: 'id',
     order: 'desc',
     params: null as T,

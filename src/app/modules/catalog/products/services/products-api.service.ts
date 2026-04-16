@@ -11,7 +11,7 @@ import {
   ProductPaginationRequest,
   ProductPageResponse,
 } from '../interfaces';
-import { ResponseBase } from '@core/interfaces';
+import { PageData, ResponseBase } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -100,14 +100,14 @@ export class ProductsApiService {
 
   page(
     params: ProductPaginationRequest,
-  ): Observable<{ error: boolean; msg: string; data?: ProductListResponse }> {
+  ): Observable<{ error: boolean; msg: string; data?: PageData<Product> }> {
     const res = {
       error: true,
       msg: 'Error undefined',
-      data: undefined as ProductListResponse | undefined,
+      data: undefined as PageData<Product> | undefined,
     };
 
-    return this.http.post<ResponseBase<ProductPageResponse>>(`${this.apiUrl}/page`, params).pipe(
+    return this.http.post<ResponseBase<PageData<Product>>>(`${this.apiUrl}/page`, params).pipe(
       map((r) => {
         res.msg = r.message;
         if (!r.success) return res;

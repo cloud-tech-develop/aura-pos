@@ -43,7 +43,6 @@ import { formatPageParams } from '@shared/utils/table';
 export class IndexCategories {
   private categoriesService = inject(CategoriesService);
 
-  readonly searchQuery = signal('');
   readonly page = signal(1);
   readonly rows = signal(10);
   readonly totalRecords = signal(0);
@@ -52,9 +51,10 @@ export class IndexCategories {
 
   readonly showDialog = signal(false);
   readonly isEditing = signal(false);
+  readonly searchQuery = signal('');
   readonly selectedCategory = signal<Category | null>(null);
 
-  loadCategories(event?: TableLazyLoadEvent): void {
+  loadCategories(event: TableLazyLoadEvent): void {
     const payload: PageParams<null> = formatPageParams(event);
     this.isLoading.set(true);
     this.categoriesService.page(payload).subscribe((res) => {
@@ -69,7 +69,10 @@ export class IndexCategories {
   }
 
   onSearch(): void {
-    this.loadCategories({ first: 0, rows: this.rows() } as TableLazyLoadEvent);
+    this.loadCategories({
+      first: 0,
+      rows: this.rows(),
+    } as TableLazyLoadEvent);
   }
 
   openCreateDialog(): void {

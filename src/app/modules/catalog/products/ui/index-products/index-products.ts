@@ -31,6 +31,8 @@ import { TextareaModule } from 'primeng/textarea';
 import { TabsModule } from 'primeng/tabs';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { CreateProductModal } from '../create-product-modal/create-product-modal';
+import { PageParams } from '@core/interfaces';
+import { formatPageParams } from '@shared/utils/table';
 
 @Component({
   selector: 'app-index-products',
@@ -68,17 +70,14 @@ export class IndexProducts implements OnInit {
     search: '',
   });
 
-  readonly products = this.productsService.products;
-  readonly isLoading = this.productsService.isLoading;
-  readonly pagination = this.productsService.pagination;
-
   readonly searchQuery = signal('');
   readonly selectedCategory = signal<number | null>(null);
   readonly selectedBrand = signal<number | null>(null);
 
   readonly page = signal(1);
   readonly rows = signal(10);
-
+  readonly isLoading = signal(false);
+  readonly products = signal<Product[]>([]);
   readonly totalRecords = signal(0);
 
   // Dialog
@@ -93,20 +92,21 @@ export class IndexProducts implements OnInit {
     { label: 'Discontinued', value: 'DISCONTINUED' },
   ];
 
-  ngOnInit(): void {
-    // this.loadProducts();
-  }
+  ngOnInit(): void {}
 
-  loadProducts(event?: TableLazyLoadEvent): void {
-    if (event) {
-      this.params.set({
-        page: (event.first || 0) / (event.rows || 10) + 1,
-        limit: event.rows || 10,
-        search: this.searchQuery() || undefined,
-      });
-    }
-
-    this.productsService.page(this.params()).subscribe();
+  loadProducts(event: TableLazyLoadEvent): void {
+    const payload: PageParams<null> = formatPageParams(event);
+    this.isLoading.set(true);
+    this.productsService.page(payload).subscribe({
+      next: ({ data, error, msg }) => {
+        this.isLoading.set(false);
+        this.products.set(data?.items ?? []);
+        this.totalRecords.set(data?.total ?? 0);
+      },
+      error: () => {
+        this.isLoading.set(false);
+      },
+    });
   }
 
   getStatusSeverity(

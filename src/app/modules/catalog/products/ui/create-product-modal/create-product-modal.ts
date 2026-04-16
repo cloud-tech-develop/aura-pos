@@ -24,6 +24,8 @@ import { getFormErrors } from '@shared/utils';
 import { CategoriesService } from '@module-catalog/categories/services';
 import { Category } from '@module-catalog/categories/interfaces';
 import { ListId } from '@core/interfaces';
+import { UnitsService } from '@module-catalog/units/services';
+import { BrandsService } from '@module-catalog/brands/services';
 
 @Component({
   selector: 'app-create-product-modal',
@@ -50,10 +52,14 @@ export class CreateProductModal implements OnInit {
   private fb = inject(FormBuilder);
   private service = inject(ProductsService);
   private categoriesService = inject(CategoriesService);
+  private unitsService = inject(UnitsService);
+  private brandsService = inject(BrandsService);
 
   isEditing = input<boolean>(false);
   isSaving = signal<boolean>(false);
   categoryList = signal<ListId[]>([]);
+  unitList = signal<ListId[]>([]);
+  brandList = signal<ListId[]>([]);
 
   readonly productForm: FormGroup = this.fb.group({
     status: [true],
@@ -76,6 +82,12 @@ export class CreateProductModal implements OnInit {
   ngOnInit(): void {
     this.categoriesService.list().subscribe((res) => {
       this.categoryList.set(res.data || []);
+    });
+    this.unitsService.list().subscribe((res) => {
+      this.unitList.set(res.data || []);
+    });
+    this.brandsService.list().subscribe((res) => {
+      this.brandList.set(res.data || []);
     });
   }
 

@@ -132,8 +132,10 @@
               <p-select
                 id="brand_id"
                 formControlName="brand_id"
-                [options]="[]"
+                [options]="brandList()"
                 placeholder="Sin marca"
+                optionLabel="name"
+                optionValue="id"
                 class="w-full"
                 [showClear]="true"
               ></p-select>
@@ -153,9 +155,12 @@
               <p-select
                 id="unit_id"
                 formControlName="unit_id"
-                [options]="[]"
+                [options]="unitList()"
                 placeholder="Seleccionar unidad..."
+                optionLabel="name"
+                optionValue="id"
                 class="w-full"
+                [showClear]="true"
               ></p-select>
               <validator-errors
                 [control]="productForm.get('unit_id')"
