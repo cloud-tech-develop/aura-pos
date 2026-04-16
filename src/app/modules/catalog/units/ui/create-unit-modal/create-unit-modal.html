@@ -1,0 +1,74 @@
+<form [formGroup]="unitForm" class="flex flex-col gap-4">
+  <div class="flex flex-col gap-2">
+    <label for="name" class="font-bold text-surface-700 text-xs">
+      Nombre <span class="text-red-500">*</span>
+    </label>
+    <input
+      pInputText
+      id="name"
+      formControlName="name"
+      placeholder="Ej: Kilogramo, Litro, Pieza..."
+      class="w-full"
+    />
+    <validator-errors [control]="unitForm.get('name')" [label]="'HEADERS.NAME' | translate" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="abbreviation" class="font-bold text-surface-700 text-xs">
+      Abreviatura <span class="text-red-500">*</span>
+    </label>
+    <input
+      pInputText
+      id="abbreviation"
+      formControlName="abbreviation"
+      placeholder="Ej: kg, lt, pza..."
+      class="w-full"
+      maxlength="20"
+    />
+    <validator-errors [control]="unitForm.get('abbreviation')" [label]="'HEADERS.ABBREVIATION' | translate" />
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div
+      class="border border-surface-200 rounded-xl p-4 flex justify-between items-center bg-surface-50/30"
+    >
+      <div class="flex flex-col">
+        <span class="font-bold text-surface-800 text-sm">Activo</span>
+        <span class="text-xs text-surface-500">
+          {{
+            unitForm.get('active')?.value
+              ? 'La unidad estará disponible'
+              : 'La unidad no estará disponible'
+          }}
+        </span>
+      </div>
+      <p-toggleswitch formControlName="active" class="p-green-500"></p-toggleswitch>
+    </div>
+
+    <div
+      class="border border-surface-200 rounded-xl p-4 flex justify-between items-center bg-surface-50/30"
+    >
+      <div class="flex flex-col">
+        <span class="font-bold text-surface-800 text-sm">Permitir decimales</span>
+        <span class="text-xs text-surface-500">
+          {{
+            unitForm.get('allow_decimals')?.value
+              ? 'Se permiten valores decimales'
+              : 'Solo valores enteros'
+          }}
+        </span>
+      </div>
+      <p-toggleswitch formControlName="allow_decimals" class="p-green-500"></p-toggleswitch>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-2 pt-2">
+    <button pButton label="Cancelar" class="p-button-text" (click)="cancel()"></button>
+    <button
+      pButton
+      [label]="isEditing() ? 'Actualizar' : 'Crear'"
+      [loading]="isSaving()"
+      (click)="saveUnit()"
+    ></button>
+  </div>
+</form>

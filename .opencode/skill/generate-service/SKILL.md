@@ -51,7 +51,7 @@ Required parameters:
 - moduleName → Name of the module
 - feature → Name of the feature
 - endpoint → API endpoint path
-- methods → List of HTTP methods to generate
+- methods → List of HTTP methods to generate (including 'page' for paginated tables)
 - requestInterfaces → Interfaces used for request
 - responseInterfaces → Interfaces used for response
 
@@ -59,10 +59,10 @@ Example:
 
 ```json
 {
-  "moduleName": "auth",
-  "feature": "auth",
-  "endpoint": "/auth",
-  "methods": ["login", "logout"]
+  "moduleName": "catalog",
+  "feature": "units",
+  "endpoint": "/catalog/units",
+  "methods": ["list", "getById", "create", "update", "delete", "page"]
 }
 ```
 
@@ -131,6 +131,29 @@ Standard response format:
 }
 ```
 
+### Page Method Response Format
+For paginated endpoints, use:
+```typescript
+{
+  error: boolean;
+  msg: string;
+  data?: PageData<T>;
+}
+
+interface PageData<T> {
+  items: T[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+```
+
+Import from `@core/interfaces:
+```typescript
+import { ListId, PageData, PageParams, PageResponse, ResponseBase } from '@core/interfaces';
+```
+
 2️⃣ {feature}.service.ts
 Purpose:
   - Handle business logic
@@ -190,10 +213,33 @@ The generated code MUST:
 - Not create global services
 - Not export api services in index.ts
 
---- 
+---
+
+## Available Methods
+
+### Standard CRUD Methods
+
+| Method | HTTP Verb | Description |
+|--------|-----------|-------------|
+| `list` | GET | List all items (for dropdowns) |
+| `getById` | GET | Get single item by ID |
+| `create` | POST | Create new item |
+| `update` | PUT | Update existing item |
+| `delete` | DELETE | Delete item |
+
+### Pagination Method
+
+| Method | HTTP Verb | Description |
+|--------|-----------|-------------|
+| `page` | POST | Paginated list for PrimeNG tables |
+
+The `page` method uses:
+- `PageParams<FilterType>` from `@core/interfaces` for request
+- `PageData<T>` and `PageResponse<T>` from `@core/interfaces` for response
+- `formatPageParams` from `@shared/utils/table` for converting PrimeNG events
 
 ## Template Example
-{feature}-api.service.ts
+{feature}-api.service.ts (with page method)
 ```typescript
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
@@ -201,34 +247,116 @@ import { catchError, map, Observable } from 'rxjs';
 import { environment } from '@environment/environment';
 import { httpErrorHandler } from '@shared/utils';
 import { ExampleRequest, ExampleResponse, ExampleData } from '../interfaces';
+import { ListId, PageData, PageParams, PageResponse, ResponseBase } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExampleApiService {
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.API_URL + '/example';
 
-  exampleMethod(payload: ExampleRequest): Observable<{
+  // List for dropdowns
+  list(): Observable<{ error: boolean; msg: string; data?: ListId[] }> {
+    const res = { error: true, msg: 'Error undefined', data: undefined as ListId[] | undefined };
+
+    return this.http.get<ResponseBase<ListId[]>>(`${this.apiUrl}`).pipe(
+      map((r) => {
+        res.msg = r.message;
+        if (!r.success) return res;
+        res.data = r.data;
+        res.error = false;
+        return res;
+      }),
+      catchError(httpErrorHandler),
+    );
+  }
+
+  // Get by ID
+  getById(id: number): Observable<{ error: boolean; msg: string; data?: ExampleData }> {
+    const res = { error: true, msg: 'Error undefined', data: undefined as ExampleData | undefined };
+
+    return this.http.get<ResponseBase<ExampleData>>(`${this.apiUrl}/${id}`).pipe(
+      map((r) => {
+        res.msg = r.message;
+        if (!r.success) return res;
+        res.data = r.data;
+        res.error = false;
+        return res;
+      }),
+      catchError(httpErrorHandler),
+    );
+  }
+
+  // Create
+  create(payload: ExampleRequest): Observable<{ error: boolean; msg: string; data?: ExampleData }> {
+    const res = { error: true, msg: 'Error undefined', data: undefined as ExampleData | undefined };
+
+    return this.http.post<ResponseBase<ExampleData>>(`${this.apiUrl}`, payload).pipe(
+      map((r) => {
+        res.msg = r.message;
+        if (!r.success) return res;
+        res.data = r.data;
+        res.error = false;
+        return res;
+      }),
+      catchError(httpErrorHandler),
+    );
+  }
+
+  // Update
+  update(id: number, payload: ExampleRequest): Observable<{ error: boolean; msg: string; data?: ExampleData }> {
+    const res = { error: true, msg: 'Error undefined', data: undefined as ExampleData | undefined };
+
+    return this.http.put<ResponseBase<ExampleData>>(`${this.apiUrl}/${id}`, payload).pipe(
+      map((r) => {
+        res.msg = r.message;
+        if (!r.success) return res;
+        res.data = r.data;
+        res.error = false;
+        return res;
+      }),
+      catchError(httpErrorHandler),
+    );
+  }
+
+  // Delete
+  delete(id: number): Observable<{ error: boolean; msg: string }> {
+    const res = { error: true, msg: 'Error undefined' };
+
+    return this.http.delete<ResponseBase<ExampleData>>(`${this.apiUrl}/${id}`).pipe(
+      map((r) => {
+        res.msg = r.message;
+        res.error = !r.success;
+        return res;
+      }),
+      catchError(httpErrorHandler),
+    );
+  }
+
+  // Page (for PrimeNG tables)
+  page(payload: PageParams<null>): Observable<{
     error: boolean;
     msg: string;
-    data?: ExampleData;
+    data?: PageData<ExampleData>;
   }> {
     const res = {
       error: true,
       msg: 'Error undefined',
-      data: undefined as ExampleData | undefined,
+      data: undefined as PageData<ExampleData> | undefined,
     };
 
-    return this.http.post<ExampleResponse>(
-      `${this.apiUrl}/example`,
-      payload,
-    ).pipe(
-      map((r) => {
-        res.msg = r.message;
-        if (r.error) return res;
-
-        res.data = r.data;
+    return this.http.post<PageResponse<ExampleData>>(`${this.apiUrl}/page`, payload).pipe(
+      map(({ data, success, message }) => {
+        res.msg = message;
+        if (!success) return res;
+        res.data = {
+          items: data.items || [],
+          page: data.page || 1,
+          limit: data.limit || 10,
+          total: data.total,
+          totalPages: data.totalPages,
+        };
         res.error = false;
         return res;
       }),
@@ -239,11 +367,12 @@ export class ExampleApiService {
 ```
 
 
-{feature}.service.ts
+{feature}.service.ts (with page method)
 ```typescript
 import { inject, Injectable } from '@angular/core';
 import { ExampleApiService } from './example-api.service';
 import { ExampleRequest, ExampleData } from '../interfaces';
+import { ListId, PageData, PageParams } from '@core/interfaces';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -252,12 +381,32 @@ import { Observable } from 'rxjs';
 export class ExampleService {
   private exampleApiService = inject(ExampleApiService);
 
-  exampleMethod(payload: ExampleRequest): Observable<{
+  list(): Observable<{ error: boolean; msg: string; data?: ListId[] }> {
+    return this.exampleApiService.list();
+  }
+
+  getById(id: number): Observable<{ error: boolean; msg: string; data?: ExampleData }> {
+    return this.exampleApiService.getById(id);
+  }
+
+  create(payload: ExampleRequest): Observable<{ error: boolean; msg: string; data?: ExampleData }> {
+    return this.exampleApiService.create(payload);
+  }
+
+  update(id: number, payload: ExampleRequest): Observable<{ error: boolean; msg: string; data?: ExampleData }> {
+    return this.exampleApiService.update(id, payload);
+  }
+
+  delete(id: number): Observable<{ error: boolean; msg: string }> {
+    return this.exampleApiService.delete(id);
+  }
+
+  page(payload: PageParams<null>): Observable<{
     error: boolean;
     msg: string;
-    data?: ExampleData;
+    data?: PageData<ExampleData>;
   }> {
-    return this.exampleApiService.exampleMethod(payload);
+    return this.exampleApiService.page(payload);
   }
 }
 ```

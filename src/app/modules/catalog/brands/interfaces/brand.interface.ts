@@ -1,29 +1,13 @@
 // Brand interface for Catalog Module
 export interface Brand {
-  id: string;
+  id: number;
   name: string;
-  description?: string;
-  logoUrl?: string;
-  isActive: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  active: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface BrandRequest {
   name: string;
-  description?: string;
-  logoUrl?: string;
-  isActive?: boolean;
-}
-
-export interface BrandResponse {
-  message: string;
-  error: boolean;
-  data?: Brand;
-}
-
-export interface BrandListResponse {
-  message: string;
-  error: boolean;
-  data?: Brand[];
+  active?: boolean;
 }

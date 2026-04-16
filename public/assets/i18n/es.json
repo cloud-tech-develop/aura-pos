@@ -33,6 +33,8 @@
   "HEADERS": {
     "ID": "ID",
     "NAME": "Nombre",
+    "ABBREVIATION": "Abreviatura",
+    "ALLOW_DECIMALS": "Decimales",
     "CATEGORY": "Categoría",
     "BRAND": "Marca",
     "COST": "Costo",

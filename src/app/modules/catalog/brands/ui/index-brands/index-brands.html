@@ -1,4 +1,105 @@
-<div class="container">
-  <h1>Brands</h1>
-  <p>Brands management module</p>
+<div class="brands-page flex flex-col gap-4">
+  <app-index-header
+    title="Marcas"
+    description="Administra las marcas de tus productos"
+    titleIcon="tag"
+    buttonText="Nueva Marca"
+    (buttonAction)="openCreateDialog()"
+  ></app-index-header>
+
+  <p-table
+    #dt
+    [value]="brands()"
+    [paginator]="true"
+    [rows]="rows()"
+    [totalRecords]="totalRecords()"
+    [loading]="isLoading()"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [lazy]="true"
+    (onLazyLoad)="loadBrands($event)"
+  >
+    <ng-template #caption>
+      <div class="flex gap-4">
+        <p-iconfield iconPosition="left" styleClass="w-full max-w-md">
+          <p-inputicon class="pi pi-search" />
+          <input
+            pInputText
+            [(ngModel)]="searchQuery"
+            type="text"
+            placeholder="Buscar marcas..."
+            (input)="dt.filterGlobal($event.target.value, 'contains')"
+            class="w-full"
+          />
+        </p-iconfield>
+        <p-tag [value]="totalRecords() + ' Marcas'" severity="success"></p-tag>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ 'HEADERS.ID' | translate }}</th>
+        <th>{{ 'HEADERS.NAME' | translate }}</th>
+        <th>{{ 'HEADERS.STATUS' | translate }}</th>
+        <th>{{ 'COMMON.ACTIONS' | translate }}</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-brand>
+      <tr>
+        <td>{{ brand.id }}</td>
+        <td>
+          <span class="font-bold">{{ brand.name }}</span>
+        </td>
+        <td>
+          <p-tag
+            [value]="brand.active ? 'Activo' : 'Inactivo'"
+            [severity]="brand.active ? 'success' : 'warn'"
+          ></p-tag>
+        </td>
+        <td>
+          <div class="flex gap-2">
+            <button
+              pButton
+              icon="pi pi-pencil"
+              class="p-button-text p-button-sm"
+              (click)="openEditDialog(brand)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button-text p-button-danger p-button-sm"
+              (click)="deleteBrand(brand)"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="4" class="text-center p-4">
+          {{ 'ALERTS.TABLE_EMPTY' | translate }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog
+    [visible]="showDialog()"
+    (visibleChange)="showDialog.set($event)"
+    [header]="isEditing() ? 'Editar Marca' : 'Nueva Marca'"
+    [modal]="true"
+    [style]="{ width: '40rem' }"
+    [closable]="true"
+    [draggable]="false"
+    (onHide)="hideDialog()"
+  >
+    @if (showDialog()) {
+      <app-create-brand-modal
+        [isEditing]="isEditing()"
+        [brand]="selectedBrand()"
+        (closeModal)="hideDialog()"
+        (reloadTable)="dt.reset(); searchQuery.set('')"
+      />
+    }
+  </p-dialog>
 </div>

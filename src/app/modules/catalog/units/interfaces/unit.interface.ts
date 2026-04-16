@@ -1,29 +1,17 @@
 // Unit interface for Catalog Module
 export interface Unit {
-  id: string;
+  id: number;
   name: string;
   abbreviation: string;
-  description?: string;
-  isActive: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  active: boolean;
+  allow_decimals: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface UnitRequest {
   name: string;
   abbreviation: string;
-  description?: string;
-  isActive?: boolean;
-}
-
-export interface UnitResponse {
-  message: string;
-  error: boolean;
-  data?: Unit;
-}
-
-export interface UnitListResponse {
-  message: string;
-  error: boolean;
-  data?: Unit[];
+  active?: boolean;
+  allow_decimals?: boolean;
 }
