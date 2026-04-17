@@ -106,7 +106,11 @@
     "SUCCESS": "Éxito",
     "ERROR": "Error",
     "WARNING": "Advertencia",
-    "INFO": "Información"
+    "INFO": "Información",
+    "STANDARD": "Standard",
+    "KIT": "Kit",
+    "WEIGHTABLE": "Pesable",
+    "SERVICE": "Servicio"
   },
   "POS": {
     "CART": "Carrito",

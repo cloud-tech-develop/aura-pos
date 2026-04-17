@@ -1,3 +1,5 @@
+import { ListId } from '@core/interfaces';
+
 // Unit interface for Catalog Module
 export interface Unit {
   id: number;
@@ -14,4 +16,8 @@ export interface UnitRequest {
   abbreviation: string;
   active?: boolean;
   allow_decimals?: boolean;
+}
+
+export interface UnitList extends ListId {
+  abbreviation: string;
 }

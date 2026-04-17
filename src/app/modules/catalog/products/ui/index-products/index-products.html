@@ -92,17 +92,35 @@
   <p-dialog
     [visible]="showDialog()"
     (visibleChange)="showDialog.set($event)"
-    [header]="isEditing() ? 'Editar Producto' : 'Nuevo Producto'"
     [modal]="true"
-    [style]="{ width: '50rem' }"
-    [closable]="true"
+    [style]="{ width: '56rem' }"
+    [closable]="false"
     [draggable]="false"
+    [resizable]="false"
     (onHide)="hideDialog()"
+    class="custom-product-dialog pt-0"
   >
-    <app-create-product-modal
-      [isEditing]="isEditing()"
-      (closeModal)="hideDialog()"
-      (reloadTable)="dt.reset(); searchQuery.set('')"
-    />
+    <ng-template #header>
+      <div class="flex items-center justify-between w-full bg-indigo-600 text-white px-6 py-4 rounded-t-xl -m-[1.25rem] mb-0 overflow-hidden">
+        <h3 class="text-xl font-bold m-0 flex items-center gap-2 pl-2">
+          <i class="pi pi-shopping-bag"></i>
+          {{ isEditing() ? 'Editar producto' : 'Nuevo producto' }}
+        </h3>
+        <button 
+          pButton 
+          icon="pi pi-times" 
+          class="p-button-rounded p-button-text text-white/80 hover:text-white hover:bg-white/10"
+          (click)="hideDialog()"
+        ></button>
+      </div>
+    </ng-template>
+
+    <div class="mt-4">
+      <app-create-product-modal
+        [isEditing]="isEditing()"
+        (closeModal)="hideDialog()"
+        (reloadTable)="dt.reset(); searchQuery.set('')"
+      />
+    </div>
   </p-dialog>
 </div>

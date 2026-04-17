@@ -104,7 +104,11 @@
     "SUCCESS": "Success",
     "ERROR": "Error",
     "WARNING": "Warning",
-    "INFO": "Info"
+    "INFO": "Info",
+    "STANDARD": "Standard",
+    "KIT": "Kit",
+    "WEIGHTABLE": "Weightable",
+    "SERVICE": "Service"
   },
   "POS": {
     "CART": "Cart",

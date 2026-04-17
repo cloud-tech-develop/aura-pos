@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
 import { environment } from '@environment/environment';
 import { httpErrorHandler } from '@shared/utils';
-import { Unit, UnitRequest } from '../interfaces';
+import { Unit, UnitList, UnitRequest } from '../interfaces';
 import { ListId, PageData, PageParams, PageResponse, ResponseBase } from '@core/interfaces';
 
 @Injectable({
@@ -16,11 +16,14 @@ export class UnitsApiService {
   list(): Observable<{ error: boolean; msg: string; data?: ListId[] }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as ListId[] | undefined };
 
-    return this.http.get<ResponseBase<ListId[]>>(`${this.apiUrl}`).pipe(
+    return this.http.get<ResponseBase<UnitList[]>>(`${this.apiUrl}`).pipe(
       map((r) => {
         res.msg = r.message;
         if (!r.success) return res;
-        res.data = r.data;
+        res.data = r.data.map((u) => ({
+          id: u.id,
+          name: `${u.name} (${u.abbreviation})`,
+        }));
         res.error = false;
         return res;
       }),
@@ -58,7 +61,10 @@ export class UnitsApiService {
     );
   }
 
-  update(id: number, payload: UnitRequest): Observable<{ error: boolean; msg: string; data?: Unit }> {
+  update(
+    id: number,
+    payload: UnitRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Unit }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Unit | undefined };
 
     return this.http.put<ResponseBase<Unit>>(`${this.apiUrl}/${id}`, payload).pipe(
