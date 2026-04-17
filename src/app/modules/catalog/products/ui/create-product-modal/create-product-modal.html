@@ -5,20 +5,29 @@
         <i class="pi pi-info-circle mr-2"></i>
         <span>Básico</span>
       </p-tab>
-      <p-tab value="1">
-        <i class="pi pi-dollar mr-2"></i>
+      <p-tab value="1" class="active:text-green-500">
+        <i class="pi pi-dollar mr-2 text-green-500"></i>
         <span>Impuestos</span>
       </p-tab>
       <p-tab value="2">
-        <i class="pi pi-box mr-2"></i>
+        <i class="pi pi-box mr-2 text-green-500"></i>
         <span>Inventario</span>
       </p-tab>
       <p-tab value="3">
-        <i class="pi pi-th-large mr-2"></i>
-        <span>Presentaciones</span>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-th-large text-green-500"></i>
+          <span>Presentaciones</span>
+          @if (presentationsList().length > 0) {
+            <span
+              class="bg-indigo-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold"
+            >
+              {{ presentationsList().length }}
+            </span>
+          }
+        </div>
       </p-tab>
       <p-tab value="4">
-        <i class="pi pi-money-bill mr-2"></i>
+        <i class="pi pi-dollar mr-2 text-green-500"></i>
         <span>Precios</span>
       </p-tab>
     </p-tablist>
@@ -48,15 +57,24 @@
 
           <!-- Estado -->
           <div
-            class="border border-surface-200 rounded-xl p-4 flex justify-between items-center bg-surface-50/30"
+            class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors"
           >
             <div class="flex flex-col">
-              <span class="font-bold text-surface-800 text-sm">Estado</span>
+              <div class="flex items-center gap-2 mb-0.5">
+                <i
+                  class="pi pi-check-circle"
+                  [class.text-green-500]="productForm.get('active')?.value"
+                  [class.text-surface-400]="!productForm.get('active')?.value"
+                ></i>
+                <span class="font-bold text-surface-800">Estado del producto</span>
+              </div>
               <span class="text-xs text-surface-500">{{
-                productForm.get('status')?.value ? 'Activo' : 'Inactivo'
+                productForm.get('active')?.value
+                  ? 'El producto está activo y disponible'
+                  : 'El producto está inactivo'
               }}</span>
             </div>
-            <p-toggleswitch formControlName="status" class="p-green-500"></p-toggleswitch>
+            <p-toggleswitch formControlName="active" class="p-green-500"></p-toggleswitch>
           </div>
 
           <!-- Name -->
@@ -149,12 +167,12 @@
           <!-- Unit & Type -->
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
-              <label for="unit_id" class="font-bold text-surface-700 text-xs"
+              <label for="unit_measure_id" class="font-bold text-surface-700 text-xs"
                 >Unidad de medida <span class="text-red-500">*</span></label
               >
               <p-select
-                id="unit_id"
-                formControlName="unit_id"
+                id="unit_measure_id"
+                formControlName="unit_measure_id"
                 [options]="unitList()"
                 placeholder="Seleccionar unidad..."
                 optionLabel="name"
@@ -163,7 +181,7 @@
                 [showClear]="true"
               ></p-select>
               <validator-errors
-                [control]="productForm.get('unit_id')"
+                [control]="productForm.get('unit_measure_id')"
                 [label]="'HEADERS.UNIT' | translate"
               />
             </div>
@@ -174,10 +192,31 @@
               <p-select
                 id="product_type"
                 formControlName="product_type"
-                [options]="[{ label: 'Estándar', value: 'Estándar' }]"
-                placeholder="Estándar"
+                [options]="productTypes"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Seleccionar tipo..."
                 class="w-full"
-              ></p-select>
+                [showClear]="true"
+                [filter]="true"
+                filterBy="label"
+                [filterFields]="['label']"
+              >
+                <ng-template pTemplate="item" let-productType>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-surface-700 text-sm">{{
+                      productType.label | translate
+                    }}</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="selectedItem" let-productType>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-surface-700 text-sm">{{
+                      productType.label | translate
+                    }}</span>
+                  </div>
+                </ng-template>
+              </p-select>
               <validator-errors
                 [control]="productForm.get('product_type')"
                 [label]="'HEADERS.PRODUCT_TYPE' | translate"
@@ -219,38 +258,443 @@
       </p-tabpanel>
 
       <p-tabpanel value="1">
-        <div class="py-8 text-center text-surface-500">
-          Configuración de impuestos (En construcción)
+        <div class="flex flex-col gap-6 py-4">
+          <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex gap-4 text-green-800">
+            <div
+              class="bg-green-500 text-white rounded-lg p-2 h-10 w-10 flex items-center justify-center shrink-0"
+            >
+              <i class="pi pi-lightbulb text-xl"></i>
+            </div>
+            <div>
+              <h4 class="font-bold mb-1">El precio se define en las presentaciones</h4>
+              <p class="text-sm">
+                Ve al tab <span class="font-bold">Presentaciones</span>, agrega la presentación de
+                compra (ej: Caja x 100) con su costo y precio, y el sistema calculará
+                automáticamente el precio por unidad base.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="border-t border-surface-200 flex-1"></div>
+            <span class="text-sm font-bold text-surface-400 font-mono tracking-widest"
+              >IMPUESTOS</span
+            >
+            <div class="border-t border-surface-200 flex-1"></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+              <label for="iva_percentage" class="font-bold text-surface-700 text-xs"
+                >IVA (%) <span class="text-red-500">*</span></label
+              >
+              <input
+                pInputText
+                id="iva_percentage"
+                formControlName="iva_percentage"
+                placeholder="0%"
+                class="w-full"
+              />
+              <span class="text-xs text-surface-400"
+                ><i class="pi pi-info-circle mr-1"></i> Valores comunes: 0%, 5%, 19%</span
+              >
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="consumption_tax" class="font-bold text-surface-700 text-xs"
+                >Impoconsumo ($) <span class="text-red-500">*</span></label
+              >
+              <p-inputNumber
+                id="consumption_tax"
+                formControlName="consumption_tax"
+                mode="currency"
+                currency="COP"
+                locale="es-CO"
+                placeholder="$ 0"
+                class="w-full"
+              ></p-inputNumber>
+              <span class="text-xs text-surface-400"
+                ><i class="pi pi-info-circle mr-1"></i> Aplica a bebidas azucaradas, licores,
+                etc.</span
+              >
+            </div>
+          </div>
         </div>
       </p-tabpanel>
 
       <p-tabpanel value="2">
-        <div class="py-8 text-center text-surface-500">
-          Configuración de inventario (En construcción)
+        <div class="flex flex-col gap-4 py-4">
+          <div
+            class="bg-orange-50 border border-orange-200 rounded-xl p-4 flex gap-3 text-orange-800 text-sm"
+          >
+            <i class="pi pi-info-circle mt-0.5 shrink-0 text-orange-500"></i>
+            <p>
+              La configuración de inventario define cómo se rastrea el stock de este producto.
+              <span class="font-bold text-orange-700"
+                >No puedes cambiarla una vez que el producto tenga movimientos registrados.</span
+              >
+            </p>
+          </div>
+
+          <div
+            class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors"
+          >
+            <div class="flex flex-col">
+              <div class="flex items-center gap-2 mb-1">
+                <i class="pi pi-box text-surface-500"></i>
+                <span class="font-bold text-surface-800">Maneja inventario</span>
+              </div>
+              <span class="text-xs text-surface-500"
+                >Controla el stock disponible. Desactivar en servicios o productos digitales.</span
+              >
+            </div>
+            <p-toggleswitch
+              formControlName="manages_inventory"
+              class="p-green-500"
+            ></p-toggleswitch>
+          </div>
+
+          <div
+            class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors opacity-75"
+          >
+            <div class="flex flex-col">
+              <div class="flex items-center gap-2 mb-1">
+                <i class="pi pi-calendar text-surface-500"></i>
+                <span class="font-bold text-surface-800">Maneja lotes</span>
+              </div>
+              <span class="text-xs text-surface-500"
+                >Rastrea lotes con número y fecha de vencimiento. Ideal para alimentos y
+                medicamentos.</span
+              >
+            </div>
+            <p-toggleswitch formControlName="manage_batches" class="p-green-500"></p-toggleswitch>
+          </div>
+
+          <div
+            class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors opacity-75"
+          >
+            <div class="flex flex-col">
+              <div class="flex items-center gap-2 mb-1">
+                <i class="pi pi-qrcode text-surface-500"></i>
+                <span class="font-bold text-surface-800">Maneja serial</span>
+              </div>
+              <span class="text-xs text-surface-500"
+                >Rastrea cada unidad por número de serie. Ideal para electrónicos y
+                maquinaria.</span
+              >
+            </div>
+            <p-toggleswitch formControlName="manage_serial" class="p-green-500"></p-toggleswitch>
+          </div>
+
+          <div
+            class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors opacity-75"
+          >
+            <div class="flex flex-col">
+              <div class="flex items-center gap-2 mb-1">
+                <i class="pi pi-arrow-down-left text-surface-500"></i>
+                <span class="font-bold text-surface-800">Permitir stock negativo</span>
+              </div>
+              <span class="text-xs text-surface-500"
+                >Permite vender aunque no haya stock. El inventario quedará en negativo hasta que se
+                registre la compra. Útil para carnicerías y negocios que reciben y venden antes de
+                registrar la compra.</span
+              >
+            </div>
+            <p-toggleswitch
+              formControlName="allow_negative_stock"
+              class="p-green-500"
+            ></p-toggleswitch>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span
+              class="inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-full text-xs font-medium"
+              ><i class="pi pi-check-circle"></i> Control de stock</span
+            >
+            <span
+              class="inline-flex items-center gap-1 px-3 py-1 bg-surface-100 text-surface-500 border border-surface-200 rounded-full text-xs font-medium"
+              ><i class="pi pi-times-circle"></i> Trazabilidad por lote</span
+            >
+            <span
+              class="inline-flex items-center gap-1 px-3 py-1 bg-surface-100 text-surface-500 border border-surface-200 rounded-full text-xs font-medium"
+              ><i class="pi pi-times-circle"></i> Trazabilidad por serial</span
+            >
+            <span
+              class="inline-flex items-center gap-1 px-3 py-1 bg-surface-100 text-surface-500 border border-surface-200 rounded-full text-xs font-medium"
+              ><i class="pi pi-times-circle"></i> Venta con stock negativo</span
+            >
+          </div>
         </div>
       </p-tabpanel>
 
       <p-tabpanel value="3">
-        <div class="py-8 text-center text-surface-500">
-          Configuración de presentaciones (En construcción)
+        <div class="flex flex-col gap-4 py-4">
+          <div
+            class="bg-orange-50 border border-orange-200 rounded-xl p-4 flex gap-3 text-orange-800 text-sm"
+          >
+            <i class="pi pi-info-circle mt-0.5 shrink-0 text-orange-500"></i>
+            <p>
+              Define cómo se <span class="font-bold text-orange-600">compra y vende</span> este
+              producto. La unidad base es
+              <span class="font-bold text-orange-600">unidad base</span>. El factor indica cuántas
+              unidades base contiene cada presentación.
+            </p>
+          </div>
+
+          @if (!showPresentationForm()) {
+            @if (presentationsList().length === 0) {
+              <!-- Empty State -->
+              <div
+                class="border-2 border-dashed border-surface-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center bg-surface-50/50 my-4"
+              >
+                <i class="pi pi-th-large text-4xl text-surface-300 mb-4"></i>
+                <h4 class="text-lg font-bold text-surface-800 mb-2">
+                  Sin presentaciones configuradas
+                </h4>
+                <p class="text-sm text-surface-500 max-w-sm">
+                  Sin presentaciones, el producto se vende en su unidad base.<br />Agrega
+                  presentaciones si se vende por
+                  <span class="font-bold text-surface-700">cajas, bultos, paquetes</span>, etc.
+                </p>
+              </div>
+            } @else {
+              <div class="flex flex-col gap-3 py-2">
+                @for (presentation of presentationsList(); track $index) {
+                  <div
+                    class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50"
+                  >
+                    <div>
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="font-bold text-surface-800">{{ presentation.name }}</span>
+                        @if (presentation.default_purchase) {
+                          <span
+                            class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full flex items-center gap-1"
+                            ><i class="pi pi-cart-plus text-[10px]"></i> Compra</span
+                          >
+                        }
+                      </div>
+                      <div
+                        class="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded inline-block font-medium"
+                      >
+                        &times; {{ presentation.factor }} unidad base
+                      </div>
+                    </div>
+
+                    <div class="flex items-center gap-6">
+                      @if (presentation.barcode) {
+                        <div class="flex items-center gap-2 text-surface-500">
+                          <i class="pi pi-barcode"></i>
+                          <span class="text-sm">{{ presentation.barcode }}</span>
+                        </div>
+                      }
+
+                      <div class="text-right">
+                        <div class="font-bold text-surface-800">
+                          ${{ presentation.sale_price | number: '1.0-0' }}
+                        </div>
+                        <div class="text-xs text-surface-500">
+                          Costo: ${{ presentation.cost_price | number: '1.0-0' }}
+                        </div>
+                      </div>
+
+                      <div class="flex items-center gap-2">
+                        <button
+                          pButton
+                          icon="pi pi-pencil"
+                          class="p-button-rounded p-button-text p-button-success p-button-sm"
+                        ></button>
+                        <button
+                          pButton
+                          icon="pi pi-trash"
+                          class="p-button-rounded p-button-text p-button-danger p-button-sm"
+                          (click)="removePresentation($index)"
+                        ></button>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+
+            <div>
+              <button
+                pButton
+                type="button"
+                label="Agregar presentación"
+                icon="pi pi-plus"
+                class="p-button-outlined p-button-primary"
+                (click)="addPresentation()"
+              ></button>
+            </div>
+          } @else {
+            <!-- Formulario de Presentación -->
+            <div
+              class="border border-surface-200 rounded-xl p-4 bg-surface-50/50"
+              [formGroup]="presentationForm"
+            >
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="flex flex-col gap-2">
+                  <label class="font-bold text-surface-700 text-xs"
+                    >Nombre <span class="text-red-500">*</span></label
+                  >
+                  <input pInputText formControlName="name" placeholder="Bulto" class="w-full" />
+                </div>
+                <div class="flex flex-col gap-2">
+                  <label class="font-bold text-surface-700 text-xs"
+                    >Factor <span class="text-red-500">*</span></label
+                  >
+                  <p-inputNumber formControlName="factor" class="w-full"></p-inputNumber>
+                  <span class="text-[10px] text-surface-400">Unidades base que contiene</span>
+                </div>
+                <div class="flex flex-col gap-2">
+                  <label class="font-bold text-surface-700 text-xs"
+                    >Código de barras
+                    <span class="text-surface-400 font-normal">(opcional)</span></label
+                  >
+                  <input
+                    pInputText
+                    formControlName="barcode"
+                    placeholder="123456789"
+                    class="w-full"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="flex flex-col gap-2">
+                  <label class="font-bold text-surface-700 text-xs"
+                    >Precio de venta <span class="text-red-500">*</span></label
+                  >
+                  <p-inputNumber
+                    formControlName="sale_price"
+                    mode="currency"
+                    currency="COP"
+                    locale="es-CO"
+                    class="w-full"
+                  ></p-inputNumber>
+                  <span class="text-[10px] text-surface-400"
+                    ><i class="pi pi-info-circle mr-1"></i>Lo que paga el cliente por esta
+                    presentación</span
+                  >
+                </div>
+                <div class="flex flex-col gap-2">
+                  <label class="font-bold text-surface-700 text-xs"
+                    >Costo <span class="text-red-500">*</span></label
+                  >
+                  <p-inputNumber
+                    formControlName="cost_price"
+                    mode="currency"
+                    currency="COP"
+                    locale="es-CO"
+                    class="w-full"
+                  ></p-inputNumber>
+                  <span class="text-[10px] text-surface-400"
+                    ><i class="pi pi-info-circle mr-1"></i>Lo que pagaste al proveedor por esta
+                    presentación</span
+                  >
+                </div>
+              </div>
+
+              <div
+                class="border border-surface-200 rounded-lg p-3 grid grid-cols-2 gap-4 bg-white mb-4"
+              >
+                <div class="flex items-start gap-2">
+                  <p-toggleswitch
+                    formControlName="default_purchase"
+                    class="p-green-500"
+                  ></p-toggleswitch>
+                  <div class="flex flex-col">
+                    <span class="text-sm font-bold text-surface-700 flex items-center gap-1"
+                      ><i class="pi pi-cart-plus text-primary"></i> Presentación de compra por
+                      defecto</span
+                    >
+                    <span class="text-xs text-surface-500"
+                      >Se preselecciona en el módulo de compras</span
+                    >
+                  </div>
+                </div>
+                <div class="flex items-start gap-2">
+                  <p-toggleswitch formControlName="default_sale"></p-toggleswitch>
+                  <div class="flex flex-col">
+                    <span class="text-sm font-bold text-surface-700 flex items-center gap-1"
+                      ><i class="pi pi-star text-primary"></i> Presentación de venta por
+                      defecto</span
+                    >
+                    <span class="text-xs text-surface-500"
+                      >Aparece seleccionada primero en el POS</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="border border-indigo-100 bg-indigo-50/50 rounded-lg p-3 flex items-center gap-2 mb-4"
+              >
+                <i class="pi pi-arrow-right text-indigo-500"></i>
+                <span class="text-indigo-800 text-sm"
+                  >Al comprar/vender
+                  <span class="font-bold"
+                    >1 {{ presentationForm.get('name')?.value || 'Presentación' }}</span
+                  >
+                  se moverán
+                  <span class="font-bold text-indigo-600">{{
+                    presentationForm.get('factor')?.value || 1
+                  }}</span>
+                  unidad base del inventario.</span
+                >
+              </div>
+
+              <div class="flex justify-end gap-2">
+                <button
+                  pButton
+                  label="Cancelar"
+                  class="p-button-text"
+                  (click)="cancelPresentation()"
+                ></button>
+                <button
+                  pButton
+                  label="Guardar presentación"
+                  class="p-button-primary"
+                  (click)="savePresentation()"
+                ></button>
+              </div>
+            </div>
+          }
         </div>
       </p-tabpanel>
 
       <p-tabpanel value="4">
-        <div class="py-8 text-center text-surface-500 flex flex-col gap-6">
+        <div class="flex flex-col gap-6 py-4">
+          <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex gap-4 text-green-800">
+            <div
+              class="bg-green-500 text-white rounded-lg h-10 w-10 flex items-center justify-center shrink-0"
+            >
+              <i class="pi pi-lightbulb text-xl"></i>
+            </div>
+            <div>
+              <h4 class="font-bold mb-1">Definir precios base por unidad</h4>
+              <p class="text-sm">
+                Estos precios se usarán como base para calcular los precios de las presentaciones.
+              </p>
+            </div>
+          </div>
+
           <div class="grid grid-cols-2 gap-4 text-left">
             <div class="flex flex-col gap-2">
-              <label for="cost_price" class="font-bold text-surface-700 text-xs">Costo *</label>
+              <label for="cost_price" class="font-bold text-surface-700 text-xs"
+                >Costo unitario <span class="text-red-500">*</span></label
+              >
               <p-inputNumber
                 id="cost_price"
                 formControlName="cost_price"
                 mode="currency"
                 currency="COP"
                 locale="es-CO"
-                placeholder="0.00"
-                class="w-full"
+                placeholder="$ 0"
                 class="w-full"
               ></p-inputNumber>
+              <span class="text-xs text-surface-400"
+                ><i class="pi pi-info-circle mr-1"></i> Costo por unidad base</span
+              >
               <validator-errors
                 [control]="productForm.get('cost_price')"
                 [label]="'HEADERS.COST' | translate"
@@ -258,33 +702,94 @@
             </div>
 
             <div class="flex flex-col gap-2">
-              <label for="sale_price" class="font-bold text-surface-700 text-xs">Venta *</label>
+              <label for="sale_price" class="font-bold text-surface-700 text-xs"
+                >Precio de venta <span class="text-red-500">*</span></label
+              >
               <p-inputNumber
                 id="sale_price"
                 formControlName="sale_price"
                 mode="currency"
                 currency="COP"
                 locale="es-CO"
-                placeholder="0.00"
-                class="w-full"
+                placeholder="$ 0"
                 class="w-full"
               ></p-inputNumber>
+              <span class="text-xs text-surface-400"
+                ><i class="pi pi-info-circle mr-1"></i> Precio por unidad base</span
+              >
               <validator-errors
                 [control]="productForm.get('sale_price')"
                 [label]="'HEADERS.SALE' | translate"
               />
             </div>
           </div>
+
+          <div class="grid grid-cols-2 gap-4 text-left">
+            <div class="flex flex-col gap-2">
+              <label for="price_2" class="font-bold text-surface-700 text-xs"
+                >Precio 2 <span class="text-surface-400 font-normal">(opcional)</span></label
+              >
+              <p-inputNumber
+                id="price_2"
+                formControlName="price_2"
+                mode="currency"
+                currency="COP"
+                locale="es-CO"
+                placeholder="$ 0"
+                class="w-full"
+              ></p-inputNumber>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="price_3" class="font-bold text-surface-700 text-xs"
+                >Precio 3 <span class="text-surface-400 font-normal">(opcional)</span></label
+              >
+              <p-inputNumber
+                id="price_3"
+                formControlName="price_3"
+                mode="currency"
+                currency="COP"
+                locale="es-CO"
+                placeholder="$ 0"
+                class="w-full"
+              ></p-inputNumber>
+            </div>
+          </div>
+
+          <div
+            class="bg-green-50 border border-green-200 rounded-xl p-4 flex justify-between items-center"
+          >
+            <div class="flex items-center gap-2 font-bold text-green-800">
+              <i class="pi pi-percentage"></i> Margen de utilidad
+            </div>
+            <div
+              class="font-bold"
+              [class.text-red-500]="margin < 0"
+              [class.text-green-600]="margin >= 0"
+            >
+              {{ margin > 0 ? '+' : '' }}{{ margin | number: '1.1-1' }}%
+            </div>
+          </div>
         </div>
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
-  <div class="flex justify-end gap-2">
-    <button pButton label="Cancelar" class="p-button-text" (click)="(closeModal)"></button>
+  <div class="flex justify-end gap-3 p-4 border-t border-surface-100 bg-surface-50/30 rounded-b-xl">
     <button
       pButton
-      [label]="isEditing() ? 'Actualizar' : 'Crear'"
+      type="button"
+      label="Cancelar"
+      icon="pi pi-times"
+      class="p-button-outlined p-button-secondary border-surface-200 text-surface-600"
+      (click)="closeModal.emit()"
+    ></button>
+    <button
+      pButton
+      type="button"
+      [label]="isEditing() ? 'Actualizar producto' : 'Guardar producto'"
+      icon="pi pi-check"
       [loading]="isSaving()"
+      class="p-button-primary bg-indigo-600 border-none px-6"
       (click)="saveProduct()"
     ></button>
   </div>
