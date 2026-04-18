@@ -5,7 +5,8 @@ import * as dotenv from 'dotenv';
 // Load .env file (locally). In Dokploy, vars come from process.env automatically
 dotenv.config({ override: false });
 
-console.log('DEBUG process.env:', JSON.stringify(process.env, null, 2));
+// Also try .env.production for Dokploy deployments
+dotenv.config({ path: path.join(__dirname, '../.env.production'), override: true });
 
 function getEnv(key: string, fallback: string): string {
   return process.env[key] || fallback;
