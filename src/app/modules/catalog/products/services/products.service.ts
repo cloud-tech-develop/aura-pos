@@ -44,4 +44,8 @@ export class ProductsService {
   }> {
     return this.productsApiService.page(params);
   }
+
+  existsBySku(sku: string): Observable<boolean> {
+    return this.productsApiService.existsBySku(sku);
+  }
 }

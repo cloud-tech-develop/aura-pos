@@ -11,9 +11,6 @@ export const formatPageParams = <T>(event: TableLazyLoadEvent): PageParams<T> =>
   const limit = event.rows || 10;
   const search = event.globalFilter as string;
 
-  console.log('globalFilter', event.globalFilter);
-  console.log('search', search);
-
   return {
     page,
     limit,

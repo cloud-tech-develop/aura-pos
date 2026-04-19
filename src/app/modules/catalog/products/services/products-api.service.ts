@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '@environment/environment';
 import { httpErrorHandler } from '@shared/utils';
 import {
@@ -116,6 +116,13 @@ export class ProductsApiService {
         return res;
       }),
       catchError(httpErrorHandler),
+    );
+  }
+
+  existsBySku(sku: string): Observable<boolean> {
+    return this.http.get<ResponseBase<{ exists: boolean }>>(`${this.apiUrl}/exist/${sku}`).pipe(
+      map((r) => r.data?.exists ?? false),
+      catchError(() => of(false)),
     );
   }
 }

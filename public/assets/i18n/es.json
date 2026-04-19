@@ -226,7 +226,8 @@
     "MIN_VALUE": "El campo {{control}} debe ser mayor o igual a {{value}}",
     "MAX_VALUE": "El campo {{control}} debe ser menor o igual a {{value}}",
     "UNIQUE": "El valor del campo {{control}} ya existe",
-    "TABLE_EMPTY": "No se encontraron registros"
+    "TABLE_EMPTY": "No se encontraron registros",
+    "REQUIRED_FIELDS": "Por favor, complete los campos requeridos"
   },
   "TOAST": {
     "SUCCESS": "Éxito",

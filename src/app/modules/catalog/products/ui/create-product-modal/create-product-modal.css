@@ -1,3 +1,13 @@
 :host {
   display: block;
 }
+
+.sub-card-inv {
+  @apply w-6/12 border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors opacity-75;
+}
+
+:host ::ng-deep .p-chip {
+  padding-block: 0.25rem;
+  padding-inline: 0.5rem;
+  font-size: smaller;
+}

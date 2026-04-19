@@ -1,19 +1,19 @@
 <form [formGroup]="productForm" class="flex flex-col h-full">
-  <p-tabs value="0" class="flex-1">
+  <p-tabs [(value)]="tabValue" class="flex-1">
     <p-tablist>
-      <p-tab value="0">
+      <p-tab [value]="0">
         <i class="pi pi-info-circle mr-2"></i>
         <span>Básico</span>
       </p-tab>
-      <p-tab value="1" class="active:text-green-500">
+      <p-tab [value]="1" class="active:text-green-500">
         <i class="pi pi-dollar mr-2 text-green-500"></i>
         <span>Impuestos</span>
       </p-tab>
-      <p-tab value="2">
+      <p-tab [value]="2">
         <i class="pi pi-box mr-2 text-green-500"></i>
         <span>Inventario</span>
       </p-tab>
-      <p-tab value="3">
+      <p-tab [value]="3">
         <div class="flex items-center gap-2">
           <i class="pi pi-th-large text-green-500"></i>
           <span>Presentaciones</span>
@@ -26,14 +26,14 @@
           }
         </div>
       </p-tab>
-      <p-tab value="4">
+      <p-tab [value]="4">
         <i class="pi pi-dollar mr-2 text-green-500"></i>
         <span>Precios</span>
       </p-tab>
     </p-tablist>
 
     <p-tabpanels>
-      <p-tabpanel value="0">
+      <p-tabpanel [value]="0">
         <div class="flex flex-col gap-6 py-4">
           <!-- Image Upload Box -->
           <div class="flex flex-col items-center gap-3">
@@ -99,13 +99,13 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
               <label for="sku" class="font-bold text-surface-700 text-xs"
-                >{{ 'HEADERS.SKU' | translate
-                }}<span class="text-surface-400 font-normal">(opcional)</span></label
+                >{{ 'HEADERS.SKU' | translate }}<span class="text-red-500">*</span></label
               >
               <input pInputText id="sku" formControlName="sku" placeholder="Ej: BEB-001" />
               <validator-errors
                 [control]="productForm.get('sku')"
                 [label]="'HEADERS.SKU' | translate"
+                [customErrors]="[{ type: 'skuExists', message: 'El SKU ya existe' }]"
               />
             </div>
             <div class="flex flex-col gap-2">
@@ -139,6 +139,8 @@
                 optionValue="id"
                 class="w-full"
                 [showClear]="true"
+                [filter]="true"
+                filterBy="name"
               ></p-select>
               <validator-errors
                 [control]="productForm.get('category_id')"
@@ -156,6 +158,8 @@
                 optionValue="id"
                 class="w-full"
                 [showClear]="true"
+                [filter]="true"
+                filterBy="name"
               ></p-select>
               <validator-errors
                 [control]="productForm.get('brand_id')"
@@ -179,6 +183,8 @@
                 optionValue="id"
                 class="w-full"
                 [showClear]="true"
+                [filter]="true"
+                filterBy="name"
               ></p-select>
               <validator-errors
                 [control]="productForm.get('unit_measure_id')"
@@ -197,7 +203,6 @@
                 optionValue="value"
                 placeholder="Seleccionar tipo..."
                 class="w-full"
-                [showClear]="true"
                 [filter]="true"
                 filterBy="label"
                 [filterFields]="['label']"
@@ -257,7 +262,7 @@
         </div>
       </p-tabpanel>
 
-      <p-tabpanel value="1">
+      <p-tabpanel [value]="1">
         <div class="flex flex-col gap-6 py-4">
           <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex gap-4 text-green-800">
             <div
@@ -288,13 +293,16 @@
               <label for="iva_percentage" class="font-bold text-surface-700 text-xs"
                 >IVA (%) <span class="text-red-500">*</span></label
               >
-              <input
-                pInputText
+              <p-inputNumber
                 id="iva_percentage"
                 formControlName="iva_percentage"
                 placeholder="0%"
+                [min]="0"
+                [max]="100"
+                [minFractionDigits]="0"
+                [maxFractionDigits]="2"
                 class="w-full"
-              />
+              ></p-inputNumber>
               <span class="text-xs text-surface-400"
                 ><i class="pi pi-info-circle mr-1"></i> Valores comunes: 0%, 5%, 19%</span
               >
@@ -310,6 +318,7 @@
                 currency="COP"
                 locale="es-CO"
                 placeholder="$ 0"
+                [min]="0"
                 class="w-full"
               ></p-inputNumber>
               <span class="text-xs text-surface-400"
@@ -321,7 +330,7 @@
         </div>
       </p-tabpanel>
 
-      <p-tabpanel value="2">
+      <p-tabpanel [value]="2">
         <div class="flex flex-col gap-4 py-4">
           <div
             class="bg-orange-50 border border-orange-200 rounded-xl p-4 flex gap-3 text-orange-800 text-sm"
@@ -341,92 +350,135 @@
             <div class="flex flex-col">
               <div class="flex items-center gap-2 mb-1">
                 <i class="pi pi-box text-surface-500"></i>
-                <span class="font-bold text-surface-800">Maneja inventario</span>
+                <span class="font-bold text-surface-800">Stock mínimo</span>
               </div>
               <span class="text-xs text-surface-500"
-                >Controla el stock disponible. Desactivar en servicios o productos digitales.</span
+                >Cantidad mínima de stock que debe tener el producto. Cuando el stock llegue a este
+                nivel, se mostrará una alerta para reabastecer el inventario.</span
               >
             </div>
-            <p-toggleswitch
-              formControlName="manages_inventory"
-              class="p-green-500"
-            ></p-toggleswitch>
+            <p-inputNumber
+              id="min_stock"
+              formControlName="min_stock"
+              placeholder="0"
+              [min]="0"
+              [minFractionDigits]="0"
+              [maxFractionDigits]="0"
+              class="w-full"
+            ></p-inputNumber>
           </div>
 
-          <div
-            class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors opacity-75"
-          >
-            <div class="flex flex-col">
-              <div class="flex items-center gap-2 mb-1">
-                <i class="pi pi-calendar text-surface-500"></i>
-                <span class="font-bold text-surface-800">Maneja lotes</span>
+          <div class="w-full flex gap-4">
+            <div class="sub-card-inv">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 mb-1">
+                  <i class="pi pi-box text-surface-500"></i>
+                  <span class="font-bold text-surface-800">Maneja inventario</span>
+                </div>
+                <span class="text-xs text-surface-500"
+                  >Controla el stock disponible. Desactivar en servicios o productos
+                  digitales.</span
+                >
               </div>
-              <span class="text-xs text-surface-500"
-                >Rastrea lotes con número y fecha de vencimiento. Ideal para alimentos y
-                medicamentos.</span
-              >
+              <div class="!w-[3.5rem]">
+                <p-toggleswitch formControlName="manages_inventory"></p-toggleswitch>
+              </div>
             </div>
-            <p-toggleswitch formControlName="manage_batches" class="p-green-500"></p-toggleswitch>
+
+            <div class="sub-card-inv">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 mb-1">
+                  <i class="pi pi-calendar text-surface-500"></i>
+                  <span class="font-bold text-surface-800">Maneja lotes</span>
+                </div>
+                <span class="text-xs text-surface-500"
+                  >Rastrea lotes con número y fecha de vencimiento. Ideal para alimentos y
+                  medicamentos.</span
+                >
+              </div>
+              <div class="!w-[3.5rem]">
+                <p-toggleswitch formControlName="manages_batches"></p-toggleswitch>
+              </div>
+            </div>
           </div>
 
-          <div
-            class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors opacity-75"
-          >
-            <div class="flex flex-col">
-              <div class="flex items-center gap-2 mb-1">
-                <i class="pi pi-qrcode text-surface-500"></i>
-                <span class="font-bold text-surface-800">Maneja serial</span>
+          <div class="w-full flex gap-4">
+            <div class="sub-card-inv">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 mb-1">
+                  <i class="pi pi-qrcode text-surface-500"></i>
+                  <span class="font-bold text-surface-800">Maneja serial</span>
+                </div>
+                <span class="text-xs text-surface-500"
+                  >Rastrea cada unidad por número de serie. Ideal para electrónicos y
+                  maquinaria.</span
+                >
               </div>
-              <span class="text-xs text-surface-500"
-                >Rastrea cada unidad por número de serie. Ideal para electrónicos y
-                maquinaria.</span
-              >
+              <div class="!w-[3.5rem]">
+                <p-toggleswitch formControlName="manages_serial"></p-toggleswitch>
+              </div>
             </div>
-            <p-toggleswitch formControlName="manage_serial" class="p-green-500"></p-toggleswitch>
-          </div>
 
-          <div
-            class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors opacity-75"
-          >
-            <div class="flex flex-col">
-              <div class="flex items-center gap-2 mb-1">
-                <i class="pi pi-arrow-down-left text-surface-500"></i>
-                <span class="font-bold text-surface-800">Permitir stock negativo</span>
+            <div class="sub-card-inv">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 mb-1">
+                  <i class="pi pi-arrow-down-left text-surface-500"></i>
+                  <span class="font-bold text-surface-800">Permitir stock negativo</span>
+                </div>
+                <span class="text-xs text-surface-500"
+                  >Permite vender aunque no haya stock. El inventario quedará en negativo hasta que
+                  se registre la compra. Útil para carnicerías y negocios que reciben y venden antes
+                  de registrar la compra.</span
+                >
               </div>
-              <span class="text-xs text-surface-500"
-                >Permite vender aunque no haya stock. El inventario quedará en negativo hasta que se
-                registre la compra. Útil para carnicerías y negocios que reciben y venden antes de
-                registrar la compra.</span
-              >
+              <div class="!w-[3.5rem]">
+                <p-toggleswitch formControlName="allow_negative_stock"></p-toggleswitch>
+              </div>
             </div>
-            <p-toggleswitch
-              formControlName="allow_negative_stock"
-              class="p-green-500"
-            ></p-toggleswitch>
           </div>
 
           <div class="flex flex-wrap gap-2 mt-2">
-            <span
-              class="inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-full text-xs font-medium"
-              ><i class="pi pi-check-circle"></i> Control de stock</span
-            >
-            <span
-              class="inline-flex items-center gap-1 px-3 py-1 bg-surface-100 text-surface-500 border border-surface-200 rounded-full text-xs font-medium"
-              ><i class="pi pi-times-circle"></i> Trazabilidad por lote</span
-            >
-            <span
-              class="inline-flex items-center gap-1 px-3 py-1 bg-surface-100 text-surface-500 border border-surface-200 rounded-full text-xs font-medium"
-              ><i class="pi pi-times-circle"></i> Trazabilidad por serial</span
-            >
-            <span
-              class="inline-flex items-center gap-1 px-3 py-1 bg-surface-100 text-surface-500 border border-surface-200 rounded-full text-xs font-medium"
-              ><i class="pi pi-times-circle"></i> Venta con stock negativo</span
-            >
+            <p-chip
+              [disabled]="productForm.get('manages_inventory')?.value ? false : true"
+              label="Control de stock"
+              [icon]="
+                productForm.get('manages_inventory')?.value
+                  ? 'pi pi-check-circle'
+                  : 'pi pi-times-circle'
+              "
+            />
+            <p-chip
+              [disabled]="productForm.get('manages_batches')?.value ? false : true"
+              label="Trazabilidad por lote"
+              [icon]="
+                productForm.get('manages_batches')?.value
+                  ? 'pi pi-check-circle'
+                  : 'pi pi-times-circle'
+              "
+            />
+            <p-chip
+              [disabled]="productForm.get('manages_serial')?.value ? false : true"
+              label="Trazabilidad por serial"
+              [icon]="
+                productForm.get('manages_serial')?.value
+                  ? 'pi pi-check-circle'
+                  : 'pi pi-times-circle'
+              "
+            />
+            <p-chip
+              [disabled]="productForm.get('allow_negative_stock')?.value ? false : true"
+              label="Venta con stock negativo"
+              [icon]="
+                productForm.get('allow_negative_stock')?.value
+                  ? 'pi pi-check-circle'
+                  : 'pi pi-times-circle'
+              "
+            />
           </div>
         </div>
       </p-tabpanel>
 
-      <p-tabpanel value="3">
+      <p-tabpanel [value]="3">
         <div class="flex flex-col gap-4 py-4">
           <div
             class="bg-orange-50 border border-orange-200 rounded-xl p-4 flex gap-3 text-orange-800 text-sm"
@@ -662,7 +714,7 @@
         </div>
       </p-tabpanel>
 
-      <p-tabpanel value="4">
+      <p-tabpanel [value]="4">
         <div class="flex flex-col gap-6 py-4">
           <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex gap-4 text-green-800">
             <div
@@ -683,83 +735,100 @@
               <label for="cost_price" class="font-bold text-surface-700 text-xs"
                 >Costo unitario <span class="text-red-500">*</span></label
               >
-              <p-inputNumber
-                id="cost_price"
-                formControlName="cost_price"
-                mode="currency"
-                currency="COP"
-                locale="es-CO"
-                placeholder="$ 0"
-                class="w-full"
-              ></p-inputNumber>
-              <span class="text-xs text-surface-400"
-                ><i class="pi pi-info-circle mr-1"></i> Costo por unidad base</span
-              >
-              <validator-errors
-                [control]="productForm.get('cost_price')"
-                [label]="'HEADERS.COST' | translate"
-              />
+              <div>
+                <p-inputNumber
+                  id="cost_price"
+                  formControlName="cost_price"
+                  mode="currency"
+                  currency="COP"
+                  locale="es-CO"
+                  placeholder="$ 0"
+                  class="w-full"
+                ></p-inputNumber>
+                <validator-errors
+                  [control]="productForm.get('cost_price')"
+                  [label]="'HEADERS.COST' | translate"
+                />
+              </div>
             </div>
 
             <div class="flex flex-col gap-2">
               <label for="sale_price" class="font-bold text-surface-700 text-xs"
                 >Precio de venta <span class="text-red-500">*</span></label
               >
-              <p-inputNumber
-                id="sale_price"
-                formControlName="sale_price"
-                mode="currency"
-                currency="COP"
-                locale="es-CO"
-                placeholder="$ 0"
-                class="w-full"
-              ></p-inputNumber>
-              <span class="text-xs text-surface-400"
-                ><i class="pi pi-info-circle mr-1"></i> Precio por unidad base</span
-              >
-              <validator-errors
-                [control]="productForm.get('sale_price')"
-                [label]="'HEADERS.SALE' | translate"
-              />
+              <div>
+                <p-inputNumber
+                  id="sale_price"
+                  formControlName="sale_price"
+                  mode="currency"
+                  currency="COP"
+                  locale="es-CO"
+                  placeholder="$ 0"
+                  class="w-full"
+                ></p-inputNumber>
+                <validator-errors
+                  [control]="productForm.get('sale_price')"
+                  [label]="'HEADERS.PRICE' | translate"
+                />
+              </div>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4 text-left">
+            @let priceTitle = 'HEADERS.PRICE' | translate;
             <div class="flex flex-col gap-2">
               <label for="price_2" class="font-bold text-surface-700 text-xs"
-                >Precio 2 <span class="text-surface-400 font-normal">(opcional)</span></label
+                >{{ priceTitle }} 2
+                <span class="text-surface-400 font-normal">(opcional)</span></label
               >
-              <p-inputNumber
-                id="price_2"
-                formControlName="price_2"
-                mode="currency"
-                currency="COP"
-                locale="es-CO"
-                placeholder="$ 0"
-                class="w-full"
-              ></p-inputNumber>
+              <div>
+                <p-inputNumber
+                  id="price_2"
+                  formControlName="price_2"
+                  mode="currency"
+                  currency="COP"
+                  locale="es-CO"
+                  placeholder="$ 0"
+                  class="w-full"
+                ></p-inputNumber>
+                <validator-errors
+                  [control]="productForm.get('price_2')"
+                  [label]="priceTitle + ' 2'"
+                />
+              </div>
             </div>
 
             <div class="flex flex-col gap-2">
               <label for="price_3" class="font-bold text-surface-700 text-xs"
-                >Precio 3 <span class="text-surface-400 font-normal">(opcional)</span></label
+                >{{ priceTitle }} 3
+                <span class="text-surface-400 font-normal">(opcional)</span></label
               >
-              <p-inputNumber
-                id="price_3"
-                formControlName="price_3"
-                mode="currency"
-                currency="COP"
-                locale="es-CO"
-                placeholder="$ 0"
-                class="w-full"
-              ></p-inputNumber>
+              <div>
+                <p-inputNumber
+                  id="price_3"
+                  formControlName="price_3"
+                  mode="currency"
+                  currency="COP"
+                  locale="es-CO"
+                  placeholder="$ 0"
+                  class="w-full"
+                ></p-inputNumber>
+                <validator-errors
+                  [control]="productForm.get('price_3')"
+                  [label]="priceTitle + ' 3'"
+                />
+              </div>
             </div>
           </div>
 
           <div
             class="bg-green-50 border border-green-200 rounded-xl p-4 flex justify-between items-center"
           >
-            <div class="flex items-center gap-2 font-bold text-green-800">
+            <div
+              class="flex items-center gap-2 font-bold"
+              [class.text-red-500]="margin < 0"
+              [class.text-green-600]="margin >= 0"
+            >
               <i class="pi pi-percentage"></i> Margen de utilidad
             </div>
             <div
@@ -783,14 +852,26 @@
       class="p-button-outlined p-button-secondary border-surface-200 text-surface-600"
       (click)="closeModal.emit()"
     ></button>
-    <button
-      pButton
-      type="button"
-      [label]="isEditing() ? 'Actualizar producto' : 'Guardar producto'"
-      icon="pi pi-check"
-      [loading]="isSaving()"
-      class="p-button-primary bg-indigo-600 border-none px-6"
-      (click)="saveProduct()"
-    ></button>
+
+    @if (tabValue == 4) {
+      <button
+        pButton
+        type="button"
+        [label]="isEditing() ? 'Actualizar producto' : 'Guardar producto'"
+        icon="pi pi-check"
+        [loading]="isSaving()"
+        class="p-button-primary"
+        (click)="saveProduct()"
+      ></button>
+    } @else {
+      <button
+        pButton
+        type="button"
+        label="Siguiente"
+        icon="pi pi-arrow-right"
+        class="p-button-success"
+        (click)="nextTab()"
+      ></button>
+    }
   </div>
 </form>

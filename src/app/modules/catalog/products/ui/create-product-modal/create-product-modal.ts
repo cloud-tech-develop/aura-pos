@@ -1,39 +1,43 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  inject,
-  input,
-  OnInit,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, EventEmitter, inject, input, OnInit, Output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 import { CreateProductRequest } from '@module-catalog/products/interfaces';
 import { ProductsService } from '@module-catalog/products/services';
+
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TabsModule } from 'primeng/tabs';
 import { TextareaModule } from 'primeng/textarea';
+import { ChipModule } from 'primeng/chip';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+
 import { ValidatorErrors } from '@shared/components/validation-errors/validator-errors.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { getFormErrors } from '@shared/utils';
 import { CategoriesService } from '@module-catalog/categories/services';
-import { Category } from '@module-catalog/categories/interfaces';
-import { ListId } from '@core/interfaces';
 import { UnitsService } from '@module-catalog/units/services';
 import { BrandsService } from '@module-catalog/brands/services';
-import { PRODUCT_TYPES } from '@core/constants';
+
+import { PRODUCT_STANDARD, PRODUCT_TYPES } from '@core/constants';
+import { getFormErrors } from '@shared/utils';
+import { skuExistsValidator } from '@core/validators';
+import { ListId } from '@core/interfaces';
+import { ToastAlertService } from '@services/index';
+
+const TAB_ERRORS: Record<number, string[]> = {
+  0: ['name', 'sku', 'unit_measure_id'],
+  1: ['presentations'],
+  2: [],
+  3: [],
+  4: ['cost_price', 'sale_price'],
+};
 
 @Component({
   selector: 'app-create-product-modal',
   templateUrl: './create-product-modal.html',
   styleUrl: './create-product-modal.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     InputNumberModule,
@@ -43,6 +47,7 @@ import { PRODUCT_TYPES } from '@core/constants';
     InputTextModule,
     TabsModule,
     ToggleSwitchModule,
+    ChipModule,
     TranslateModule,
     ValidatorErrors,
     CommonModule,
@@ -53,6 +58,9 @@ export class CreateProductModal implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
 
   private fb = inject(FormBuilder);
+  private toast = inject(ToastAlertService);
+  private translate = inject(TranslateService);
+
   private service = inject(ProductsService);
   private categoriesService = inject(CategoriesService);
   private unitsService = inject(UnitsService);
@@ -63,30 +71,38 @@ export class CreateProductModal implements OnInit {
   categoryList = signal<ListId[]>([]);
   unitList = signal<ListId[]>([]);
   brandList = signal<ListId[]>([]);
+  showPresentationForm = signal(false);
+  presentationsList = signal<any[]>([]);
   productTypes = PRODUCT_TYPES;
+
+  tabValue: number = 0;
 
   readonly productForm: FormGroup = this.fb.group({
     active: [true],
-    sku: ['', [Validators.maxLength(50)]],
-    barcode: ['', [Validators.maxLength(50)]],
-    name: ['', [Validators.required, Validators.maxLength(200)]],
-    description: ['', [Validators.maxLength(500)]],
+    sku: [
+      null,
+      [Validators.required, Validators.maxLength(50)],
+      [skuExistsValidator((sku) => this.service.existsBySku(sku))],
+    ],
+    barcode: [null, [Validators.maxLength(50)]],
+    name: [null, [Validators.required, Validators.maxLength(200)]],
+    description: [null, [Validators.maxLength(500)]],
     category_id: [null],
     brand_id: [null],
-    unit_measure_id: [null],
-    product_type: ['Standard'],
+    unit_measure_id: [null, [Validators.required]],
+    product_type: [PRODUCT_STANDARD.value],
     visible_in_pos: [true],
     cost_price: [null, [Validators.required, Validators.min(0)]],
     sale_price: [null, [Validators.required, Validators.min(0)]],
     price_2: [null],
     price_3: [null],
-    iva_percentage: [0],
-    consumption_tax: [0],
+    iva_percentage: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+    consumption_tax: [0, [Validators.required, Validators.min(0)]],
     manages_inventory: [true],
     manages_batches: [false],
     manages_serial: [false],
     allow_negative_stock: [false],
-    min_stock: [0],
+    min_stock: [0, [Validators.required, Validators.min(0)]],
     image_url: [''],
   });
 
@@ -106,7 +122,16 @@ export class CreateProductModal implements OnInit {
     this.productForm.markAllAsTouched();
     if (this.productForm.invalid) {
       const errors = getFormErrors(this.productForm);
-      console.log({ errors });
+      const listErrors = errors.map((error) => Object.keys(error)[0]);
+      [4, 3, 2, 1, 0].forEach((tab) => {
+        TAB_ERRORS[tab].forEach((error) => {
+          if (listErrors.includes(error)) {
+            this.tabValue = tab;
+          }
+        });
+      });
+      this.productForm.updateValueAndValidity();
+      this.toast.error(this.translate.instant('ALERTS.REQUIRED_FIELDS'));
       return;
     }
     const product: CreateProductRequest = {
@@ -143,9 +168,6 @@ export class CreateProductModal implements OnInit {
       }
     });
   }
-
-  showPresentationForm = signal(false);
-  presentationsList = signal<any[]>([]);
 
   readonly presentationForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
@@ -193,5 +215,17 @@ export class CreateProductModal implements OnInit {
     const sale = this.productForm.get('sale_price')?.value || 0;
     if (cost === 0) return 0;
     return ((sale - cost) / cost) * 100;
+  }
+
+  nextTab() {
+    this.productForm.markAllAsTouched();
+    const errors = getFormErrors(this.productForm);
+
+    const listErrors = errors.map((error) => Object.keys(error)[0]);
+    const errorsInTab = listErrors.some((error) => TAB_ERRORS[this.tabValue].includes(error));
+    if (errorsInTab) {
+      return;
+    }
+    this.tabValue = this.tabValue + 1;
   }
 }

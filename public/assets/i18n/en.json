@@ -224,7 +224,8 @@
     "MIN_VALUE": "The {{control}} field must be greater than or equal to {{value}}",
     "MAX_VALUE": "The {{control}} field must be less than or equal to {{value}}",
     "UNIQUE": "The {{control}} field value already exists",
-    "TABLE_EMPTY": "No records found"
+    "TABLE_EMPTY": "No records found",
+    "REQUIRED_FIELDS": "Please complete the required fields"
   },
   "TOAST": {
     "SUCCESS": "Success",
