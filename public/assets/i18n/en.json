@@ -23,12 +23,23 @@
   },
   "PRODUCTS": {
     "TITLE": "Products",
+    "SUBTITLE": "Manage the complete catalog of products and services",
+    "NAME": "Product",
     "ADD": "Add Product",
-    "ADD_PRODUCT": "Add Product",
-    "EDIT_PRODUCT": "Edit Product",
+    "EDIT": "Edit Product",
+    "DELETE": "Delete Product",
     "NO_PRODUCTS": "No products found",
     "EMPTY": "No products found",
     "FILTER_STATUS": "Filter by status"
+  },
+  "PRESENTATIONS": {
+    "TITLE": "Presentations",
+    "SUBTITLE": "Manage the presentations of the products",
+    "NAME": "Presentation",
+    "ADD": "Add Presentation",
+    "EDIT": "Edit Presentation",
+    "DELETE": "Delete Presentation",
+    "EMPTY": "No presentations found"
   },
   "HEADERS": {
     "ID": "ID",

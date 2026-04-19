@@ -17,15 +17,20 @@ export class PresentationsService {
     return this.presentationsApiService.getById(id);
   }
 
-  create(payload: PresentationRequest): Observable<{ error: boolean; msg: string; data?: Presentation }> {
+  create(
+    payload: PresentationRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Presentation }> {
     return this.presentationsApiService.create(payload);
   }
 
-  update(id: string, payload: PresentationRequest): Observable<{ error: boolean; msg: string; data?: Presentation }> {
+  update(
+    id: string,
+    payload: PresentationRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Presentation }> {
     return this.presentationsApiService.update(id, payload);
   }
 
-  delete(id: string): Observable<{ error: boolean; msg: string }> {
+  delete(id: number): Observable<{ error: boolean; msg: string }> {
     return this.presentationsApiService.delete(id);
   }
 }

@@ -1,9 +1,18 @@
-import { CommonModule, DecimalPipe } from '@angular/common';
-import { Component, EventEmitter, inject, input, OnInit, Output, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { CreateProductRequest } from '@module-catalog/products/interfaces';
+import { ProductRequest, Product } from '@module-catalog/products/interfaces';
 import { ProductsService } from '@module-catalog/products/services';
 
 import { ButtonModule } from 'primeng/button';
@@ -25,6 +34,11 @@ import { getFormErrors } from '@shared/utils';
 import { skuExistsValidator } from '@core/validators';
 import { ListId } from '@core/interfaces';
 import { ToastAlertService } from '@services/index';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { PresentationsService } from '@module-catalog/presentations/services';
+import { DialogModule } from 'primeng/dialog';
+import { Presentation } from '@module-catalog/presentations/interfaces';
 
 const TAB_ERRORS: Record<number, string[]> = {
   0: ['name', 'sku', 'unit_measure_id'],
@@ -45,6 +59,9 @@ const TAB_ERRORS: Record<number, string[]> = {
     TextareaModule,
     SelectModule,
     InputTextModule,
+    DialogModule,
+    IconFieldModule,
+    InputIconModule,
     TabsModule,
     ToggleSwitchModule,
     ChipModule,
@@ -53,9 +70,11 @@ const TAB_ERRORS: Record<number, string[]> = {
     CommonModule,
   ],
 })
-export class CreateProductModal implements OnInit {
+export class CreateProductModal implements OnInit, OnDestroy {
   @Output() reloadTable = new EventEmitter<void>();
   @Output() closeModal = new EventEmitter<void>();
+  product = input<Product | null>(null);
+  isEditing = input<boolean>(false);
 
   private fb = inject(FormBuilder);
   private toast = inject(ToastAlertService);
@@ -65,25 +84,30 @@ export class CreateProductModal implements OnInit {
   private categoriesService = inject(CategoriesService);
   private unitsService = inject(UnitsService);
   private brandsService = inject(BrandsService);
+  private presentationsService = inject(PresentationsService);
 
-  isEditing = input<boolean>(false);
+  selectedPresentation = signal<Presentation | null>(null);
   isSaving = signal<boolean>(false);
   categoryList = signal<ListId[]>([]);
   unitList = signal<ListId[]>([]);
   brandList = signal<ListId[]>([]);
   showPresentationForm = signal(false);
-  presentationsList = signal<any[]>([]);
+  showDeleteDialog = signal(false);
+  presentationsList = signal<Presentation[]>([]);
   productTypes = PRODUCT_TYPES;
 
   tabValue: number = 0;
 
+  get margin(): number {
+    const cost = this.productForm.get('cost_price')?.value || 0;
+    const sale = this.productForm.get('sale_price')?.value || 0;
+    if (cost === 0) return 0;
+    return ((sale - cost) / cost) * 100;
+  }
+
   readonly productForm: FormGroup = this.fb.group({
     active: [true],
-    sku: [
-      null,
-      [Validators.required, Validators.maxLength(50)],
-      [skuExistsValidator((sku) => this.service.existsBySku(sku))],
-    ],
+    sku: [null, [Validators.required, Validators.maxLength(50)]],
     barcode: [null, [Validators.maxLength(50)]],
     name: [null, [Validators.required, Validators.maxLength(200)]],
     description: [null, [Validators.maxLength(500)]],
@@ -106,6 +130,10 @@ export class CreateProductModal implements OnInit {
     image_url: [''],
   });
 
+  ngOnDestroy(): void {
+    this.closeModal.emit();
+  }
+
   ngOnInit(): void {
     this.categoriesService.list().subscribe((res) => {
       this.categoryList.set(res.data || []);
@@ -115,6 +143,31 @@ export class CreateProductModal implements OnInit {
     });
     this.brandsService.list().subscribe((res) => {
       this.brandList.set(res.data || []);
+    });
+    const SKU_CONTROL = this.productForm.get('sku');
+    if (this.product()) {
+      this.productForm.patchValue(this.product()!);
+      SKU_CONTROL?.disable();
+      this.getPresentations();
+    } else {
+      SKU_CONTROL?.enable();
+      SKU_CONTROL?.setAsyncValidators([skuExistsValidator((sku) => this.service.existsBySku(sku))]);
+      SKU_CONTROL?.updateValueAndValidity();
+    }
+  }
+
+  onSkuUnlock() {
+    const SKU_CONTROL = this.productForm.get('sku');
+    SKU_CONTROL?.enable();
+    SKU_CONTROL?.setAsyncValidators([skuExistsValidator((sku) => this.service.existsBySku(sku))]);
+    SKU_CONTROL?.updateValueAndValidity();
+  }
+
+  private getPresentations() {
+    this.service.getPresentations(this.product()!.id).subscribe((res) => {
+      if (!res.error) {
+        this.presentationsList.set(res.data || []);
+      }
     });
   }
 
@@ -134,7 +187,7 @@ export class CreateProductModal implements OnInit {
       this.toast.error(this.translate.instant('ALERTS.REQUIRED_FIELDS'));
       return;
     }
-    const product: CreateProductRequest = {
+    const product: ProductRequest = {
       active: this.productForm.get('active')?.value,
       sku: this.productForm.get('sku')?.value,
       barcode: this.productForm.get('barcode')?.value,
@@ -161,15 +214,25 @@ export class CreateProductModal implements OnInit {
       presentations: this.presentationsList(),
     };
 
-    this.service.create(product).subscribe((response) => {
-      if (!response.error) {
-        this.reloadTable.emit();
-        this.closeModal.emit();
-      }
-    });
+    if (this.isEditing()) {
+      this.service.update(this.product()!.id, product).subscribe((response) => {
+        if (!response.error) {
+          this.reloadTable.emit();
+          this.closeModal.emit();
+        }
+      });
+    } else {
+      this.service.create(product).subscribe((response) => {
+        if (!response.error) {
+          this.reloadTable.emit();
+          this.closeModal.emit();
+        }
+      });
+    }
   }
 
   readonly presentationForm: FormGroup = this.fb.group({
+    id: [null],
     name: ['', Validators.required],
     factor: [1, [Validators.required, Validators.min(1)]],
     barcode: [''],
@@ -179,16 +242,17 @@ export class CreateProductModal implements OnInit {
     default_sale: [false],
   });
 
-  addPresentation() {
+  addPresentation(presentation?: Presentation) {
     this.showPresentationForm.set(true);
     this.presentationForm.reset({
-      name: '',
-      factor: 1,
-      barcode: '',
-      sale_price: null,
-      cost_price: null,
-      default_purchase: false,
-      default_sale: false,
+      id: presentation?.id || null,
+      name: presentation?.name || '',
+      factor: presentation?.factor || 1,
+      barcode: presentation?.barcode || '',
+      sale_price: presentation?.sale_price || null,
+      cost_price: presentation?.cost_price || null,
+      default_purchase: presentation?.default_purchase || false,
+      default_sale: presentation?.default_sale || false,
     });
   }
 
@@ -198,7 +262,18 @@ export class CreateProductModal implements OnInit {
 
   savePresentation() {
     if (this.presentationForm.valid) {
-      const current = this.presentationsList();
+      const isEditing = this.presentationForm.get('id')?.value;
+      const currenIsDefaultPurchase = this.presentationForm.get('default_purchase')?.value;
+      const currenIsDefaultSale = this.presentationForm.get('default_sale')?.value;
+      const current = this.presentationsList()
+        .map((p) => {
+          return {
+            ...p,
+            default_purchase: currenIsDefaultPurchase ? false : p.default_purchase,
+            default_sale: currenIsDefaultSale ? false : p.default_sale,
+          };
+        })
+        .filter((p) => p.id !== isEditing);
       this.presentationsList.set([...current, this.presentationForm.value]);
       this.showPresentationForm.set(false);
     }
@@ -206,15 +281,25 @@ export class CreateProductModal implements OnInit {
 
   removePresentation(index: number) {
     const current = this.presentationsList();
-    current.splice(index, 1);
-    this.presentationsList.set([...current]);
+    const presentation = current[index];
+
+    if (presentation && presentation.id) {
+      this.selectedPresentation.set(presentation);
+      this.showDeleteDialog.set(true);
+    } else {
+      current.splice(index, 1);
+      this.presentationsList.set([...current]);
+    }
   }
 
-  get margin(): number {
-    const cost = this.productForm.get('cost_price')?.value || 0;
-    const sale = this.productForm.get('sale_price')?.value || 0;
-    if (cost === 0) return 0;
-    return ((sale - cost) / cost) * 100;
+  deletePresentation() {
+    this.showDeleteDialog.set(false);
+    this.presentationsService.delete(this.selectedPresentation()!.id!).subscribe((response) => {
+      if (!response.error) {
+        this.toast.success(this.translate.instant('MESSAGES.DELETE_SUCCESS'));
+        this.getPresentations();
+      }
+    });
   }
 
   nextTab() {

@@ -1,13 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -15,24 +10,22 @@ import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { PaginatorModule } from 'primeng/paginator';
-import { DialogModule } from 'primeng/dialog';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { ProductsService } from '../../services';
-import {
-  Product,
-  ProductStatus,
-  CreateProductRequest,
-  ProductPaginationRequest,
-} from '../../interfaces';
-import { IndexHeaderComponent } from '@shared/components/index-header/index-header.component';
 import { CardModule } from 'primeng/card';
 import { TextareaModule } from 'primeng/textarea';
 import { TabsModule } from 'primeng/tabs';
+import { PaginatorModule } from 'primeng/paginator';
+import { DialogModule } from 'primeng/dialog';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { ToastrService } from 'ngx-toastr';
+
+import { Product, ProductPaginationRequest } from '../../interfaces';
+import { ProductsService } from '../../services';
+import { IndexHeaderComponent } from '@shared/components/index-header/index-header.component';
 import { CreateProductModal } from '../create-product-modal/create-product-modal';
 import { PageParams } from '@core/interfaces';
 import { formatPageParams } from '@shared/utils/table';
+import { TruncatePipe } from '@core/pipes';
 
 @Component({
   selector: 'app-index-products',
@@ -54,6 +47,7 @@ import { formatPageParams } from '@shared/utils/table';
     PaginatorModule,
     DialogModule,
     InputNumberModule,
+    TruncatePipe,
     TabsModule,
     ToggleSwitchModule,
     CreateProductModal,
@@ -62,8 +56,11 @@ import { formatPageParams } from '@shared/utils/table';
   styleUrl: './index-products.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IndexProducts implements OnInit {
+export class IndexProducts {
   private productsService = inject(ProductsService);
+  private toastr = inject(ToastrService);
+  private translate = inject(TranslateService);
+
   readonly params = signal<ProductPaginationRequest>({
     page: 1,
     limit: 10,
@@ -85,6 +82,7 @@ export class IndexProducts implements OnInit {
   readonly isEditing = signal(false);
   readonly selectedProduct = signal<Product | null>(null);
   readonly isSaving = signal(false);
+  readonly showDeleteDialog = signal(false);
 
   readonly statusOptions = [
     { label: 'Active', value: 'ACTIVE' },
@@ -92,42 +90,37 @@ export class IndexProducts implements OnInit {
     { label: 'Discontinued', value: 'DISCONTINUED' },
   ];
 
-  ngOnInit(): void {}
-
   loadProducts(event: TableLazyLoadEvent): void {
     const payload: PageParams<null> = formatPageParams(event);
     this.isLoading.set(true);
     this.productsService.page(payload).subscribe({
-      next: ({ data, error, msg }) => {
+      next: ({ data }) => {
         this.isLoading.set(false);
         this.products.set(data?.items ?? []);
         this.totalRecords.set(data?.total ?? 0);
       },
-      error: () => {
-        this.isLoading.set(false);
-      },
     });
   }
 
-  getStatusSeverity(
-    status: ProductStatus,
-  ): 'success' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined {
-    switch (status) {
-      case 'ACTIVE':
-        return 'success';
-      case 'INACTIVE':
-        return 'warn';
-      case 'DISCONTINUED':
-        return 'danger';
-      default:
-        return 'secondary';
-    }
+  onDelete(product: Product): void {
+    this.showDeleteDialog.set(true);
+    this.selectedProduct.set(product);
   }
 
-  deleteProduct(product: Product): void {
-    this.productsService.delete(product.id).subscribe({
+  onEdit(product: Product): void {
+    this.showDialog.set(true);
+    this.isEditing.set(true);
+    this.selectedProduct.set(product);
+  }
+
+  deleteProduct(): void {
+    if (!this.selectedProduct()) return;
+    this.productsService.delete(this.selectedProduct()!.id).subscribe({
       next: (res) => {
         if (!res.error) {
+          this.showDeleteDialog.set(false);
+          this.selectedProduct.set(null);
+          this.toastr.success(this.translate.instant('MESSAGES.DELETE_SUCCESS'));
           this.loadProducts({ first: 0, rows: 10 } as TableLazyLoadEvent);
         }
       },
@@ -136,5 +129,7 @@ export class IndexProducts implements OnInit {
 
   hideDialog(): void {
     this.showDialog.set(false);
+    this.isEditing.set(false);
+    this.selectedProduct.set(null);
   }
 }

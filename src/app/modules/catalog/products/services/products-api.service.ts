@@ -5,13 +5,13 @@ import { environment } from '@environment/environment';
 import { httpErrorHandler } from '@shared/utils';
 import {
   Product,
-  CreateProductRequest,
-  UpdateProductRequest,
+  ProductRequest,
   ProductListResponse,
   ProductPaginationRequest,
   ProductPageResponse,
 } from '../interfaces';
 import { PageData, ResponseBase } from '@core/interfaces';
+import { Presentation } from '@module-catalog/presentations/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -50,9 +50,7 @@ export class ProductsApiService {
     );
   }
 
-  create(
-    payload: CreateProductRequest,
-  ): Observable<{ error: boolean; msg: string; data?: Product }> {
+  create(payload: ProductRequest): Observable<{ error: boolean; msg: string; data?: Product }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Product | undefined };
 
     return this.http.post<ResponseBase<Product>>(`${this.apiUrl}`, payload).pipe(
@@ -69,7 +67,7 @@ export class ProductsApiService {
 
   update(
     id: number,
-    payload: UpdateProductRequest,
+    payload: ProductRequest,
   ): Observable<{ error: boolean; msg: string; data?: Product }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Product | undefined };
 
@@ -123,6 +121,47 @@ export class ProductsApiService {
     return this.http.get<ResponseBase<{ exists: boolean }>>(`${this.apiUrl}/exist/${sku}`).pipe(
       map((r) => r.data?.exists ?? false),
       catchError(() => of(false)),
+    );
+  }
+
+  getPresentations(id: number): Observable<{ error: boolean; msg: string; data?: Presentation[] }> {
+    const res = {
+      error: true,
+      msg: 'Error undefined',
+      data: undefined as Presentation[] | undefined,
+    };
+
+    return this.http.get<ResponseBase<Presentation[]>>(`${this.apiUrl}/${id}/presentations`).pipe(
+      map((r) => {
+        res.msg = r.message;
+        if (!r.success) return res;
+        res.data = r.data;
+        res.error = false;
+        return res;
+      }),
+      catchError(httpErrorHandler),
+    );
+  }
+
+  upsertPresentations(
+    id: number,
+    payload: Presentation[],
+  ): Observable<{ error: boolean; msg: string; data: null }> {
+    const res = {
+      error: true,
+      msg: 'Error undefined',
+      data: null,
+    };
+
+    return this.http.post<ResponseBase<null>>(`${this.apiUrl}/${id}/presentations`, payload).pipe(
+      map((r) => {
+        res.msg = r.message;
+        if (!r.success) return res;
+        res.data = r.data;
+        res.error = false;
+        return res;
+      }),
+      catchError(httpErrorHandler),
     );
   }
 }

@@ -11,6 +11,25 @@ export interface Base64 {
 }
 
 export type StatusServices = 'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR';
+export type StatusCommon =
+  | 'ACTIVE'
+  | 'INACTIVE'
+  | 'DISCONTINUED'
+  | 'PENDING'
+  | 'CANCELLED'
+  | 'DRAFT'
+  | 'COMPLETED'
+  | 'PAID'
+  | 'UNPAID'
+  | 'PARTIALLY_PAID'
+  | 'RETURNED'
+  | 'PARTIALLY_RETURNED'
+  | 'CLOSED'
+  | 'OPEN'
+  | 'VOIDED'
+  | 'EXPIRED'
+  | 'REJECTED'
+  | 'APPROVED';
 
 export type OptionType = {
   value: string;

@@ -1,17 +1,17 @@
 // Presentation interface for Catalog Module
 export interface Presentation {
-  id: string;
+  id?: number;
   name: string;
-  description?: string;
-  unitId?: string;
-  quantity: number;
-  barcode?: string;
-  imageUrl?: string;
+  product_id: number;
+  factor: number;
+  barcode: string;
+  cost_price: number;
+  sale_price: number;
+  default_purchase: boolean;
+  default_sale: boolean;
+  enterprise_id: number;
   isActive: boolean;
-  createdAt?: string;
-  updatedAt?: string;
 }
-
 export interface PresentationRequest {
   name: string;
   description?: string;

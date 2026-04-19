@@ -12,12 +12,33 @@ describe('IndexProducts', () => {
   const mockProductsService = {
     page: () => {
       return {
-        subscribe: (callbacks: { next: (res: { error: boolean; data?: { items: Product[]; total: number } }) => void }) => {
+        subscribe: (callbacks: {
+          next: (res: { error: boolean; data?: { items: Product[]; total: number } }) => void;
+        }) => {
           callbacks.next({
             error: false,
             data: {
               items: [
-                { id: 1, sku: 'PROD001', name: 'Café Americano', cost_price: 25, sale_price: 45, status: 'ACTIVE' },
+                {
+                  id: 1,
+                  sku: 'PROD001',
+                  name: 'Café Americano',
+                  cost_price: 25,
+                  sale_price: 45,
+                  status: 'ACTIVE',
+                  description: null,
+                  category_id: null,
+                  category_name: null,
+                  brand_id: null,
+                  brand_name: null,
+                  unit_measure_id: 0,
+                  unit_name: '',
+                  tax_rate: null,
+                  min_stock: 0,
+                  current_stock: 0,
+                  image_url: null,
+                  enterprise_id: 0,
+                },
               ],
               total: 1,
             },
@@ -37,9 +58,7 @@ describe('IndexProducts', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [IndexProducts, HttpClientTestingModule],
-      providers: [
-        { provide: ProductsService, useValue: mockProductsService },
-      ],
+      providers: [{ provide: ProductsService, useValue: mockProductsService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(IndexProducts);
@@ -108,28 +127,29 @@ describe('IndexProducts', () => {
     });
   });
 
-  describe('getStatusSeverity', () => {
-    it('should return success for ACTIVE status', () => {
-      expect(component.getStatusSeverity('ACTIVE')).toBe('success');
-    });
-
-    it('should return warn for INACTIVE status', () => {
-      expect(component.getStatusSeverity('INACTIVE')).toBe('warn');
-    });
-
-    it('should return danger for DISCONTINUED status', () => {
-      expect(component.getStatusSeverity('DISCONTINUED')).toBe('danger');
-    });
-
-    it('should return secondary for unknown status', () => {
-      expect(component.getStatusSeverity('UNKNOWN' as any)).toBe('secondary');
-    });
-  });
-
   describe('deleteProduct', () => {
     it('should delete product successfully', () => {
-      const product: Product = { id: 1, sku: 'PROD001', name: 'Test', cost_price: 10, sale_price: 20, status: 'ACTIVE' };
-      component.deleteProduct(product);
+      const product: Product = {
+        id: 1,
+        sku: 'PROD001',
+        name: 'Test',
+        cost_price: 10,
+        sale_price: 20,
+        status: 'ACTIVE',
+        description: null,
+        category_id: null,
+        category_name: null,
+        brand_id: null,
+        brand_name: null,
+        unit_measure_id: 0,
+        unit_name: '',
+        tax_rate: null,
+        min_stock: 0,
+        current_stock: 0,
+        image_url: null,
+        enterprise_id: 0,
+      };
+      component.deleteProduct();
 
       expect(component.isLoading()).toBe(true);
     });

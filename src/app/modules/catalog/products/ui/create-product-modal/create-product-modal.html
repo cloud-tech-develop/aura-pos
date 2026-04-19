@@ -101,7 +101,18 @@
               <label for="sku" class="font-bold text-surface-700 text-xs"
                 >{{ 'HEADERS.SKU' | translate }}<span class="text-red-500">*</span></label
               >
-              <input pInputText id="sku" formControlName="sku" placeholder="Ej: BEB-001" />
+              <p-iconfield>
+                <input
+                  pInputText
+                  id="sku"
+                  class="w-full"
+                  formControlName="sku"
+                  placeholder="Ej: BEB-001"
+                />
+                @if (productForm.get('sku')?.disabled) {
+                  <p-inputicon class="pi pi-lock-open" (click)="onSkuUnlock()" />
+                }
+              </p-iconfield>
               <validator-errors
                 [control]="productForm.get('sku')"
                 [label]="'HEADERS.SKU' | translate"
@@ -553,6 +564,7 @@
                           pButton
                           icon="pi pi-pencil"
                           class="p-button-rounded p-button-text p-button-success p-button-sm"
+                          (click)="addPresentation(presentation)"
                         ></button>
                         <button
                           pButton
@@ -875,3 +887,28 @@
     }
   </div>
 </form>
+
+@if (showDeleteDialog()) {
+  <p-dialog
+    [header]="'PRESENTATIONS.DELETE' | translate"
+    [(visible)]="showDeleteDialog"
+    [style]="{ width: '25rem' }"
+  >
+    <span class="p-text-secondary block">{{ 'MESSAGES.DELETE_CONFIRM' | translate }}</span>
+    <h3 class="text-xl font-bold text-center text-red-500 mb-8 mt-0">
+      ⚠️ {{ selectedPresentation()?.name }} ⚠️
+    </h3>
+    <div class="flex justify-end gap-2">
+      <p-button
+        [label]="'COMMON.CANCEL' | translate"
+        severity="secondary"
+        (click)="showDeleteDialog.set(false)"
+      />
+      <p-button
+        [label]="'COMMON.DELETE' | translate"
+        severity="danger"
+        (click)="deletePresentation()"
+      />
+    </div>
+  </p-dialog>
+}

@@ -3,12 +3,12 @@ import { Observable, tap } from 'rxjs';
 import { ProductsApiService } from './products-api.service';
 import {
   Product,
-  CreateProductRequest,
-  UpdateProductRequest,
+  ProductRequest,
   ProductListResponse,
   ProductPaginationRequest,
 } from '../interfaces';
 import { PageData } from '@core/interfaces';
+import { Presentation } from '@module-catalog/presentations/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -20,15 +20,13 @@ export class ProductsService {
     return this.productsApiService.getById(id);
   }
 
-  create(
-    payload: CreateProductRequest,
-  ): Observable<{ error: boolean; msg: string; data?: Product }> {
+  create(payload: ProductRequest): Observable<{ error: boolean; msg: string; data?: Product }> {
     return this.productsApiService.create(payload);
   }
 
   update(
     id: number,
-    payload: UpdateProductRequest,
+    payload: ProductRequest,
   ): Observable<{ error: boolean; msg: string; data?: Product }> {
     return this.productsApiService.update(id, payload);
   }
@@ -47,5 +45,16 @@ export class ProductsService {
 
   existsBySku(sku: string): Observable<boolean> {
     return this.productsApiService.existsBySku(sku);
+  }
+
+  getPresentations(id: number): Observable<{ error: boolean; msg: string; data?: Presentation[] }> {
+    return this.productsApiService.getPresentations(id);
+  }
+
+  upsertPresentations(
+    id: number,
+    payload: Presentation[],
+  ): Observable<{ error: boolean; msg: string; data: null }> {
+    return this.productsApiService.upsertPresentations(id, payload);
   }
 }

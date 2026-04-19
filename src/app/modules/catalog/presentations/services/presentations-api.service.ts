@@ -3,7 +3,12 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
 import { environment } from '@environment/environment';
 import { httpErrorHandler } from '@shared/utils';
-import { Presentation, PresentationRequest, PresentationResponse, PresentationListResponse } from '../interfaces';
+import {
+  Presentation,
+  PresentationRequest,
+  PresentationResponse,
+  PresentationListResponse,
+} from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +18,11 @@ export class PresentationsApiService {
   private apiUrl = environment.API_URL;
 
   getAll(): Observable<{ error: boolean; msg: string; data?: Presentation[] }> {
-    const res = { error: true, msg: 'Error undefined', data: undefined as Presentation[] | undefined };
+    const res = {
+      error: true,
+      msg: 'Error undefined',
+      data: undefined as Presentation[] | undefined,
+    };
 
     return this.http.get<PresentationListResponse>(`${this.apiUrl}/presentations`).pipe(
       map((r) => {
@@ -28,7 +37,11 @@ export class PresentationsApiService {
   }
 
   getById(id: string): Observable<{ error: boolean; msg: string; data?: Presentation }> {
-    const res = { error: true, msg: 'Error undefined', data: undefined as Presentation | undefined };
+    const res = {
+      error: true,
+      msg: 'Error undefined',
+      data: undefined as Presentation | undefined,
+    };
 
     return this.http.get<PresentationResponse>(`${this.apiUrl}/presentations/${id}`).pipe(
       map((r) => {
@@ -42,8 +55,14 @@ export class PresentationsApiService {
     );
   }
 
-  create(payload: PresentationRequest): Observable<{ error: boolean; msg: string; data?: Presentation }> {
-    const res = { error: true, msg: 'Error undefined', data: undefined as Presentation | undefined };
+  create(
+    payload: PresentationRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Presentation }> {
+    const res = {
+      error: true,
+      msg: 'Error undefined',
+      data: undefined as Presentation | undefined,
+    };
 
     return this.http.post<PresentationResponse>(`${this.apiUrl}/presentations`, payload).pipe(
       map((r) => {
@@ -57,8 +76,15 @@ export class PresentationsApiService {
     );
   }
 
-  update(id: string, payload: PresentationRequest): Observable<{ error: boolean; msg: string; data?: Presentation }> {
-    const res = { error: true, msg: 'Error undefined', data: undefined as Presentation | undefined };
+  update(
+    id: string,
+    payload: PresentationRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Presentation }> {
+    const res = {
+      error: true,
+      msg: 'Error undefined',
+      data: undefined as Presentation | undefined,
+    };
 
     return this.http.put<PresentationResponse>(`${this.apiUrl}/presentations/${id}`, payload).pipe(
       map((r) => {
@@ -72,7 +98,7 @@ export class PresentationsApiService {
     );
   }
 
-  delete(id: string): Observable<{ error: boolean; msg: string }> {
+  delete(id: number): Observable<{ error: boolean; msg: string }> {
     const res = { error: true, msg: 'Error undefined' };
 
     return this.http.delete<PresentationResponse>(`${this.apiUrl}/presentations/${id}`).pipe(
