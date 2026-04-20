@@ -303,7 +303,7 @@ export class MyComponent {
 ```html
 <!-- Pipe approach (recommended for simple cases) -->
 <h1>{{ 'HOME.TITLE' | translate }}</h1>
-<button>{{ 'COMMON.SAVE' | translate }}</button>
+<button>{{ 'GLOBAL.ACTIONS.SAVE' | translate }}</button>
 ```
 
 **With parameters:**
@@ -340,32 +340,89 @@ export class MyComponent {
 
 ### Translation File Structure
 
-Use nested keys for organization:
+Follow this hierarchy to avoid redundancy:
 
 ```json
 {
-  "COMMON": {
-    "SAVE": "Save",
-    "CANCEL": "Cancel",
-    "DELETE": "Delete"
+  "APP": {
+    "TITLE": "Aura POS",
+    "LOADING": "Loading..."
   },
-  "NAV": {
-    "DASHBOARD": "Dashboard",
-    "SALES": "Sales"
+  "GLOBAL": {
+    "STATUS": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "PENDING": "Pending"
+    },
+    "ACTIONS": {
+      "SAVE": "Save",
+      "CANCEL": "Cancel",
+      "DELETE": "Delete",
+      "EDIT": "Edit",
+      "ADD": "Add",
+      "SEARCH": "Search",
+      "FILTER": "Filter",
+      "EXPORT": "Export",
+      "IMPORT": "Import",
+      "REFRESH": "Refresh",
+      "UPDATE": "Update",
+      "CLOSE": "Close",
+      "CONFIRM": "Confirm"
+    },
+    "YES_NO": {
+      "YES": "Yes",
+      "NO": "No"
+    }
   },
-  "MODULE_NAME": {
-    "FEATURE": "Feature text"
-  }
+  "TABLE": {
+    "ID": "ID",
+    "NAME": "Name",
+    "CODE": "Code",
+    "DESCRIPTION": "Description",
+    "ACTIONS": "Actions",
+    "STATUS": "Status",
+    "EMPTY": "No records found"
+  },
+  "NAV": {...},
+  "MODULE_NAME": {...}
 }
 ```
 
+**Translation Layers (Priority Order):**
+
+1. **`TABLE`** - Reusable table headers (use in any grid)
+2. **`GLOBAL`** - Truly global elements used everywhere
+3. **`GLOBAL.STATUS`** - Generic status values
+4. **`GLOBAL.ACTIONS`** - Common action buttons
+5. **`MODULE_NAME`** - Module-specific translations
+
 ### Best Practices
 
-- Use semantic keys: `COMMON.SAVE` not `SAVE_BUTTON`
-- Group by feature/module
-- Use parameters for dynamic values: `{{ 'MSG' | translate:{ count: 5 } }}`
-- Avoid concatenating translations
+- **NEVER duplicate** keys from GLOBAL, TABLE, or COMMON in individual modules
+- Use semantic keys: `TABLE.NAME` not `MODULE_SPECIFIC.NAME`
+- Group by purpose: `TABLE` for grids, `GLOBAL` for shared, `MODULE` for specific
+- Use parameters: `{{ 'VALIDATION.MIN_LENGTH' | translate:{ min: 5 } }}`
 - Keep translations in sync across all language files
+- If a translation is used in 3+ modules, move to GLOBAL/TABLE
+
+**Anti-patterns to Avoid:**
+
+```json
+// ❌ WRONG - Duplicated across modules
+{
+  "PRODUCTS": { "NAME": "Product", "STATUS": "Status" },
+  "CATEGORIES": { "NAME": "Category", "STATUS": "Status" },
+  "CLIENTS": { "NAME": "Client", "STATUS": "Status" }
+}
+
+// ✅ CORRECT - Use shared TABLE/GLOBAL keys
+{
+  "TABLE": { "NAME": "Name", "STATUS": "Status" },
+  "PRODUCTS": { "TITLE": "Products" },
+  "CATEGORIES": { "TITLE": "Categories" },
+  "CLIENTS": { "TITLE": "Clients" }
+}
+```
 
 ## Toast Notifications (ToastAlertService)
 
