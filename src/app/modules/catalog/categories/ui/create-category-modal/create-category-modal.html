@@ -1,7 +1,7 @@
 <form [formGroup]="categoryForm" class="flex flex-col gap-4">
   <div class="flex flex-col gap-2">
     <label for="name" class="font-bold text-surface-700 text-xs">
-      Nombre <span class="text-red-500">*</span>
+      {{ 'CATEGORIES.NAME' | translate }} <span class="text-red-500">*</span>
     </label>
     <input
       pInputText
@@ -10,13 +10,13 @@
       placeholder="Ej: Bebidas, Electrónica,..."
       class="w-full"
     />
-    <validator-errors [control]="categoryForm.get('name')" [label]="'HEADERS.NAME' | translate" />
+    <validator-errors [control]="categoryForm.get('name')" [label]="'TABLE.NAME' | translate" />
   </div>
 
   <div class="grid grid-cols-2 gap-4">
     <div class="flex flex-col gap-2">
       <label for="default_tax_rate" class="font-bold text-surface-700 text-xs">
-        Tasa de impuesto (%)
+        {{ 'TABLE.TAX_RATE' | translate }} (%)
       </label>
       <p-inputNumber
         id="default_tax_rate"
@@ -30,17 +30,17 @@
       ></p-inputNumber>
       <validator-errors
         [control]="categoryForm.get('default_tax_rate')"
-        [label]="'CATEGORIES.TAX_RATE' | translate"
+        [label]="'TABLE.TAX_RATE' | translate"
       />
     </div>
 
     <div class="flex flex-col gap-2">
-      <label for="parent_id" class="font-bold text-surface-700 text-xs"> Categoría padre </label>
+      <label for="parent_id" class="font-bold text-surface-700 text-xs"> {{ 'CATEGORIES.PARENT_CATEGORY' | translate }} </label>
       <p-select
         id="parent_id"
         formControlName="parent_id"
         [options]="categoryList()"
-        placeholder="Sin categoría padre"
+        [placeholder]="'CATEGORIES.NO_PARENT' | translate"
         optionLabel="name"
         optionValue="id"
         class="w-full"
@@ -53,12 +53,12 @@
     class="border border-surface-200 rounded-xl p-4 flex justify-between items-center bg-surface-50/30"
   >
     <div class="flex flex-col">
-      <span class="font-bold text-surface-800 text-sm">Activo</span>
+      <span class="font-bold text-surface-800 text-sm">{{ 'TABLE.STATUS' | translate }}</span>
       <span class="text-xs text-surface-500">
         {{
           categoryForm.get('active')?.value
-            ? 'La categoría estará visible'
-            : 'La categoría estará oculta'
+            ? ('MESSAGES.CATEGORY_ACTIVE' | translate)
+            : ('MESSAGES.CATEGORY_INACTIVE' | translate)
         }}
       </span>
     </div>
@@ -67,27 +67,27 @@
 
   <div class="flex flex-col gap-2">
     <label for="description" class="font-bold text-surface-700 text-xs">
-      Descripción <span class="text-surface-400 font-normal">(opcional)</span>
+      {{ 'TABLE.DESCRIPTION' | translate }} <span class="text-surface-400 font-normal">{{ 'CATALOG.OPTIONAL' | translate }}</span>
     </label>
     <textarea
       pTextarea
       id="description"
       formControlName="description"
       rows="3"
-      placeholder="Descripción de la categoría..."
+      [placeholder]="'TABLE.DESCRIPTION' | translate"
       class="w-full resize-y"
     ></textarea>
     <validator-errors
       [control]="categoryForm.get('description')"
-      [label]="'HEADERS.DESCRIPTION' | translate"
+      [label]="'TABLE.DESCRIPTION' | translate"
     />
   </div>
 
   <div class="flex justify-end gap-2 pt-2">
-    <button pButton label="Cancelar" class="p-button-text" (click)="cancel()"></button>
+    <button pButton [label]="'GLOBAL.ACTIONS.CANCEL' | translate" class="p-button-text" (click)="cancel()"></button>
     <button
       pButton
-      [label]="isEditing() ? 'Actualizar' : 'Crear'"
+      [label]="isEditing() ? ('GLOBAL.ACTIONS.UPDATE' | translate) : ('GLOBAL.ACTIONS.ADD' | translate)"
       [loading]="isSaving()"
       (click)="saveCategory()"
     ></button>

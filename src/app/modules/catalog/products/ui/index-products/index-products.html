@@ -28,7 +28,7 @@
             pInputText
             [(ngModel)]="searchQuery"
             type="text"
-            placeholder="{{ 'COMMON.SEARCH' | translate }} {{ 'PRODUCTS.NAME' | translate }}..."
+            placeholder="{{ 'GLOBAL.ACTIONS.SEARCH' | translate }} {{ 'PRODUCTS.NAME' | translate }}..."
             (input)="dt.filterGlobal($event.target.value, 'contains')"
             class="w-full"
           />
@@ -41,14 +41,14 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ 'HEADERS.SKU' | translate }}</th>
-        <th>{{ 'HEADERS.NAME' | translate }}</th>
-        <th>{{ 'HEADERS.CATEGORY' | translate }}</th>
-        <th>{{ 'HEADERS.BRAND' | translate }}</th>
-        <th>{{ 'HEADERS.COST' | translate }}</th>
-        <th>{{ 'HEADERS.PRICE' | translate }}</th>
-        <th>{{ 'HEADERS.STATUS' | translate }}</th>
-        <th>{{ 'COMMON.ACTIONS' | translate }}</th>
+        <th>{{ 'TABLE.SKU' | translate }}</th>
+        <th>{{ 'TABLE.NAME' | translate }}</th>
+        <th>{{ 'TABLE.CATEGORY' | translate }}</th>
+        <th>{{ 'TABLE.BRAND' | translate }}</th>
+        <th>{{ 'TABLE.COST' | translate }}</th>
+        <th>{{ 'TABLE.PRICE' | translate }}</th>
+        <th>{{ 'TABLE.STATUS' | translate }}</th>
+        <th>{{ 'TABLE.ACTIONS' | translate }}</th>
       </tr>
     </ng-template>
     <ng-template #body let-product>
@@ -69,7 +69,7 @@
         <td>
           <p-tag
             [value]="
-              product.active ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate)
+              product.active ? ('GLOBAL.STATUS.ACTIVE' | translate) : ('GLOBAL.STATUS.INACTIVE' | translate)
             "
             [severity]="product.active ? 'success' : 'danger'"
           ></p-tag>
@@ -157,11 +157,11 @@
     </h3>
     <div class="flex justify-end gap-2">
       <p-button
-        [label]="'COMMON.CANCEL' | translate"
+        [label]="'GLOBAL.ACTIONS.CANCEL' | translate"
         severity="secondary"
         (click)="showDeleteDialog.set(false)"
       />
-      <p-button [label]="'COMMON.DELETE' | translate" severity="danger" (click)="deleteProduct()" />
+      <p-button [label]="'GLOBAL.ACTIONS.DELETE' | translate" severity="danger" (click)="deleteProduct()" />
     </div>
   </p-dialog>
 }

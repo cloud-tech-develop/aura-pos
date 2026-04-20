@@ -1,9 +1,9 @@
 <div class="units-page flex flex-col gap-4">
   <app-index-header
-    title="Unidades de Medida"
+    [title]="'UNITS.TITLE' | translate"
+    [description]="'UNITS.SUBTITLE' | translate"
     titleIcon="chart-bar"
-    description="Define las unidades con las que mides tus productos"
-    buttonText="Nueva Unidad"
+    [buttonText]="'UNITS.ADD' | translate"
     (buttonAction)="openCreateDialog()"
   ></app-index-header>
 
@@ -16,7 +16,7 @@
     [loading]="isLoading()"
     [tableStyle]="{ 'min-width': '50rem' }"
     [rowsPerPageOptions]="[5, 10, 20]"
-    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [lazy]="true"
     (onLazyLoad)="loadUnits($event)"
   >
@@ -28,22 +28,22 @@
             pInputText
             [(ngModel)]="searchQuery"
             type="text"
-            placeholder="Buscar unidades..."
+            [placeholder]="'GLOBAL.ACTIONS.SEARCH' | translate"
             (input)="dt.filterGlobal($event.target.value, 'contains')"
             class="w-full"
           />
         </p-iconfield>
-        <p-tag [value]="totalRecords() + ' Unidades'" severity="success"></p-tag>
+        <p-tag [value]="totalRecords() + ' ' + ('UNITS.TITLE' | translate)" severity="success"></p-tag>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ 'HEADERS.ID' | translate }}</th>
-        <th>{{ 'HEADERS.NAME' | translate }}</th>
-        <th>{{ 'HEADERS.ABBREVIATION' | translate }}</th>
-        <th>{{ 'HEADERS.ALLOW_DECIMALS' | translate }}</th>
-        <th>{{ 'HEADERS.STATUS' | translate }}</th>
-        <th>{{ 'COMMON.ACTIONS' | translate }}</th>
+        <th>{{ 'TABLE.ID' | translate }}</th>
+        <th>{{ 'TABLE.NAME' | translate }}</th>
+        <th>{{ 'TABLE.ABBREVIATION' | translate }}</th>
+        <th>{{ 'TABLE.ALLOW_DECIMALS' | translate }}</th>
+        <th>{{ 'TABLE.STATUS' | translate }}</th>
+        <th>{{ 'TABLE.ACTIONS' | translate }}</th>
       </tr>
     </ng-template>
     <ng-template #body let-unit>
@@ -57,13 +57,13 @@
         </td>
         <td>
           <p-tag
-            [value]="unit.allow_decimals ? 'Si' : 'No'"
+            [value]="unit.allow_decimals ? ('GLOBAL.YES_NO.YES' | translate) : ('GLOBAL.YES_NO.NO' | translate)"
             [severity]="unit.allow_decimals ? 'info' : 'secondary'"
           ></p-tag>
         </td>
         <td>
           <p-tag
-            [value]="unit.active ? 'Activo' : 'Inactivo'"
+            [value]="unit.active ? ('GLOBAL.STATUS.ACTIVE' | translate) : ('GLOBAL.STATUS.INACTIVE' | translate)"
             [severity]="unit.active ? 'success' : 'warn'"
           ></p-tag>
         </td>
@@ -88,7 +88,7 @@
     <ng-template #emptymessage>
       <tr>
         <td colspan="6" class="text-center p-4">
-          {{ 'ALERTS.TABLE_EMPTY' | translate }}
+          {{ 'UNITS.EMPTY' | translate }}
         </td>
       </tr>
     </ng-template>
@@ -99,7 +99,7 @@
   <p-dialog
     [visible]="showDialog()"
     (visibleChange)="showDialog.set($event)"
-    [header]="isEditing() ? 'Editar Unidad' : 'Nueva Unidad'"
+    [header]="isEditing() ? ('UNITS.EDIT' | translate) : ('UNITS.ADD' | translate)"
     [modal]="true"
     [style]="{ width: '40rem' }"
     [closable]="true"

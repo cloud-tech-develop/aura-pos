@@ -3,20 +3,20 @@
     <p-tablist>
       <p-tab [value]="0">
         <i class="pi pi-info-circle mr-2"></i>
-        <span>Básico</span>
+        <span>{{ 'CATALOG.BASIC' | translate }}</span>
       </p-tab>
       <p-tab [value]="1" class="active:text-green-500">
         <i class="pi pi-dollar mr-2 text-green-500"></i>
-        <span>Impuestos</span>
+        <span>{{ 'CATALOG.TAXES' | translate }}</span>
       </p-tab>
       <p-tab [value]="2">
         <i class="pi pi-box mr-2 text-green-500"></i>
-        <span>Inventario</span>
+        <span>{{ 'CATALOG.INVENTORY' | translate }}</span>
       </p-tab>
       <p-tab [value]="3">
         <div class="flex items-center gap-2">
           <i class="pi pi-th-large text-green-500"></i>
-          <span>Presentaciones</span>
+          <span>{{ 'CATALOG.PRESENTATIONS' | translate }}</span>
           @if (presentationsList().length > 0) {
             <span
               class="bg-indigo-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold"
@@ -28,7 +28,7 @@
       </p-tab>
       <p-tab [value]="4">
         <i class="pi pi-dollar mr-2 text-green-500"></i>
-        <span>Precios</span>
+        <span>{{ 'CATALOG.PRICES' | translate }}</span>
       </p-tab>
     </p-tablist>
 
@@ -41,17 +41,17 @@
               class="w-40 h-40 border-2 border-dashed border-surface-300 rounded-2xl flex flex-col items-center justify-center text-surface-400 bg-surface-50/50"
             >
               <i class="pi pi-image text-5xl mb-2 text-surface-300"></i>
-              <span class="text-sm font-medium">Sin imagen</span>
+              <span class="text-sm font-medium">{{ 'CATALOG.NO_IMAGE' | translate }}</span>
             </div>
             <button
               pButton
               type="button"
-              label="Subir imagen"
+              [label]="'CATALOG.UPLOAD_IMAGE' | translate"
               icon="pi pi-upload"
               class="p-button-outlined p-button-success p-button-sm"
             ></button>
             <span class="text-xs text-surface-500 font-medium">
-              <i class="pi pi-info-circle mr-1"></i> JPG, PNG, WebP, GIF o AVIF máx. 10 MB
+              <i class="pi pi-info-circle mr-1"></i> {{ 'CATALOG.IMAGE_HINT' | translate }}
             </span>
           </div>
 
@@ -66,12 +66,12 @@
                   [class.text-green-500]="productForm.get('active')?.value"
                   [class.text-surface-400]="!productForm.get('active')?.value"
                 ></i>
-                <span class="font-bold text-surface-800">Estado del producto</span>
+                <span class="font-bold text-surface-800">{{ 'CATALOG.PRODUCT_STATUS' | translate }}</span>
               </div>
               <span class="text-xs text-surface-500">{{
                 productForm.get('active')?.value
-                  ? 'El producto está activo y disponible'
-                  : 'El producto está inactivo'
+                  ? ('CATALOG.ACTIVE_PRODUCT' | translate)
+                  : ('CATALOG.INACTIVE_PRODUCT' | translate)
               }}</span>
             </div>
             <p-toggleswitch formControlName="active" class="p-green-500"></p-toggleswitch>
@@ -80,7 +80,7 @@
           <!-- Name -->
           <div class="flex flex-col gap-2">
             <label for="name" class="font-bold text-surface-700 text-xs"
-              >Nombre del producto <span class="text-red-500">*</span></label
+              >{{ 'CATALOG.PRODUCT_NAME' | translate }} <span class="text-red-500">*</span></label
             >
             <input
               pInputText

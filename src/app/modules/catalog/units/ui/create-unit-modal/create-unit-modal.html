@@ -1,7 +1,7 @@
 <form [formGroup]="unitForm" class="flex flex-col gap-4">
   <div class="flex flex-col gap-2">
     <label for="name" class="font-bold text-surface-700 text-xs">
-      Nombre <span class="text-red-500">*</span>
+      {{ 'UNITS.NAME' | translate }} <span class="text-red-500">*</span>
     </label>
     <input
       pInputText
@@ -10,12 +10,12 @@
       placeholder="Ej: Kilogramo, Litro, Pieza..."
       class="w-full"
     />
-    <validator-errors [control]="unitForm.get('name')" [label]="'HEADERS.NAME' | translate" />
+    <validator-errors [control]="unitForm.get('name')" [label]="'TABLE.NAME' | translate" />
   </div>
 
   <div class="flex flex-col gap-2">
     <label for="abbreviation" class="font-bold text-surface-700 text-xs">
-      Abreviatura <span class="text-red-500">*</span>
+      {{ 'UNITS.ABBREVIATION' | translate }} <span class="text-red-500">*</span>
     </label>
     <input
       pInputText
@@ -25,7 +25,7 @@
       class="w-full"
       maxlength="20"
     />
-    <validator-errors [control]="unitForm.get('abbreviation')" [label]="'HEADERS.ABBREVIATION' | translate" />
+    <validator-errors [control]="unitForm.get('abbreviation')" [label]="'TABLE.ABBREVIATION' | translate" />
   </div>
 
   <div class="grid grid-cols-2 gap-4">
@@ -33,12 +33,12 @@
       class="border border-surface-200 rounded-xl p-4 flex justify-between items-center bg-surface-50/30"
     >
       <div class="flex flex-col">
-        <span class="font-bold text-surface-800 text-sm">Activo</span>
+        <span class="font-bold text-surface-800 text-sm">{{ 'TABLE.STATUS' | translate }}</span>
         <span class="text-xs text-surface-500">
           {{
             unitForm.get('active')?.value
-              ? 'La unidad estará disponible'
-              : 'La unidad no estará disponible'
+              ? ('MESSAGES.CATEGORY_ACTIVE' | translate)
+              : ('MESSAGES.CATEGORY_INACTIVE' | translate)
           }}
         </span>
       </div>
@@ -49,12 +49,12 @@
       class="border border-surface-200 rounded-xl p-4 flex justify-between items-center bg-surface-50/30"
     >
       <div class="flex flex-col">
-        <span class="font-bold text-surface-800 text-sm">Permitir decimales</span>
+        <span class="font-bold text-surface-800 text-sm">{{ 'UNITS.ALLOW_DECIMALS' | translate }}</span>
         <span class="text-xs text-surface-500">
           {{
             unitForm.get('allow_decimals')?.value
-              ? 'Se permiten valores decimales'
-              : 'Solo valores enteros'
+              ? ('UNITS.YES' | translate)
+              : ('UNITS.NO' | translate)
           }}
         </span>
       </div>
@@ -63,10 +63,10 @@
   </div>
 
   <div class="flex justify-end gap-2 pt-2">
-    <button pButton label="Cancelar" class="p-button-text" (click)="cancel()"></button>
+    <button pButton [label]="'GLOBAL.ACTIONS.CANCEL' | translate" class="p-button-text" (click)="cancel()"></button>
     <button
       pButton
-      [label]="isEditing() ? 'Actualizar' : 'Crear'"
+      [label]="isEditing() ? ('GLOBAL.ACTIONS.UPDATE' | translate) : ('GLOBAL.ACTIONS.ADD' | translate)"
       [loading]="isSaving()"
       (click)="saveUnit()"
     ></button>

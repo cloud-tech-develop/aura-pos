@@ -1,9 +1,9 @@
 <div class="categories-page flex flex-col gap-4">
   <app-index-header
-    title="Categorías"
-    description="Organiza tus productos en grupos lógicos"
+    [title]="'CATEGORIES.TITLE' | translate"
+    [description]="'CATEGORIES.SUBTITLE' | translate"
     titleIcon="th-large"
-    buttonText="Nueva Categoría"
+    [buttonText]="'CATEGORIES.ADD' | translate"
     (buttonAction)="openCreateDialog()"
   ></app-index-header>
 
@@ -16,7 +16,7 @@
     [loading]="isLoading()"
     [tableStyle]="{ 'min-width': '50rem' }"
     [rowsPerPageOptions]="[5, 10, 20]"
-    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [lazy]="true"
     (onLazyLoad)="loadCategories($event)"
   >
@@ -28,22 +28,22 @@
             pInputText
             [(ngModel)]="searchQuery"
             type="text"
-            placeholder="Buscar categorías..."
+            [placeholder]="'GLOBAL.ACTIONS.SEARCH' | translate"
             (input)="dt.filterGlobal($event.target.value, 'contains')"
             class="w-full"
           />
         </p-iconfield>
-        <p-tag [value]="totalRecords() + ' Categorías'" severity="success"></p-tag>
+        <p-tag [value]="totalRecords() + ' ' + ('CATEGORIES.TITLE' | translate)" severity="success"></p-tag>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ 'HEADERS.ID' | translate }}</th>
-        <th>{{ 'HEADERS.NAME' | translate }}</th>
-        <th>{{ 'HEADERS.TAX' | translate }} (%)</th>
-        <th>{{ 'HEADERS.STATUS' | translate }}</th>
-        <th>{{ 'HEADERS.DESCRIPTION' | translate }}</th>
-        <th>{{ 'COMMON.ACTIONS' | translate }}</th>
+        <th>{{ 'TABLE.ID' | translate }}</th>
+        <th>{{ 'TABLE.NAME' | translate }}</th>
+        <th>{{ 'TABLE.TAX_RATE' | translate }} (%)</th>
+        <th>{{ 'TABLE.STATUS' | translate }}</th>
+        <th>{{ 'TABLE.DESCRIPTION' | translate }}</th>
+        <th>{{ 'TABLE.ACTIONS' | translate }}</th>
       </tr>
     </ng-template>
     <ng-template #body let-category>
@@ -55,7 +55,7 @@
         <td>{{ category.default_tax_rate }}%</td>
         <td>
           <p-tag
-            [value]="category.active ? 'Activo' : 'Inactivo'"
+            [value]="category.active ? ('GLOBAL.STATUS.ACTIVE' | translate) : ('GLOBAL.STATUS.INACTIVE' | translate)"
             [severity]="category.active ? 'success' : 'warn'"
           ></p-tag>
         </td>
@@ -83,7 +83,7 @@
     <ng-template #emptymessage>
       <tr>
         <td colspan="6" class="text-center p-4">
-          {{ 'ALERTS.TABLE_EMPTY' | translate }}
+          {{ 'CATEGORIES.EMPTY' | translate }}
         </td>
       </tr>
     </ng-template>
@@ -92,7 +92,7 @@
   <p-dialog
     [visible]="showDialog()"
     (visibleChange)="showDialog.set($event)"
-    [header]="isEditing() ? 'Editar Categoría' : 'Nueva Categoría'"
+    [header]="isEditing() ? ('CATEGORIES.EDIT' | translate) : ('CATEGORIES.ADD' | translate)"
     [modal]="true"
     [style]="{ width: '40rem' }"
     [closable]="true"
