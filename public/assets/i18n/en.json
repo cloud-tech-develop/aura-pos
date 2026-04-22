@@ -47,7 +47,20 @@
     "PRODUCT": "Product",
     "TAX": "Tax",
     "TAX_RATE": "Tax Rate",
-    "PARENT_CATEGORY": "Parent Category"
+    "PARENT_CATEGORY": "Parent Category",
+    "PARENT_PRESENTATION": "Parent Presentation",
+    "VISIBLE_AT_POS": "Visible at POS",
+    "COMPOSITION": "Composition",
+    "LABEL": "Label",
+    "TYPE": "Type",
+    "BASIC": "Basic",
+    "TAXS": "Taxes",
+    "COMPOSITIONS": "Compositions",
+    "LABELS": "Labels",
+    "PRESENTATIONS": "Presentations",
+    "PRICES": "Prices",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive"
   },
   "GLOBAL": {
     "STATUS": {
@@ -95,31 +108,7 @@
     "DELETE": "Delete Presentation",
     "EMPTY": "No presentations found"
   },
-  "HEADERS": {
-    "ID": "ID",
-    "NAME": "Name",
-    "CATEGORY": "Category",
-    "BRAND": "Brand",
-    "COST": "Cost",
-    "SKU": "SKU",
-    "PRICE": "Price",
-    "STATUS": "Status",
-    "ACTIONS": "Actions",
-    "CODE": "Code",
-    "QUANTITY": "Quantity",
-    "DESCRIPTION": "Description",
-    "UNIT": "Unit",
-    "STOCK": "Stock",
-    "PROFIT": "Profit",
-    "MIN_STOCK": "Min Stock",
-    "MAX_STOCK": "Max Stock",
-    "BARCODE": "Barcode",
-    "PRESENTATION": "Presentation",
-    "PRODUCT": "Product",
-    "TAX": "Tax",
-    "COMPOSITION": "Composition",
-    "LABEL": "Label"
-  },
+
   "AUTH": {
     "LOGIN": {
       "TITLE": "Sign In",
@@ -278,7 +267,21 @@
     "LOAD_ERROR": "Error loading data",
     "NETWORK_ERROR": "Network error. Please try again.",
     "SALE_COMPLETED": "Sale completed successfully",
-    "SALE_ERROR": "Error processing sale"
+    "SALE_ERROR": "Error processing sale",
+    "CATEGORY_ACTIVE": "The category is active",
+    "CATEGORY_INACTIVE": "The category is inactive",
+    "BRAND_ACTIVE": "The brand is active",
+    "BRAND_INACTIVE": "The brand is inactive",
+    "UNIT_ACTIVE": "The unit is active",
+    "UNIT_INACTIVE": "The unit is inactive",
+    "PRESENTATION_ACTIVE": "The presentation is active",
+    "PRESENTATION_INACTIVE": "The presentation is inactive",
+    "COMPOSITION_ACTIVE": "The composition is active",
+    "COMPOSITION_INACTIVE": "The composition is inactive",
+    "LABEL_ACTIVE": "The label is active",
+    "LABEL_INACTIVE": "The label is inactive",
+    "PRODUCT_ACTIVE": "The product is active",
+    "PRODUCT_INACTIVE": "The product is inactive"
   },
   "ALERTS": {
     "REQUIRED": "The {{control}} field is required",

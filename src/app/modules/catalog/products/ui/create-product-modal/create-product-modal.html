@@ -66,7 +66,9 @@
                   [class.text-green-500]="productForm.get('active')?.value"
                   [class.text-surface-400]="!productForm.get('active')?.value"
                 ></i>
-                <span class="font-bold text-surface-800">{{ 'CATALOG.PRODUCT_STATUS' | translate }}</span>
+                <span class="font-bold text-surface-800">{{
+                  'CATALOG.PRODUCT_STATUS' | translate
+                }}</span>
               </div>
               <span class="text-xs text-surface-500">{{
                 productForm.get('active')?.value
@@ -91,7 +93,7 @@
             />
             <validator-errors
               [control]="productForm.get('name')"
-              [label]="'HEADERS.NAME' | translate"
+              [label]="'TABLE.NAME' | translate"
             />
           </div>
 
@@ -99,7 +101,7 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
               <label for="sku" class="font-bold text-surface-700 text-xs"
-                >{{ 'HEADERS.SKU' | translate }}<span class="text-red-500">*</span></label
+                >{{ 'TABLE.SKU' | translate }}<span class="text-red-500">*</span></label
               >
               <p-iconfield>
                 <input
@@ -115,7 +117,7 @@
               </p-iconfield>
               <validator-errors
                 [control]="productForm.get('sku')"
-                [label]="'HEADERS.SKU' | translate"
+                [label]="'TABLE.SKU' | translate"
                 [customErrors]="[{ type: 'skuExists', message: 'El SKU ya existe' }]"
               />
             </div>
@@ -132,7 +134,7 @@
               />
               <validator-errors
                 [control]="productForm.get('barcode')"
-                [label]="'HEADERS.BARCODE' | translate"
+                [label]="'TABLE.BARCODE' | translate"
               />
             </div>
           </div>
@@ -155,7 +157,7 @@
               ></p-select>
               <validator-errors
                 [control]="productForm.get('category_id')"
-                [label]="'HEADERS.CATEGORY' | translate"
+                [label]="'TABLE.CATEGORY' | translate"
               />
             </div>
             <div class="flex flex-col gap-2">
@@ -174,7 +176,7 @@
               ></p-select>
               <validator-errors
                 [control]="productForm.get('brand_id')"
-                [label]="'HEADERS.BRAND' | translate"
+                [label]="'TABLE.BRAND' | translate"
               />
             </div>
           </div>
@@ -199,7 +201,7 @@
               ></p-select>
               <validator-errors
                 [control]="productForm.get('unit_measure_id')"
-                [label]="'HEADERS.UNIT' | translate"
+                [label]="'TABLE.UNIT' | translate"
               />
             </div>
             <div class="flex flex-col gap-2">
@@ -235,7 +237,7 @@
               </p-select>
               <validator-errors
                 [control]="productForm.get('product_type')"
-                [label]="'HEADERS.PRODUCT_TYPE' | translate"
+                [label]="'TABLE.PRODUCT_TYPE' | translate"
               />
             </div>
           </div>
@@ -267,7 +269,7 @@
             ></textarea>
             <validator-errors
               [control]="productForm.get('description')"
-              [label]="'HEADERS.DESCRIPTION' | translate"
+              [label]="'TABLE.DESCRIPTION' | translate"
             />
           </div>
         </div>
@@ -759,7 +761,7 @@
                 ></p-inputNumber>
                 <validator-errors
                   [control]="productForm.get('cost_price')"
-                  [label]="'HEADERS.COST' | translate"
+                  [label]="'TABLE.COST' | translate"
                 />
               </div>
             </div>
@@ -780,14 +782,14 @@
                 ></p-inputNumber>
                 <validator-errors
                   [control]="productForm.get('sale_price')"
-                  [label]="'HEADERS.PRICE' | translate"
+                  [label]="'TABLE.PRICE' | translate"
                 />
               </div>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4 text-left">
-            @let priceTitle = 'HEADERS.PRICE' | translate;
+            @let priceTitle = 'TABLE.PRICE' | translate;
             <div class="flex flex-col gap-2">
               <label for="price_2" class="font-bold text-surface-700 text-xs"
                 >{{ priceTitle }} 2
