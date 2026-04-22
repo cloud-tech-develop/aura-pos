@@ -123,8 +123,8 @@
             </div>
             <div class="flex flex-col gap-2">
               <label for="barcode" class="font-bold text-surface-700 text-xs"
-                >Código de barras
-                <span class="text-surface-400 font-normal">(opcional)</span></label
+                >{{ 'TABLE.BARCODE' | translate }}
+                <span class="text-surface-400 font-normal">{{ 'CATALOG.OPTIONAL' | translate }}</span></label
               >
               <input
                 pInputText
@@ -142,18 +142,19 @@
           <!-- Category & Brand -->
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
-              <label for="category_id" class="font-bold text-surface-700 text-xs">Categoría</label>
+              <label for="category_id" class="font-bold text-surface-700 text-xs">{{ 'TABLE.CATEGORY' | translate }}</label>
               <p-select
                 id="category_id"
                 formControlName="category_id"
                 [options]="categoryList()"
-                placeholder="Sin categoría"
+                placeholder="{{ 'CATALOG.NO_CATEGORY' | translate }}"
                 optionLabel="name"
                 optionValue="id"
                 class="w-full"
                 [showClear]="true"
                 [filter]="true"
                 filterBy="name"
+                placeholder="{{ 'CATALOG.NO_CATEGORY' | translate }}"
               ></p-select>
               <validator-errors
                 [control]="productForm.get('category_id')"
@@ -161,12 +162,12 @@
               />
             </div>
             <div class="flex flex-col gap-2">
-              <label for="brand_id" class="font-bold text-surface-700 text-xs">Marca</label>
+              <label for="brand_id" class="font-bold text-surface-700 text-xs">{{ 'TABLE.BRAND' | translate }}</label>
               <p-select
                 id="brand_id"
                 formControlName="brand_id"
                 [options]="brandList()"
-                placeholder="Sin marca"
+                placeholder="{{ 'CATALOG.NO_BRAND' | translate }}"
                 optionLabel="name"
                 optionValue="id"
                 class="w-full"
@@ -185,13 +186,13 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
               <label for="unit_measure_id" class="font-bold text-surface-700 text-xs"
-                >Unidad de medida <span class="text-red-500">*</span></label
+                >{{ 'TABLE.UNIT' | translate }} <span class="text-red-500">*</span></label
               >
               <p-select
                 id="unit_measure_id"
                 formControlName="unit_measure_id"
                 [options]="unitList()"
-                placeholder="Seleccionar unidad..."
+                placeholder="{{ 'CATALOG.SELECT_UNIT' | translate }}"
                 optionLabel="name"
                 optionValue="id"
                 class="w-full"
@@ -206,7 +207,7 @@
             </div>
             <div class="flex flex-col gap-2">
               <label for="product_type" class="font-bold text-surface-700 text-xs"
-                >Tipo de producto <span class="text-red-500">*</span></label
+                >{{ 'TABLE.PRODUCT_TYPE' | translate }} <span class="text-red-500">*</span></label
               >
               <p-select
                 id="product_type"
@@ -214,7 +215,7 @@
                 [options]="productTypes"
                 optionLabel="label"
                 optionValue="value"
-                placeholder="Seleccionar tipo..."
+                placeholder="{{ 'CATALOG.SELECT_TYPE' | translate }}"
                 class="w-full"
                 [filter]="true"
                 filterBy="label"
@@ -246,10 +247,10 @@
           <div class="flex items-center gap-3 pt-2">
             <p-toggleswitch formControlName="visible_in_pos" class="p-green-500"></p-toggleswitch>
             <div class="flex items-center gap-1">
-              <span class="font-bold text-surface-700 text-sm">Visible en POS</span>
+              <span class="font-bold text-surface-700 text-sm">{{ 'CATALOG.VISIBLE_POS' | translate }}</span>
               <i class="pi pi-info-circle text-surface-400 text-sm"></i>
               <span class="text-xs text-surface-400"
-                >Desactívalo si es un insumo o ingrediente que no se vende directamente</span
+                >{{ 'CATALOG.VISIBLE_POS_HINT' | translate }}</span
               >
             </div>
           </div>
@@ -257,14 +258,14 @@
           <!-- Description -->
           <div class="flex flex-col gap-2 pt-2">
             <label for="description" class="font-bold text-surface-700 text-xs"
-              >Descripción <span class="text-surface-400 font-normal">(opcional)</span></label
+              >{{ 'TABLE.DESCRIPTION' | translate }} <span class="text-surface-400 font-normal">{{ 'CATALOG.OPTIONAL' | translate }}</span></label
             >
             <textarea
               pTextarea
               id="description"
               formControlName="description"
               rows="3"
-              placeholder="Descripción del producto..."
+              placeholder="{{ 'CATALOG.DESCRIPTION' | translate }}..."
               class="w-full resize-y"
             ></textarea>
             <validator-errors
@@ -284,11 +285,9 @@
               <i class="pi pi-lightbulb text-xl"></i>
             </div>
             <div>
-              <h4 class="font-bold mb-1">El precio se define en las presentaciones</h4>
+              <h4 class="font-bold mb-1">{{ 'CATALOG.PRICE_DEFINED_PRESENTATIONS' | translate }}</h4>
               <p class="text-sm">
-                Ve al tab <span class="font-bold">Presentaciones</span>, agrega la presentación de
-                compra (ej: Caja x 100) con su costo y precio, y el sistema calculará
-                automáticamente el precio por unidad base.
+                {{ 'CATALOG.PRESENTATION_FACTOR' | translate }}
               </p>
             </div>
           </div>
@@ -296,7 +295,7 @@
           <div class="flex items-center gap-4">
             <div class="border-t border-surface-200 flex-1"></div>
             <span class="text-sm font-bold text-surface-400 font-mono tracking-widest"
-              >IMPUESTOS</span
+              >{{ 'CATALOG.TAXES' | translate }}</span
             >
             <div class="border-t border-surface-200 flex-1"></div>
           </div>
@@ -304,7 +303,7 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
               <label for="iva_percentage" class="font-bold text-surface-700 text-xs"
-                >IVA (%) <span class="text-red-500">*</span></label
+                >{{ 'CATALOG.IVA' | translate }} <span class="text-red-500">*</span></label
               >
               <p-inputNumber
                 id="iva_percentage"
@@ -317,12 +316,12 @@
                 class="w-full"
               ></p-inputNumber>
               <span class="text-xs text-surface-400"
-                ><i class="pi pi-info-circle mr-1"></i> Valores comunes: 0%, 5%, 19%</span
+                ><i class="pi pi-info-circle mr-1"></i> {{ 'CATALOG.IVA_HINT' | translate }}</span
               >
             </div>
             <div class="flex flex-col gap-2">
               <label for="consumption_tax" class="font-bold text-surface-700 text-xs"
-                >Impoconsumo ($) <span class="text-red-500">*</span></label
+                >{{ 'CATALOG.IMPUCONSUMO' | translate }} <span class="text-red-500">*</span></label
               >
               <p-inputNumber
                 id="consumption_tax"
@@ -335,8 +334,7 @@
                 class="w-full"
               ></p-inputNumber>
               <span class="text-xs text-surface-400"
-                ><i class="pi pi-info-circle mr-1"></i> Aplica a bebidas azucaradas, licores,
-                etc.</span
+                ><i class="pi pi-info-circle mr-1"></i> {{ 'CATALOG.IMPUCONSUMO_HINT' | translate }}</span
               >
             </div>
           </div>
@@ -350,9 +348,9 @@
           >
             <i class="pi pi-info-circle mt-0.5 shrink-0 text-orange-500"></i>
             <p>
-              La configuración de inventario define cómo se rastrea el stock de este producto.
+              {{ 'CATALOG.INVENTORY_CONFIG' | translate }}
               <span class="font-bold text-orange-700"
-                >No puedes cambiarla una vez que el producto tenga movimientos registrados.</span
+                >{{ 'CATALOG.NOT_CHANGEABLE' | translate }}</span
               >
             </p>
           </div>
@@ -363,11 +361,10 @@
             <div class="flex flex-col">
               <div class="flex items-center gap-2 mb-1">
                 <i class="pi pi-box text-surface-500"></i>
-                <span class="font-bold text-surface-800">Stock mínimo</span>
+                <span class="font-bold text-surface-800">{{ 'CATALOG.MIN_STOCK' | translate }}</span>
               </div>
               <span class="text-xs text-surface-500"
-                >Cantidad mínima de stock que debe tener el producto. Cuando el stock llegue a este
-                nivel, se mostrará una alerta para reabastecer el inventario.</span
+                >{{ 'CATALOG.MIN_STOCK_HINT' | translate }}</span
               >
             </div>
             <p-inputNumber
@@ -386,11 +383,10 @@
               <div class="flex flex-col">
                 <div class="flex items-center gap-2 mb-1">
                   <i class="pi pi-box text-surface-500"></i>
-                  <span class="font-bold text-surface-800">Maneja inventario</span>
+                  <span class="font-bold text-surface-800">{{ 'CATALOG.MANAGE_INVENTORY' | translate }}</span>
                 </div>
                 <span class="text-xs text-surface-500"
-                  >Controla el stock disponible. Desactivar en servicios o productos
-                  digitales.</span
+                  >{{ 'CATALOG.INVENTORY_HINT' | translate }}</span
                 >
               </div>
               <div class="!w-[3.5rem]">
@@ -402,11 +398,10 @@
               <div class="flex flex-col">
                 <div class="flex items-center gap-2 mb-1">
                   <i class="pi pi-calendar text-surface-500"></i>
-                  <span class="font-bold text-surface-800">Maneja lotes</span>
+                  <span class="font-bold text-surface-800">{{ 'CATALOG.MANAGE_BATCHES' | translate }}</span>
                 </div>
                 <span class="text-xs text-surface-500"
-                  >Rastrea lotes con número y fecha de vencimiento. Ideal para alimentos y
-                  medicamentos.</span
+                  >{{ 'CATALOG.BATCHES_HINT' | translate }}</span
                 >
               </div>
               <div class="!w-[3.5rem]">
@@ -420,11 +415,10 @@
               <div class="flex flex-col">
                 <div class="flex items-center gap-2 mb-1">
                   <i class="pi pi-qrcode text-surface-500"></i>
-                  <span class="font-bold text-surface-800">Maneja serial</span>
+                  <span class="font-bold text-surface-800">{{ 'CATALOG.MANAGE_SERIAL' | translate }}</span>
                 </div>
                 <span class="text-xs text-surface-500"
-                  >Rastrea cada unidad por número de serie. Ideal para electrónicos y
-                  maquinaria.</span
+                  >{{ 'CATALOG.SERIAL_HINT' | translate }}</span
                 >
               </div>
               <div class="!w-[3.5rem]">
@@ -436,12 +430,10 @@
               <div class="flex flex-col">
                 <div class="flex items-center gap-2 mb-1">
                   <i class="pi pi-arrow-down-left text-surface-500"></i>
-                  <span class="font-bold text-surface-800">Permitir stock negativo</span>
+                  <span class="font-bold text-surface-800">{{ 'CATALOG.ALLOW_NEGATIVE' | translate }}</span>
                 </div>
                 <span class="text-xs text-surface-500"
-                  >Permite vender aunque no haya stock. El inventario quedará en negativo hasta que
-                  se registre la compra. Útil para carnicerías y negocios que reciben y venden antes
-                  de registrar la compra.</span
+                  >{{ 'CATALOG.ALLOW_NEGATIVE_HINT' | translate }}</span
                 >
               </div>
               <div class="!w-[3.5rem]">
@@ -453,7 +445,7 @@
           <div class="flex flex-wrap gap-2 mt-2">
             <p-chip
               [disabled]="productForm.get('manages_inventory')?.value ? false : true"
-              label="Control de stock"
+              label="{{ 'CATALOG.STOCK_CONTROL' | translate }}"
               [icon]="
                 productForm.get('manages_inventory')?.value
                   ? 'pi pi-check-circle'
@@ -462,7 +454,7 @@
             />
             <p-chip
               [disabled]="productForm.get('manages_batches')?.value ? false : true"
-              label="Trazabilidad por lote"
+              label="{{ 'CATALOG.BATCH_TRACEABILITY' | translate }}"
               [icon]="
                 productForm.get('manages_batches')?.value
                   ? 'pi pi-check-circle'
@@ -471,7 +463,7 @@
             />
             <p-chip
               [disabled]="productForm.get('manages_serial')?.value ? false : true"
-              label="Trazabilidad por serial"
+              label="{{ 'CATALOG.SERIAL_TRACEABILITY' | translate }}"
               [icon]="
                 productForm.get('manages_serial')?.value
                   ? 'pi pi-check-circle'
@@ -480,7 +472,7 @@
             />
             <p-chip
               [disabled]="productForm.get('allow_negative_stock')?.value ? false : true"
-              label="Venta con stock negativo"
+              label="{{ 'CATALOG.NEGATIVE_SALE' | translate }}"
               [icon]="
                 productForm.get('allow_negative_stock')?.value
                   ? 'pi pi-check-circle'
@@ -498,10 +490,8 @@
           >
             <i class="pi pi-info-circle mt-0.5 shrink-0 text-orange-500"></i>
             <p>
-              Define cómo se <span class="font-bold text-orange-600">compra y vende</span> este
-              producto. La unidad base es
-              <span class="font-bold text-orange-600">unidad base</span>. El factor indica cuántas
-              unidades base contiene cada presentación.
+              {{ 'CATALOG.DEFINE_BUY_SELL' | translate }}
+              <span class="font-bold text-orange-600">{{ 'CATALOG.BASE_UNIT' | translate }}</span>. {{ 'CATALOG.FACTOR_INFO' | translate }}
             </p>
           </div>
 
@@ -513,12 +503,10 @@
               >
                 <i class="pi pi-th-large text-4xl text-surface-300 mb-4"></i>
                 <h4 class="text-lg font-bold text-surface-800 mb-2">
-                  Sin presentaciones configuradas
+                  {{ 'CATALOG.EMPTY_PRESENTATIONS' | translate }}
                 </h4>
                 <p class="text-sm text-surface-500 max-w-sm">
-                  Sin presentaciones, el producto se vende en su unidad base.<br />Agrega
-                  presentaciones si se vende por
-                  <span class="font-bold text-surface-700">cajas, bultos, paquetes</span>, etc.
+                  {{ 'CATALOG.PRESENTATIONS_HINT' | translate }}
                 </p>
               </div>
             } @else {
@@ -533,14 +521,14 @@
                         @if (presentation.default_purchase) {
                           <span
                             class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full flex items-center gap-1"
-                            ><i class="pi pi-cart-plus text-[10px]"></i> Compra</span
+                            ><i class="pi pi-cart-plus text-[10px]"></i> {{ 'CATALOG.PURCHASE' | translate }}</span
                           >
                         }
                       </div>
                       <div
                         class="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded inline-block font-medium"
                       >
-                        &times; {{ presentation.factor }} unidad base
+                        &times; {{ presentation.factor }} {{ 'CATALOG.BASE_UNIT' | translate }}
                       </div>
                     </div>
 
@@ -557,7 +545,7 @@
                           ${{ presentation.sale_price | number: '1.0-0' }}
                         </div>
                         <div class="text-xs text-surface-500">
-                          Costo: ${{ presentation.cost_price | number: '1.0-0' }}
+                          {{ 'CATALOG.COST_PRICE' | translate }}: ${{ presentation.cost_price | number: '1.0-0' }}
                         </div>
                       </div>
 
@@ -585,7 +573,7 @@
               <button
                 pButton
                 type="button"
-                label="Agregar presentación"
+                label="{{ 'CATALOG.ADD_PRESENTATION' | translate }}"
                 icon="pi pi-plus"
                 class="p-button-outlined p-button-primary"
                 (click)="addPresentation()"
@@ -606,15 +594,15 @@
                 </div>
                 <div class="flex flex-col gap-2">
                   <label class="font-bold text-surface-700 text-xs"
-                    >Factor <span class="text-red-500">*</span></label
+                    >{{ 'CATALOG.PRESENTATION_FACTOR' | translate }} <span class="text-red-500">*</span></label
                   >
                   <p-inputNumber formControlName="factor" class="w-full"></p-inputNumber>
-                  <span class="text-[10px] text-surface-400">Unidades base que contiene</span>
+                  <span class="text-[10px] text-surface-400">{{ 'CATALOG.FACTOR_HINT' | translate }}</span>
                 </div>
                 <div class="flex flex-col gap-2">
                   <label class="font-bold text-surface-700 text-xs"
-                    >Código de barras
-                    <span class="text-surface-400 font-normal">(opcional)</span></label
+                    >{{ 'TABLE.BARCODE' | translate }}
+                    <span class="text-surface-400 font-normal">{{ 'CATALOG.OPTIONAL' | translate }}</span></label
                   >
                   <input
                     pInputText
@@ -628,7 +616,7 @@
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div class="flex flex-col gap-2">
                   <label class="font-bold text-surface-700 text-xs"
-                    >Precio de venta <span class="text-red-500">*</span></label
+                    >{{ 'CATALOG.SALE_PRICE' | translate }} <span class="text-red-500">*</span></label
                   >
                   <p-inputNumber
                     formControlName="sale_price"
@@ -638,13 +626,12 @@
                     class="w-full"
                   ></p-inputNumber>
                   <span class="text-[10px] text-surface-400"
-                    ><i class="pi pi-info-circle mr-1"></i>Lo que paga el cliente por esta
-                    presentación</span
+                    ><i class="pi pi-info-circle mr-1"></i> {{ 'CATALOG.SALE_PRICE_HINT' | translate }}</span
                   >
                 </div>
                 <div class="flex flex-col gap-2">
                   <label class="font-bold text-surface-700 text-xs"
-                    >Costo <span class="text-red-500">*</span></label
+                    >{{ 'CATALOG.COST_PRICE' | translate }} <span class="text-red-500">*</span></label
                   >
                   <p-inputNumber
                     formControlName="cost_price"
@@ -654,8 +641,7 @@
                     class="w-full"
                   ></p-inputNumber>
                   <span class="text-[10px] text-surface-400"
-                    ><i class="pi pi-info-circle mr-1"></i>Lo que pagaste al proveedor por esta
-                    presentación</span
+                    ><i class="pi pi-info-circle mr-1"></i> {{ 'CATALOG.COST_PRICE_HINT' | translate }}</span
                   >
                 </div>
               </div>
@@ -670,11 +656,10 @@
                   ></p-toggleswitch>
                   <div class="flex flex-col">
                     <span class="text-sm font-bold text-surface-700 flex items-center gap-1"
-                      ><i class="pi pi-cart-plus text-primary"></i> Presentación de compra por
-                      defecto</span
+                      ><i class="pi pi-cart-plus text-primary"></i> {{ 'CATALOG.DEFAULT_PURCHASE' | translate }}</span
                     >
                     <span class="text-xs text-surface-500"
-                      >Se preselecciona en el módulo de compras</span
+                      >{{ 'CATALOG.DEFAULT_PURCHASE_HINT' | translate }}</span
                     >
                   </div>
                 </div>
@@ -682,11 +667,10 @@
                   <p-toggleswitch formControlName="default_sale"></p-toggleswitch>
                   <div class="flex flex-col">
                     <span class="text-sm font-bold text-surface-700 flex items-center gap-1"
-                      ><i class="pi pi-star text-primary"></i> Presentación de venta por
-                      defecto</span
+                      ><i class="pi pi-star text-primary"></i> {{ 'CATALOG.DEFAULT_SALE' | translate }}</span
                     >
                     <span class="text-xs text-surface-500"
-                      >Aparece seleccionada primero en el POS</span
+                      >{{ 'CATALOG.DEFAULT_SALE_HINT' | translate }}</span
                     >
                   </div>
                 </div>
@@ -697,28 +681,28 @@
               >
                 <i class="pi pi-arrow-right text-indigo-500"></i>
                 <span class="text-indigo-800 text-sm"
-                  >Al comprar/vender
+                  >{{ 'CATALOG.BUY_SELL_INFO' | translate }}
                   <span class="font-bold"
-                    >1 {{ presentationForm.get('name')?.value || 'Presentación' }}</span
+                    >1 {{ presentationForm.get('name')?.value || ('CATALOG.PRESENTATIONS' | translate) }}</span
                   >
-                  se moverán
+                  {{ 'CATALOG.WILL_MOVE' | translate }}
                   <span class="font-bold text-indigo-600">{{
                     presentationForm.get('factor')?.value || 1
                   }}</span>
-                  unidad base del inventario.</span
+                  {{ 'CATALOG.BASE_UNIT_INVENTORY' | translate }}</span
                 >
               </div>
 
               <div class="flex justify-end gap-2">
                 <button
                   pButton
-                  label="Cancelar"
+                  label="{{ 'GLOBAL.ACTIONS.CANCEL' | translate }}"
                   class="p-button-text"
                   (click)="cancelPresentation()"
                 ></button>
                 <button
                   pButton
-                  label="Guardar presentación"
+                  label="{{ 'CATALOG.SAVE_PRESENTATION' | translate }}"
                   class="p-button-primary"
                   (click)="savePresentation()"
                 ></button>
@@ -737,9 +721,9 @@
               <i class="pi pi-lightbulb text-xl"></i>
             </div>
             <div>
-              <h4 class="font-bold mb-1">Definir precios base por unidad</h4>
+              <h4 class="font-bold mb-1">{{ 'CATALOG.BASE_PRICES' | translate }}</h4>
               <p class="text-sm">
-                Estos precios se usarán como base para calcular los precios de las presentaciones.
+                {{ 'CATALOG.BASE_PRICES_HINT' | translate }}
               </p>
             </div>
           </div>
@@ -747,7 +731,7 @@
           <div class="grid grid-cols-2 gap-4 text-left">
             <div class="flex flex-col gap-2">
               <label for="cost_price" class="font-bold text-surface-700 text-xs"
-                >Costo unitario <span class="text-red-500">*</span></label
+                >{{ 'CATALOG.COST_UNIT' | translate }} <span class="text-red-500">*</span></label
               >
               <div>
                 <p-inputNumber
@@ -768,7 +752,7 @@
 
             <div class="flex flex-col gap-2">
               <label for="sale_price" class="font-bold text-surface-700 text-xs"
-                >Precio de venta <span class="text-red-500">*</span></label
+                >{{ 'CATALOG.SALE_PRICE_UNIT' | translate }} <span class="text-red-500">*</span></label
               >
               <div>
                 <p-inputNumber
@@ -792,8 +776,8 @@
             @let priceTitle = 'TABLE.PRICE' | translate;
             <div class="flex flex-col gap-2">
               <label for="price_2" class="font-bold text-surface-700 text-xs"
-                >{{ priceTitle }} 2
-                <span class="text-surface-400 font-normal">(opcional)</span></label
+                >{{ 'CATALOG.PRICE_2' | translate }}
+                <span class="text-surface-400 font-normal">{{ 'CATALOG.OPTIONAL' | translate }}</span></label
               >
               <div>
                 <p-inputNumber
@@ -814,8 +798,8 @@
 
             <div class="flex flex-col gap-2">
               <label for="price_3" class="font-bold text-surface-700 text-xs"
-                >{{ priceTitle }} 3
-                <span class="text-surface-400 font-normal">(opcional)</span></label
+                >{{ 'CATALOG.PRICE_3' | translate }}
+                <span class="text-surface-400 font-normal">{{ 'CATALOG.OPTIONAL' | translate }}</span></label
               >
               <div>
                 <p-inputNumber
@@ -843,7 +827,7 @@
               [class.text-red-500]="margin < 0"
               [class.text-green-600]="margin >= 0"
             >
-              <i class="pi pi-percentage"></i> Margen de utilidad
+              <i class="pi pi-percentage"></i> {{ 'CATALOG.MARGIN' | translate }}
             </div>
             <div
               class="font-bold"
@@ -861,7 +845,7 @@
     <button
       pButton
       type="button"
-      label="Cancelar"
+      label="{{ 'GLOBAL.ACTIONS.CANCEL' | translate }}"
       icon="pi pi-times"
       class="p-button-outlined p-button-secondary border-surface-200 text-surface-600"
       (click)="closeModal.emit()"
@@ -871,7 +855,7 @@
       <button
         pButton
         type="button"
-        [label]="isEditing() ? 'Actualizar producto' : 'Guardar producto'"
+        [label]="isEditing() ? ('CATALOG.UPDATE_PRODUCT' | translate) : ('CATALOG.SAVE_PRODUCT' | translate)"
         icon="pi pi-check"
         [loading]="isSaving()"
         class="p-button-primary"
@@ -881,7 +865,7 @@
       <button
         pButton
         type="button"
-        label="Siguiente"
+        label="{{ 'CATALOG.NEXT' | translate }}"
         icon="pi pi-arrow-right"
         class="p-button-success"
         (click)="nextTab()"
