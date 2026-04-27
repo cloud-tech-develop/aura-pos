@@ -4,6 +4,7 @@ import { ThemeService } from '@services/theme.service';
 import { ColorPalette, ThemeMode, COLOR_PALETTES } from '@core/interfaces';
 import { Router } from '@angular/router';
 import { AUTH } from '@core/constants';
+import { CommonService } from '@services/index';
 
 @Component({
   selector: 'app-theme-panel',
@@ -12,6 +13,7 @@ import { AUTH } from '@core/constants';
   styleUrls: ['./theme-panel.component.css'],
 })
 export class ThemePanelComponent {
+  private commonService = inject(CommonService);
   private themeService = inject(ThemeService);
   private router = inject(Router);
 
@@ -38,5 +40,9 @@ export class ThemePanelComponent {
 
   onLogout() {
     this.router.navigate([AUTH.ROOT, AUTH.LOGOUT]);
+  }
+
+  onDownloadOffline() {
+    this.commonService.downloadOffLineApi();
   }
 }

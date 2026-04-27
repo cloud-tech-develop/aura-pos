@@ -4,6 +4,8 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ThemePanelComponent } from '../theme-panel/theme-panel.component';
 import { TranslationService, AppLanguage } from '@services/translation.service';
+import { HeaderOptions } from '../header-options/header-options';
+import { OfflineModeDialog } from '../offline-mode-dialog/offline-mode-dialog';
 
 interface Tab {
   id: string;
@@ -13,7 +15,7 @@ interface Tab {
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterModule, TranslateModule, ThemePanelComponent],
+  imports: [CommonModule, RouterModule, TranslateModule, ThemePanelComponent, HeaderOptions, OfflineModeDialog],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })

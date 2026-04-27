@@ -259,6 +259,15 @@
     "PATTERN": "Formato inválido",
     "PASSWORD_MISMATCH": "Las contraseñas no coinciden"
   },
+  "OFFLINE": {
+    "DIALOG": {
+      "TITLE": "Conexión perdida",
+      "MESSAGE": "No se puede conectar al servidor principal. ¿Deseas usar la versión offline (localhost)?",
+      "INFO": "La versión offline usa datos locales. Algunas funciones pueden estar limitadas.",
+      "STAY_ONLINE": "Permanecer en línea",
+      "USE_OFFLINE": "Usar Offline"
+    }
+  },
   "MESSAGES": {
     "SAVE_SUCCESS": "Guardado exitosamente",
     "SAVE_ERROR": "Error al guardar",

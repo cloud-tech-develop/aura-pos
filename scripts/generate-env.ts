@@ -19,8 +19,9 @@ const isProduction = getEnv('ATMOSPHERE', 'development') === 'production';
 const envConfig = `export const environment = {
   PRODUCTION: ${isProduction},
   API_URL: '${getEnv('API_URL', 'http://localhost:8081')}',
+  API_OFFLINE: '${getEnv('API_OFFLINE', 'http://localhost:9191')}',
   ATMOSPHERE: '${getEnv('ATMOSPHERE', 'development')}',
-  SOCKET_URL: '${getEnv('SOCKET_URL', 'http://localhost:3000')}',
+  SOCKET_URL: '${getEnv('SOCKET_URL', 'ws://localhost:3000')}',
   DEFAULT_LANGUAGE: '${getEnv('DEFAULT_LANGUAGE', 'es')}',
   DEFAULT_THEME: '${getEnv('DEFAULT_THEME', 'dark')}',
   DEFAULT_CURRENCY: '${getEnv('DEFAULT_CURRENCY', 'COP')}',

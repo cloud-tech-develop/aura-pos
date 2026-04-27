@@ -1,17 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
-import { environment } from '@environment/environment';
 import { httpErrorHandler } from '@shared/utils';
 import { Unit, UnitList, UnitRequest } from '../interfaces';
 import { ListId, PageData, PageParams, PageResponse, ResponseBase } from '@core/interfaces';
+import { CatalogApiBase } from '../../services/catalog-api-base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UnitsApiService {
+export class UnitsApiService extends CatalogApiBase {
   private http = inject(HttpClient);
-  private apiUrl = environment.API_URL + '/catalog/units';
+
+  get apiUrl(): string {
+    return this.catalogUrl + '/units';
+  }
 
   list(): Observable<{ error: boolean; msg: string; data?: ListId[] }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as ListId[] | undefined };

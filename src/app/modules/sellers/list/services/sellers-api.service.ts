@@ -1,12 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ApiConnectionService } from '@services/api-connection.service';
 import { CreateSellerDto, Seller, UpdateSellerDto } from '../interfaces';
-import { environment } from '@environment/environment';
 
 export class SellersApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.API_URL}/sellers`;
+  private apiConnection = inject(ApiConnectionService);
+
+  get baseUrl(): string {
+    return `${this.apiConnection.apiUrl()}/sellers`;
+  }
 
   getAll(): Observable<Seller[]> {
     return this.http.get<Seller[]>(this.baseUrl);

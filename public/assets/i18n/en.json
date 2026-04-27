@@ -436,5 +436,18 @@
     "UPDATE_PRODUCT": "Update product",
     "PURCHASE": "Purchase",
     "CANCELED": "Cancel"
+  },
+  "OFFLINE": {
+    "DIALOG": {
+      "TITLE": "Connection lost",
+      "NO_INTERNET": "No internet connection",
+      "SERVER_UNAVAILABLE": "Server unavailable",
+      "MESSAGE": "Cannot connect to the main server. Would you like to use the offline version (localhost)?",
+      "NO_INTERNET_MESSAGE": "No internet connection. Would you like to use the offline version (localhost)?",
+      "INFO": "The offline version uses local data.",
+      "STAY_OFFLINE": "Stay Offline",
+      "USE_OFFLINE": "Use Offline",
+      "RETRY": "Retry"
+    }
   }
 }

@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { environment } from '@environment/environment';
 import { httpErrorHandler } from '@shared/utils';
 import {
   Product,
@@ -12,13 +11,17 @@ import {
 } from '../interfaces';
 import { PageData, ResponseBase } from '@core/interfaces';
 import { Presentation } from '@module-catalog/presentations/interfaces';
+import { CatalogApiBase } from '../../services/catalog-api-base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProductsApiService {
+export class ProductsApiService extends CatalogApiBase {
   private http = inject(HttpClient);
-  private apiUrl = environment.API_URL + '/catalog/products';
+
+  get apiUrl(): string {
+    return this.catalogUrl + '/products';
+  }
 
   getAll(): Observable<{ error: boolean; msg: string; data?: Product[] }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Product[] | undefined };

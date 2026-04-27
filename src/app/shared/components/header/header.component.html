@@ -1,62 +1,50 @@
 <header class="header">
   <nav class="header-nav">
     @for (tab of tabs; track tab.route) {
-      <button
-        class="tab-btn"
-        [class.active]="isActive(tab.route)"
-        (click)="navigate(tab.route)"
-      >
+      <button class="tab-btn" [class.active]="isActive(tab.route)" (click)="navigate(tab.route)">
         {{ tab.label }}
       </button>
     }
   </nav>
-  
-  <!-- Search -->
-  <div class="header-search">
-    <i class="pi pi-search search-icon"></i>
-    <input 
-      type="text" 
-      placeholder="Buscar..." 
-      class="search-input"
-    />
-  </div>
-  
-  <!-- User Profile with Dropdown -->
-  <div class="header-user">
-    <button class="user-btn" (click)="toggleUserDropdown()">
-      <img 
-        src="https://ui-avatars.com/api/?name=Test+User&background=random&color=fff" 
-        alt="User" 
-        class="user-avatar"
-      />
-    </button>
-    
-    <!-- User Dropdown with Theme Panel -->
-    @if (isUserDropdownOpen()) {
-      <div 
-        class="user-dropdown" 
-        (click)="$event.stopPropagation()"
-      >
-        <!-- Language Switcher -->
-        <div class="dropdown-section">
-          <span class="dropdown-label">{{ 'SETTINGS.LANGUAGE' | translate }}</span>
-          <div class="language-buttons">
-            @for (lang of languages; track lang.code) {
-              <button
-                class="lang-btn"
-                [class.active]="currentLang() === lang.code"
-                (click)="setLanguage(lang.code)"
-              >
-                {{ lang.name }}
-              </button>
-            }
+
+  <div class="flex gap-3 items-center">
+    <!-- Connection Indicator -->
+    <app-offline-mode-dialog></app-offline-mode-dialog>
+
+    <!-- User Profile with Dropdown -->
+    <div class="header-user">
+      <button class="user-btn" (click)="toggleUserDropdown()">
+        <img
+          src="https://ui-avatars.com/api/?name=Test+User&background=random&color=fff"
+          alt="User"
+          class="user-avatar"
+        />
+      </button>
+
+      <!-- User Dropdown with Theme Panel -->
+      @if (isUserDropdownOpen()) {
+        <div class="user-dropdown" (click)="$event.stopPropagation()">
+          <!-- Language Switcher -->
+          <div class="dropdown-section">
+            <span class="dropdown-label">{{ 'SETTINGS.LANGUAGE' | translate }}</span>
+            <div class="language-buttons">
+              @for (lang of languages; track lang.code) {
+                <button
+                  class="lang-btn"
+                  [class.active]="currentLang() === lang.code"
+                  (click)="setLanguage(lang.code)"
+                >
+                  {{ lang.name }}
+                </button>
+              }
+            </div>
           </div>
+
+          <div class="dropdown-divider"></div>
+
+          <app-theme-panel></app-theme-panel>
         </div>
-        
-        <div class="dropdown-divider"></div>
-        
-        <app-theme-panel></app-theme-panel>
-      </div>
-    }
+      }
+    </div>
   </div>
 </header>

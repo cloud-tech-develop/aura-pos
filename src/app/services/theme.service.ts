@@ -1,7 +1,6 @@
 import { Injectable, signal, effect, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '@environment/environment';
 import {
   ColorPalette,
   ThemeMode,
@@ -9,6 +8,7 @@ import {
   UserThemePreference,
   COLOR_PALETTES,
 } from '../core/interfaces/theme.interface';
+import { ApiConnectionService } from '@services/api-connection.service';
 import { Observable, of, tap, catchError, map } from 'rxjs';
 
 @Injectable({
@@ -17,14 +17,17 @@ import { Observable, of, tap, catchError, map } from 'rxjs';
 export class ThemeService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
+  private apiConnection = inject(ApiConnectionService);
 
   // Signals para el estado del tema
   readonly currentPalette = signal<ColorPalette>('violet');
   readonly currentMode = signal<ThemeMode>('dark');
   readonly isLoading = signal<boolean>(false);
 
-  // API endpoint
-  private readonly API_URL = `${environment.API_URL}/user/preferences/theme`;
+  // API endpoint dinámico
+  private get API_URL(): string {
+    return `${this.apiConnection.apiUrl()}/user/preferences/theme`;
+  }
 
   constructor() {
     // Efecto para aplicar cambios de tema automáticamente

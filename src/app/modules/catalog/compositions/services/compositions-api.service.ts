@@ -1,16 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
-import { environment } from '@environment/environment';
 import { httpErrorHandler } from '@shared/utils';
 import { Composition, CompositionRequest, CompositionResponse, CompositionListResponse } from '../interfaces';
+import { CatalogApiBase } from '../../services/catalog-api-base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CompositionsApiService {
+export class CompositionsApiService extends CatalogApiBase {
   private http = inject(HttpClient);
-  private apiUrl = environment.API_URL;
+
+  get apiUrl(): string {
+    return this.getApiUrl('/compositions');
+  }
 
   getAll(): Observable<{ error: boolean; msg: string; data?: Composition[] }> {
     const res = { error: true, msg: 'Error undefined', data: undefined as Composition[] | undefined };

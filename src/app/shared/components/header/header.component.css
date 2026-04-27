@@ -190,3 +190,91 @@
   background-color: var(--border-color);
   margin: 0;
 }
+
+/* Connection Indicator / Traffic Light */
+.connection-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  background-color: var(--surface-100);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: default;
+  transition: all 0.3s ease;
+}
+
+.connection-indicator.online {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: rgb(34, 197, 94);
+}
+
+.connection-indicator.offline {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: rgb(239, 68, 68);
+}
+
+.connection-indicator.checking {
+  background-color: rgba(251, 191, 36, 0.1);
+  color: rgb(251, 191, 36);
+}
+
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: pulse 2s infinite;
+}
+
+.connection-indicator.online .indicator-dot {
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.indicator-label {
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.indicator-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 0.25rem;
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.indicator-btn:hover {
+  background-color: rgba(34, 197, 94, 0.2);
+}
+
+/* Dark mode specific */
+.dark .connection-indicator.online {
+  background-color: rgba(34, 197, 94, 0.15);
+}
+
+.dark .connection-indicator.offline {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+.dark .connection-indicator.checking {
+  background-color: rgba(251, 191, 36, 0.15);
+}

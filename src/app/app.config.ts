@@ -6,6 +6,7 @@ import {
   enableProdMode,
   APP_INITIALIZER,
   inject,
+  InjectionToken,
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -25,6 +26,7 @@ import Aura from '@primeuix/themes/aura';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { provideToastr } from 'ngx-toastr';
 import { UserSessionStore } from '@store/user.session';
+import { AppStore } from '@store/app.store';
 
 if (environment.ATMOSPHERE === 'production') {
   enableProdMode();
@@ -32,6 +34,8 @@ if (environment.ATMOSPHERE === 'production') {
     selfXSSWarning();
   }
 }
+
+const APP_STORE_INITIALIZER = new InjectionToken<readonly string[]>('AppStoreInitializer');
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -66,6 +70,14 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory:
         (store = inject(UserSessionStore)) =>
+        () =>
+          store.init(),
+      multi: true,
+    },
+    {
+      provide: APP_STORE_INITIALIZER,
+      useFactory:
+        (store = inject(AppStore)) =>
         () =>
           store.init(),
       multi: true,

@@ -1,0 +1,28 @@
+<div class="relative top-0">
+  <div class="absolute -top-5">
+    <p-speeddial [model]="items" direction="down" [transitionDelay]="80">
+      <ng-template #button let-toggleCallback="toggleCallback">
+        <p-button
+          (click)="toggleCallback($event); onPingOffLineApi()"
+          icon="pi pi-spin pi-cog"
+          badge="2"
+          badgeSeverity="success"
+          styleClass="m-0"
+          [outlined]="true"
+        />
+      </ng-template>
+      <ng-template #item let-item let-toggleCallback="toggleCallback">
+        <div
+          class="flex items-center gap-2 p-2 w-44 border rounded cursor-pointer bg-surface-0 hover:bg-primary-400"
+          (click)="toggleCallback($event, item)"
+        >
+          <span [class]="item.icon"></span>
+          <span>
+            {{ item.label }}
+          </span>
+        </div>
+      </ng-template>
+    </p-speeddial>
+  </div>
+</div>
+<p-toast />

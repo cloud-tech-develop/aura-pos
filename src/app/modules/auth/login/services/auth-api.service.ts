@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { LoginData, LoginRequest } from '../interfaces';
 import { catchError, map, Observable } from 'rxjs';
 import { httpErrorHandler } from '@shared/utils';
-import { environment } from '@environment/environment';
+import { ApiConnectionService } from '@services/api-connection.service';
 
 interface LoginResponse {
   data: LoginData;
@@ -16,7 +16,11 @@ interface LoginResponse {
 })
 export class AuthApiService {
   private http = inject(HttpClient);
-  private apiUrl = environment.API_URL;
+  private apiConnection = inject(ApiConnectionService);
+
+  get apiUrl(): string {
+    return this.apiConnection.apiUrl();
+  }
 
   login(credentials: LoginRequest): Observable<{
     msg: string;

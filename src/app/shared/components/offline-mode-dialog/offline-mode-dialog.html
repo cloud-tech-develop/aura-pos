@@ -1,0 +1,72 @@
+<p-toast position="top-right"></p-toast>
+
+<!-- Semáforo siempre visible en la UI -->
+<div
+  class="connection-indicator"
+  [class]="connectionStatus()"
+  [title]="connectionMessage()"
+  (click)="toggleDialog()"
+>
+  <span class="indicator-dot"></span>
+  <span class="indicator-label">{{ connectionMessage() }}</span>
+  @if (shouldShowGoOnlineButton()) {
+    <button class="indicator-btn" (click)="onGoOnline($event)" title="Volver al servidor principal">
+      <i class="pi pi-cloud-upload"></i>
+    </button>
+  }
+</div>
+
+<!-- Diálogo de configuración -->
+<p-dialog
+  [header]="dialogTitle"
+  [modal]="false"
+  [closable]="canCloseDialog"
+  [closeOnEscape]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [visible]="isDialogVisible()"
+  [style]="{ width: '25rem' }"
+  (onHide)="onDismiss()"
+>
+  <ng-template pTemplate="header">
+    <div class="inline-flex align-items-center gap-2">
+      <i [class]="dialogIcon" class="text-xl"></i>
+      <span class="font-bold text-lg">{{ dialogTitle }}</span>
+    </div>
+  </ng-template>
+
+  <div class="flex flex-column gap-3">
+    <p class="m-0 text-color">{{ dialogMessage }}</p>
+
+    <div class="flex align-items-center gap-2 p-3 surface-100 border-round">
+      <i class="pi pi-info-circle text-primary-500"></i>
+      <span class="text-sm text-color-secondary">{{ dialogInfo }}</span>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex gap-2 justify-content-between">
+      @if (shouldShowGoOnline()) {
+        <p-button
+          label="Volver a Online"
+          [outlined]="true"
+          severity="info"
+          icon="pi pi-cloud"
+          (onClick)="onGoOnlineDialog()"
+        />
+      }
+      <div class="flex gap-2 ml-auto">
+        @if (shouldShowRetry()) {
+          <p-button
+            label="Reintentar"
+            [outlined]="true"
+            severity="secondary"
+            icon="pi pi-refresh"
+            (onClick)="onRetry()"
+          />
+        }
+        <p-button [label]="primaryButtonLabel" severity="success" (onClick)="onPrimaryAction()" />
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
