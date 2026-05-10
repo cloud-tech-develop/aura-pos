@@ -1,0 +1,140 @@
+<form [formGroup]="presentationForm" class="flex flex-col gap-6 p-6">
+  <!-- Name -->
+  <div class="flex flex-col gap-2">
+    <label for="name" class="font-bold text-surface-700 text-xs"
+      >{{ 'TABLE.NAME' | translate }} <span class="text-red-500">*</span></label
+    >
+    <input
+      pInputText
+      id="name"
+      formControlName="name"
+      placeholder="Ej: Bulto, Caja, Litro..."
+      class="w-full"
+    />
+  </div>
+
+  <!-- Factor & Barcode -->
+  <div class="grid grid-cols-2 gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="factor" class="font-bold text-surface-700 text-xs"
+        >{{ 'TABLE.FACTOR' | translate }} <span class="text-red-500">*</span></label
+      >
+      <p-inputNumber
+        id="factor"
+        formControlName="factor"
+        [min]="1"
+        placeholder="1"
+        class="w-full"
+      ></p-inputNumber>
+      <span class="text-xs text-surface-400">{{ 'TABLE.FACTOR_HINT' | translate }}</span>
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="barcode" class="font-bold text-surface-700 text-xs"
+        >{{ 'TABLE.BARCODE' | translate }}
+        <span class="text-surface-400 font-normal">{{
+          'CATALOG.OPTIONAL' | translate
+        }}</span></label
+      >
+      <input
+        pInputText
+        id="barcode"
+        formControlName="barcode"
+        placeholder="Ej: 123456789"
+        class="w-full"
+      />
+    </div>
+  </div>
+
+  <!-- Prices -->
+  <div class="grid grid-cols-2 gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="cost_price" class="font-bold text-surface-700 text-xs"
+        >{{ 'CATALOG.COST_PRICE' | translate }} <span class="text-red-500">*</span></label
+      >
+      <p-inputNumber
+        id="cost_price"
+        formControlName="cost_price"
+        mode="currency"
+        currency="COP"
+        locale="es-CO"
+        placeholder="$ 0"
+        class="w-full"
+      ></p-inputNumber>
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="sale_price" class="font-bold text-surface-700 text-xs"
+        >{{ 'CATALOG.SALE_PRICE' | translate }} <span class="text-red-500">*</span></label
+      >
+      <p-inputNumber
+        id="sale_price"
+        formControlName="sale_price"
+        mode="currency"
+        currency="COP"
+        locale="es-CO"
+        placeholder="$ 0"
+        class="w-full"
+      ></p-inputNumber>
+    </div>
+  </div>
+
+  <!-- Switches -->
+  <div class="grid grid-cols-2 gap-4">
+    <div class="flex items-center gap-2">
+      <p-toggleswitch formControlName="default_purchase" class="p-green-500"></p-toggleswitch>
+      <span class="text-sm font-bold text-surface-700">{{
+        'CATALOG.DEFAULT_PURCHASE' | translate
+      }}</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <p-toggleswitch formControlName="default_sale"></p-toggleswitch>
+      <span class="text-sm font-bold text-surface-700">{{
+        'CATALOG.DEFAULT_SALE' | translate
+      }}</span>
+    </div>
+  </div>
+
+  <!-- Active -->
+  <div
+    class="border border-surface-200 rounded-xl p-4 flex justify-between items-center hover:bg-surface-50 transition-colors"
+  >
+    <div class="flex flex-col">
+      <div class="flex items-center gap-2 mb-0.5">
+        <i
+          class="pi pi-check-circle"
+          [class.text-green-500]="presentationForm.get('isActive')?.value"
+          [class.text-surface-400]="!presentationForm.get('isActive')?.value"
+        ></i>
+        <span class="font-bold text-surface-800">{{ 'TABLE.STATUS' | translate }}</span>
+      </div>
+      <span class="text-xs text-surface-500">{{
+        presentationForm.get('isActive')?.value
+          ? ('GLOBAL.STATUS.ACTIVE' | translate)
+          : ('GLOBAL.STATUS.INACTIVE' | translate)
+      }}</span>
+    </div>
+    <p-toggleswitch formControlName="isActive" class="p-green-500"></p-toggleswitch>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex justify-end gap-3 pt-4 border-t border-surface-100">
+    <button
+      pButton
+      type="button"
+      label="{{ 'GLOBAL.ACTIONS.CANCEL' | translate }}"
+      icon="pi pi-times"
+      class="p-button-outlined p-button-secondary border-surface-200 text-surface-600"
+      (click)="cancel()"
+    ></button>
+    <button
+      pButton
+      type="button"
+      [label]="
+        isEditing() ? ('GLOBAL.ACTIONS.UPDATE' | translate) : ('GLOBAL.ACTIONS.SAVE' | translate)
+      "
+      icon="pi pi-check"
+      [loading]="isSaving()"
+      class="p-button-primary"
+      (click)="save()"
+    ></button>
+  </div>
+</form>

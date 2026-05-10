@@ -61,7 +61,8 @@
     "PRICES": "Precios",
     "PRODUCT_TYPE": "Tipo de Producto",
     "ACTIVE": "Activo",
-    "INACTIVE": "Inactivo"
+    "INACTIVE": "Inactivo",
+    "FACTOR": "Factor"
   },
   "GLOBAL": {
     "STATUS": {

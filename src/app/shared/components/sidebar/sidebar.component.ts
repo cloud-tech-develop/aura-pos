@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MenuItem, MenuSectionItem } from '@core/interfaces';
 import { MENU_SECTIONS } from '@core/constants';
 import { TranslateModule } from '@ngx-translate/core';
+import { CommonService } from '@services/index';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,6 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class SidebarComponent implements AfterViewInit {
   private router = inject(Router);
+  private commonService = inject(CommonService);
 
   readonly logoText = 'Aura POS - V2';
   readonly version = 'v1.0.0';
@@ -81,5 +83,9 @@ export class SidebarComponent implements AfterViewInit {
     } else {
       this.isCollapsed.set(false);
     }
+  }
+
+  onPingApi() {
+    this.commonService.pingOffLineApi().subscribe();
   }
 }

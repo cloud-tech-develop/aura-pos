@@ -2,13 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
 import { httpErrorHandler } from '@shared/utils';
+import { CatalogApiBase } from '@module-catalog/services/catalog-api-base.service';
 import {
   Presentation,
   PresentationRequest,
+  PresentationPaginationRequest,
   PresentationResponse,
-  PresentationListResponse,
+  PresentationPageResponse,
 } from '../interfaces';
-import { CatalogApiBase } from '../../services/catalog-api-base.service';
+import { PageData, ResponseBase } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +19,7 @@ export class PresentationsApiService extends CatalogApiBase {
   private http = inject(HttpClient);
 
   get apiUrl(): string {
-    return this.getApiUrl('/presentations');
+    return this.catalogUrl + '/presentations';
   }
 
   getAll(): Observable<{ error: boolean; msg: string; data?: Presentation[] }> {
@@ -27,10 +29,10 @@ export class PresentationsApiService extends CatalogApiBase {
       data: undefined as Presentation[] | undefined,
     };
 
-    return this.http.get<PresentationListResponse>(`${this.apiUrl}/presentations`).pipe(
+    return this.http.get<ResponseBase<Presentation[]>>(`${this.apiUrl}`).pipe(
       map((r) => {
         res.msg = r.message;
-        if (r.error) return res;
+        if (!r.success) return res;
         res.data = r.data;
         res.error = false;
         return res;
@@ -39,17 +41,17 @@ export class PresentationsApiService extends CatalogApiBase {
     );
   }
 
-  getById(id: string): Observable<{ error: boolean; msg: string; data?: Presentation }> {
+  getById(id: number): Observable<{ error: boolean; msg: string; data?: Presentation }> {
     const res = {
       error: true,
       msg: 'Error undefined',
       data: undefined as Presentation | undefined,
     };
 
-    return this.http.get<PresentationResponse>(`${this.apiUrl}/presentations/${id}`).pipe(
+    return this.http.get<ResponseBase<Presentation>>(`${this.apiUrl}/${id}`).pipe(
       map((r) => {
         res.msg = r.message;
-        if (r.error) return res;
+        if (!r.success) return res;
         res.data = r.data;
         res.error = false;
         return res;
@@ -67,10 +69,10 @@ export class PresentationsApiService extends CatalogApiBase {
       data: undefined as Presentation | undefined,
     };
 
-    return this.http.post<PresentationResponse>(`${this.apiUrl}/presentations`, payload).pipe(
+    return this.http.post<ResponseBase<Presentation>>(`${this.apiUrl}`, payload).pipe(
       map((r) => {
         res.msg = r.message;
-        if (r.error) return res;
+        if (!r.success) return res;
         res.data = r.data;
         res.error = false;
         return res;
@@ -80,7 +82,7 @@ export class PresentationsApiService extends CatalogApiBase {
   }
 
   update(
-    id: string,
+    id: number,
     payload: PresentationRequest,
   ): Observable<{ error: boolean; msg: string; data?: Presentation }> {
     const res = {
@@ -89,10 +91,10 @@ export class PresentationsApiService extends CatalogApiBase {
       data: undefined as Presentation | undefined,
     };
 
-    return this.http.put<PresentationResponse>(`${this.apiUrl}/presentations/${id}`, payload).pipe(
+    return this.http.put<ResponseBase<Presentation>>(`${this.apiUrl}/${id}`, payload).pipe(
       map((r) => {
         res.msg = r.message;
-        if (r.error) return res;
+        if (!r.success) return res;
         res.data = r.data;
         res.error = false;
         return res;
@@ -104,10 +106,31 @@ export class PresentationsApiService extends CatalogApiBase {
   delete(id: number): Observable<{ error: boolean; msg: string }> {
     const res = { error: true, msg: 'Error undefined' };
 
-    return this.http.delete<PresentationResponse>(`${this.apiUrl}/presentations/${id}`).pipe(
+    return this.http.delete<ResponseBase<void>>(`${this.apiUrl}/${id}`).pipe(
       map((r) => {
         res.msg = r.message;
-        res.error = r.error;
+        res.error = !r.success;
+        return res;
+      }),
+      catchError(httpErrorHandler),
+    );
+  }
+
+  page(
+    params: PresentationPaginationRequest,
+  ): Observable<{ error: boolean; msg: string; data?: PageData<Presentation> }> {
+    const res = {
+      error: true,
+      msg: 'Error undefined',
+      data: undefined as PageData<Presentation> | undefined,
+    };
+
+    return this.http.post<ResponseBase<PageData<Presentation>>>(`${this.apiUrl}/page`, params).pipe(
+      map((r) => {
+        res.msg = r.message;
+        if (!r.success) return res;
+        res.data = r.data;
+        res.error = false;
         return res;
       }),
       catchError(httpErrorHandler),

@@ -1,3 +1,8 @@
-.container {
-  padding: 1rem;
+/* Presentations Page Styles */
+:host {
+  display: block;
+}
+
+.presentations-page {
+  @apply p-4;
 }

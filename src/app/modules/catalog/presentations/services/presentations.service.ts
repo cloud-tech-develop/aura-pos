@@ -1,36 +1,51 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import {
+  Presentation,
+  PresentationRequest,
+  PresentationPaginationRequest,
+} from '../interfaces';
+import { PageData } from '@core/interfaces';
 import { PresentationsApiService } from './presentations-api.service';
-import { Presentation, PresentationRequest } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PresentationsService {
-  private presentationsApiService = inject(PresentationsApiService);
+  private apiService = inject(PresentationsApiService);
 
   getAll(): Observable<{ error: boolean; msg: string; data?: Presentation[] }> {
-    return this.presentationsApiService.getAll();
+    return this.apiService.getAll();
   }
 
-  getById(id: string): Observable<{ error: boolean; msg: string; data?: Presentation }> {
-    return this.presentationsApiService.getById(id);
+  getById(id: number): Observable<{ error: boolean; msg: string; data?: Presentation }> {
+    return this.apiService.getById(id);
   }
 
   create(
     payload: PresentationRequest,
   ): Observable<{ error: boolean; msg: string; data?: Presentation }> {
-    return this.presentationsApiService.create(payload);
+    return this.apiService.create(payload);
   }
 
   update(
-    id: string,
+    id: number,
     payload: PresentationRequest,
   ): Observable<{ error: boolean; msg: string; data?: Presentation }> {
-    return this.presentationsApiService.update(id, payload);
+    return this.apiService.update(id, payload);
   }
 
   delete(id: number): Observable<{ error: boolean; msg: string }> {
-    return this.presentationsApiService.delete(id);
+    return this.apiService.delete(id);
+  }
+
+  page(
+    params: PresentationPaginationRequest,
+  ): Observable<{
+    error: boolean;
+    msg: string;
+    data?: PageData<Presentation>;
+  }> {
+    return this.apiService.page(params);
   }
 }

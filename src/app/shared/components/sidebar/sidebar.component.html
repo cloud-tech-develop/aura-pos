@@ -100,7 +100,7 @@
     <div class="version">
       <i class="pi pi-info-circle"></i>
       @if (!isCollapsed()) {
-        <span>{{ version }}</span>
+        <span (click)="onPingApi()">{{ version }}</span>
       }
     </div>
   </div>
