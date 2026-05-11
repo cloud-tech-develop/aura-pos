@@ -68,6 +68,24 @@ export class ProductsApiService extends CatalogApiBase {
     );
   }
 
+  patch(
+    id: number,
+    payload: Partial<ProductRequest>,
+  ): Observable<{ error: boolean; msg: string; data?: Product }> {
+    const res = { error: true, msg: 'Error undefined', data: undefined as Product | undefined };
+
+    return this.http.patch<ResponseBase<Product>>(`${this.apiUrl}/${id}`, payload).pipe(
+      map((r) => {
+        res.msg = r.message;
+        if (!r.success) return res;
+        res.data = r.data;
+        res.error = false;
+        return res;
+      }),
+      catchError(httpErrorHandler),
+    );
+  }
+
   update(
     id: number,
     payload: ProductRequest,

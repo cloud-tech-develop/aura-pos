@@ -18,6 +18,6 @@ export class TagsApiService {
     barcode: string,
   ): Observable<{ error: boolean; msg: string; data?: Product }> {
     const payload: Partial<ProductRequest> = { barcode };
-    return this.productsApi.update(id, payload as ProductRequest);
+    return this.productsApi.patch(id, payload);
   }
 }
