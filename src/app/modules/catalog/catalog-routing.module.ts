@@ -19,16 +19,12 @@ export const routes: Routes = [
   {
     path: 'brands',
     loadComponent: () =>
-      import('@module-catalog/brands/ui/index-brands/index-brands').then(
-        (m) => m.IndexBrands,
-      ),
+      import('@module-catalog/brands/ui/index-brands/index-brands').then((m) => m.IndexBrands),
   },
   {
     path: 'units',
     loadComponent: () =>
-      import('@module-catalog/units/ui/index-units/index-units').then(
-        (m) => m.IndexUnits,
-      ),
+      import('@module-catalog/units/ui/index-units/index-units').then((m) => m.IndexUnits),
   },
   {
     path: 'presentations',
@@ -45,11 +41,9 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'tags',
+    path: 'labels',
     loadComponent: () =>
-      import('@module-catalog/tags/ui/index-tags/index-tags').then(
-        (m) => m.IndexTags,
-      ),
+      import('@module-catalog/labels/ui/index-labels/index-labels').then((m) => m.IndexLabels),
   },
   {
     path: '',

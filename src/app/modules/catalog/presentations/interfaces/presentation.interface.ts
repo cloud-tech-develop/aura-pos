@@ -4,7 +4,11 @@ import { StatusCommon } from '@core/interfaces';
 export interface Presentation {
   id?: number;
   name: string;
-  product_id?: number;
+  product_id: number;
+  product_name: string;
+  product_type: string;
+  category_name: string | null;
+  brand_name: string | null;
   factor: number;
   barcode?: string;
   cost_price?: number;

@@ -57,4 +57,8 @@ export class ProductsService {
   ): Observable<{ error: boolean; msg: string; data: null }> {
     return this.productsApiService.upsertPresentations(id, payload);
   }
+
+  getAll(): Observable<{ error: boolean; msg: string; data?: Product[] }> {
+    return this.productsApiService.getAll();
+  }
 }

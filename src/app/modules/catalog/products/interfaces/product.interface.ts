@@ -4,6 +4,7 @@ import { StatusCommon } from '@core/interfaces';
 export interface Product {
   id: number;
   sku: string;
+  barcode: string | null;
   name: string;
   description: string | null;
   category_id: number | null;

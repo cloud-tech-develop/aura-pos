@@ -69,16 +69,41 @@ export class PresentationsApiService extends CatalogApiBase {
       data: undefined as Presentation | undefined,
     };
 
-    return this.http.post<ResponseBase<Presentation>>(`${this.apiUrl}`, payload).pipe(
-      map((r) => {
-        res.msg = r.message;
-        if (!r.success) return res;
-        res.data = r.data;
-        res.error = false;
-        return res;
-      }),
-      catchError(httpErrorHandler),
-    );
+    return this.http
+      .post<ResponseBase<Presentation>>(`${this.apiUrl}`, { Presentations: [payload] })
+      .pipe(
+        map((r) => {
+          res.msg = r.message;
+          if (!r.success) return res;
+          res.data = r.data;
+          res.error = false;
+          return res;
+        }),
+        catchError(httpErrorHandler),
+      );
+  }
+
+  createMulti(
+    payload: PresentationRequest[],
+  ): Observable<{ error: boolean; msg: string; data?: Presentation }> {
+    const res = {
+      error: true,
+      msg: 'Error undefined',
+      data: undefined as Presentation | undefined,
+    };
+
+    return this.http
+      .post<ResponseBase<Presentation>>(`${this.apiUrl}`, { Presentations: payload })
+      .pipe(
+        map((r) => {
+          res.msg = r.message;
+          if (!r.success) return res;
+          res.data = r.data;
+          res.error = false;
+          return res;
+        }),
+        catchError(httpErrorHandler),
+      );
   }
 
   update(

@@ -1,0 +1,423 @@
+<div class="labels-page flex flex-col gap-4">
+  <app-index-header
+    [title]="'LABELS.TITLE' | translate"
+    [description]="'LABELS.SUBTITLE' | translate"
+    titleIcon="tags"
+    [buttonText]="'GLOBAL.ACTIONS.REFRESH' | translate"
+    (buttonAction)="loadProducts()"
+  ></app-index-header>
+
+  <!-- Bulk actions toolbar -->
+  @if (!isLoading() && selectedProducts().length > 0) {
+    <div
+      class="flex items-center gap-2 border border-surface-200 dark:border-surface-600 rounded-xl p-3 flex-wrap"
+    >
+      <span
+        class="flex items-center gap-1.5 text-xs font-semibold text-primary-500 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-1 rounded-full"
+      >
+        <i class="pi pi-check-circle text-xs"></i>
+        {{ selectedProducts().length }} {{ 'LABELS.SELECTED' | translate }} —
+        {{ totalLabels() }} {{ 'LABELS.LABELS' | translate }}
+      </span>
+      <button
+        pButton
+        type="button"
+        icon="pi pi-barcode"
+        [label]="'LABELS.GENERATE_CODES' | translate"
+        class="p-button-outlined p-button-sm"
+        (click)="generateAllSelected()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        icon="pi pi-cog"
+        [label]="'LABELS.CONFIGURE_PRINT' | translate"
+        class="p-button-sm"
+        (click)="openSettings()"
+      ></button>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="flex flex-col items-center justify-center gap-3 py-16 text-surface-400">
+      <p-progressSpinner strokeWidth="3" styleClass="!w-8 !h-8"></p-progressSpinner>
+      <span class="text-sm">{{ 'LABELS.LOADING' | translate }}</span>
+    </div>
+  }
+
+  <!-- Empty state -->
+  @if (!isLoading() && filteredProducts().length === 0) {
+    <div class="flex flex-col items-center py-16 text-surface-400">
+      <div class="w-16 h-16 rounded-full bg-green-50 dark:bg-green-900/30 flex items-center justify-center mb-4">
+        <i class="pi pi-check-circle text-2xl text-green-500"></i>
+      </div>
+      <h3 class="text-lg font-bold text-surface-700 dark:text-surface-200 mb-1">
+        {{ 'LABELS.ALL_CAUGHT_UP' | translate }}
+      </h3>
+      <p class="text-sm">{{ 'LABELS.ALL_HAVE_BARCODE' | translate }}</p>
+    </div>
+  }
+
+  <!-- Table -->
+  @if (!isLoading() && filteredProducts().length > 0) {
+    <p-table
+      [value]="filteredProducts()"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      dataKey="id"
+    >
+      <ng-template #caption>
+        <div class="flex items-center gap-4">
+          <p-iconfield iconPosition="left" styleClass="w-full max-w-md">
+            <p-inputicon class="pi pi-search" />
+            <input
+              pInputText
+              [(ngModel)]="searchQuery"
+              type="text"
+              [placeholder]="'LABELS.SEARCH_PLACEHOLDER' | translate"
+              class="w-full"
+            />
+          </p-iconfield>
+          <p-tag
+            [value]="filteredProducts().length + ' ' + ('PRODUCTS.TITLE' | translate)"
+            severity="info"
+          ></p-tag>
+          <div class="flex items-center gap-2 cursor-pointer" (click)="toggleAll()">
+            <p-checkbox
+              [ngModel]="allSelected()"
+              [binary]="true"
+              inputId="select-all"
+            ></p-checkbox>
+            <label for="select-all" class="text-sm text-surface-500 cursor-pointer select-none">
+              {{ 'LABELS.SELECT_ALL' | translate }}
+            </label>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem"></th>
+          <th>{{ 'TABLE.PRODUCT' | translate }}</th>
+          <th>{{ 'TABLE.SKU' | translate }}</th>
+          <th>{{ 'LABELS.BARCODE' | translate }}</th>
+          <th>{{ 'LABELS.COPIES' | translate }}</th>
+          <th>{{ 'TABLE.ACTIONS' | translate }}</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-product>
+        <tr
+          [class.selected]="product.selected"
+          [class.saved]="product.isSaved"
+        >
+          <td>
+            <p-checkbox
+              [(ngModel)]="product.selected"
+              [binary]="true"
+            ></p-checkbox>
+          </td>
+          <td>
+            <div class="font-semibold text-sm">{{ product.name }}</div>
+            @if (product.category_name) {
+              <div class="text-xs text-surface-400 mt-0.5 flex items-center gap-1">
+                <i class="pi pi-folder"></i>{{ product.category_name }}
+              </div>
+            }
+          </td>
+          <td>
+            @if (product.sku) {
+              <code class="bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300 px-1.5 py-0.5 rounded text-xs font-mono">
+                {{ product.sku }}
+              </code>
+            } @else {
+              <span class="text-surface-300">—</span>
+            }
+          </td>
+          <td>
+            @if (product.generatedBarcode) {
+              <div class="flex items-center gap-1.5">
+                <i class="pi pi-barcode text-green-500"></i>
+                <code class="text-xs font-mono text-surface-700 dark:text-surface-300">{{ product.generatedBarcode }}</code>
+                <p-tag
+                  [value]="'GLOBAL.STATUS.ACTIVE' | translate"
+                  severity="success"
+                  styleClass="!text-[0.65rem] !px-1.5 !py-0.5"
+                ></p-tag>
+              </div>
+            } @else {
+              <span class="text-surface-400 text-xs flex items-center gap-1.5">
+                <i class="pi pi-minus-circle"></i>
+                {{ 'LABELS.NO_BARCODE' | translate }}
+              </span>
+            }
+          </td>
+          <td>
+            <p-inputNumber
+              [(ngModel)]="product.copies"
+              [min]="1"
+              [max]="50"
+              [showButtons]="true"
+              buttonLayout="horizontal"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+              inputStyleClass="!w-10 !text-center"
+            ></p-inputNumber>
+          </td>
+          <td>
+            @if (product.isGenerating) {
+              <p-progressSpinner strokeWidth="4" styleClass="!w-5 !h-5 !m-0"></p-progressSpinner>
+            } @else if (!product.isSaved) {
+              <button
+                pButton
+                type="button"
+                icon="pi pi-barcode"
+                [label]="'LABELS.GENERATE' | translate"
+                class="p-button-outlined p-button-sm p-button-secondary"
+                pTooltip="Generar código EAN-13 y guardar"
+                tooltipPosition="left"
+                (click)="generateBarcode(product)"
+              ></button>
+            } @else {
+              <button
+                pButton
+                type="button"
+                icon="pi pi-print"
+                [label]="'LABELS.PRINT' | translate"
+                class="p-button-sm p-button-outlined p-button-success"
+                pTooltip="Imprimir esta etiqueta"
+                tooltipPosition="left"
+                (click)="product.selected = true; openSettings()"
+              ></button>
+            }
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="6" class="text-center p-4">
+            {{ 'LABELS.NO_PRODUCTS' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</div>
+
+<!-- Print Settings Dialog -->
+@if (showSettings()) {
+  <p-dialog
+    [header]="'LABELS.PRINT_SETTINGS' | translate"
+    [(visible)]="showSettings"
+    [modal]="true"
+    [style]="{ width: '480px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div class="flex flex-col gap-3 py-2">
+      <!-- Layout section -->
+      <div class="border border-surface-200 dark:border-surface-600 rounded-xl p-4 flex flex-col gap-4">
+        <div class="flex items-center gap-2.5 mb-1">
+          <div class="w-8 h-8 bg-primary-50 dark:bg-primary-900/30 text-primary-500 rounded-lg flex items-center justify-center text-sm">
+            <i class="pi pi-th-large"></i>
+          </div>
+          <span class="text-sm font-bold uppercase text-surface-700 dark:text-surface-200 tracking-wide">
+            {{ 'LABELS.LAYOUT' | translate }}
+          </span>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-2 block">
+            {{ 'LABELS.COLUMNS' | translate }}
+          </label>
+          <p-selectButton
+            [options]="columnOptions()"
+            [(ngModel)]="settings().columns"
+            optionLabel="label"
+            optionValue="value"
+          ></p-selectButton>
+        </div>
+        <div>
+          <div class="flex justify-between mb-1">
+            <label class="text-sm font-semibold text-surface-700 dark:text-surface-200">
+              {{ 'LABELS.SPACING' | translate }}: <b class="text-primary-500">{{ settings().spacing }}px</b>
+            </label>
+          </div>
+          <p-slider
+            [(ngModel)]="settings().spacing"
+            [min]="0"
+            [max]="50"
+          ></p-slider>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-2 block">
+            {{ 'LABELS.MARGINS' | translate }}
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-xs text-surface-500">Top:</span>
+                <b class="text-xs text-primary-500">{{ settings().marginTop }}px</b>
+              </div>
+              <p-slider
+                [(ngModel)]="settings().marginTop"
+                [min]="0"
+                [max]="80"
+              ></p-slider>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-xs text-surface-500">Right:</span>
+                <b class="text-xs text-primary-500">{{ settings().marginRight }}px</b>
+              </div>
+              <p-slider
+                [(ngModel)]="settings().marginRight"
+                [min]="0"
+                [max]="80"
+              ></p-slider>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-xs text-surface-500">Bottom:</span>
+                <b class="text-xs text-primary-500">{{ settings().marginBottom }}px</b>
+              </div>
+              <p-slider
+                [(ngModel)]="settings().marginBottom"
+                [min]="0"
+                [max]="80"
+              ></p-slider>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-xs text-surface-500">Left:</span>
+                <b class="text-xs text-primary-500">{{ settings().marginLeft }}px</b>
+              </div>
+              <p-slider
+                [(ngModel)]="settings().marginLeft"
+                [min]="0"
+                [max]="80"
+              ></p-slider>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style section -->
+      <div class="border border-surface-200 dark:border-surface-600 rounded-xl p-4 flex flex-col gap-4">
+        <div class="flex items-center gap-2.5 mb-1">
+          <div class="w-8 h-8 bg-primary-50 dark:bg-primary-900/30 text-primary-500 rounded-lg flex items-center justify-center text-sm">
+            <i class="pi pi-palette"></i>
+          </div>
+          <span class="text-sm font-bold uppercase text-surface-700 dark:text-surface-200 tracking-wide">
+            {{ 'LABELS.LABEL_STYLE' | translate }}
+          </span>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-surface-700 dark:text-surface-200">{{ 'TABLE.NAME' | translate }}</label>
+            <p-toggleButton
+              [(ngModel)]="settings().showName"
+              onLabel="SÍ"
+              offLabel="NO"
+              onIcon="pi pi-check"
+              offIcon="pi pi-times"
+              class="w-full"
+            ></p-toggleButton>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-surface-700 dark:text-surface-200">{{ 'TABLE.PRICE' | translate }}</label>
+            <p-toggleButton
+              [(ngModel)]="settings().showPrice"
+              onLabel="SÍ"
+              offLabel="NO"
+              onIcon="pi pi-check"
+              offIcon="pi pi-times"
+              class="w-full"
+            ></p-toggleButton>
+          </div>
+        </div>
+        @if (settings().showName || settings().showPrice) {
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="flex justify-between mb-1">
+                <label class="text-sm font-semibold text-surface-700 dark:text-surface-200">
+                  {{ 'LABELS.FONT_TITLE' | translate }}: <b class="text-primary-500">{{ settings().fontSizeTitle }}px</b>
+                </label>
+              </div>
+              <p-slider
+                [(ngModel)]="settings().fontSizeTitle"
+                [min]="8"
+                [max]="32"
+              ></p-slider>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <label class="text-sm font-semibold text-surface-700 dark:text-surface-200">
+                  {{ 'LABELS.FONT_CODE' | translate }}: <b class="text-primary-500">{{ settings().fontSizeCode }}px</b>
+                </label>
+              </div>
+              <p-slider
+                [(ngModel)]="settings().fontSizeCode"
+                [min]="8"
+                [max]="24"
+              ></p-slider>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Print control section -->
+      <div class="border border-surface-200 dark:border-surface-600 rounded-xl p-4 flex flex-col gap-4">
+        <div class="flex items-center gap-2.5 mb-1">
+          <div class="w-8 h-8 bg-primary-50 dark:bg-primary-900/30 text-primary-500 rounded-lg flex items-center justify-center text-sm">
+            <i class="pi pi-print"></i>
+          </div>
+          <span class="text-sm font-bold uppercase text-surface-700 dark:text-surface-200 tracking-wide">
+            {{ 'LABELS.PRINT_CONTROL' | translate }}
+          </span>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <div class="flex justify-between mb-1">
+              <label class="text-sm font-semibold text-surface-700 dark:text-surface-200">
+                {{ 'LABELS.SKIP_LABELS' | translate }}: <b class="text-primary-500">{{ settings().skipLabels }}</b>
+              </label>
+            </div>
+            <p-slider
+              [(ngModel)]="settings().skipLabels"
+              [min]="0"
+              [max]="50"
+            ></p-slider>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-surface-700 dark:text-surface-200">{{ 'LABELS.SAVE_PAPER' | translate }}</label>
+            <p-toggleButton
+              [(ngModel)]="settings().savePaper"
+              onLabel="SÍ"
+              offLabel="NO"
+              onIcon="pi pi-check"
+              offIcon="pi pi-times"
+              class="w-full"
+            ></p-toggleButton>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        [label]="'GLOBAL.ACTIONS.CLOSE' | translate"
+        icon="pi pi-times"
+        class="p-button-text p-button-secondary"
+        (click)="showSettings.set(false)"
+      ></button>
+      <button
+        pButton
+        [label]="'LABELS.PRINT_LABELS' | translate"
+        icon="pi pi-print"
+        class="p-button-success"
+        (click)="print()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+}
+
+<p-toast />

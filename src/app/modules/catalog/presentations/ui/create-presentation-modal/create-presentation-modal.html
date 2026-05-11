@@ -1,4 +1,27 @@
 <form [formGroup]="presentationForm" class="flex flex-col gap-6 p-6">
+  <!-- Product -->
+  <div class="flex flex-col gap-2">
+    <label for="product" class="font-bold text-surface-700 text-xs"
+      >{{ 'TABLE.PRODUCT' | translate }} <span class="text-red-500">*</span></label
+    >
+    <p-select
+      id="product"
+      formControlName="product_id"
+      [options]="products()"
+      optionLabel="name"
+      optionValue="id"
+      [filter]="true"
+      filterBy="name"
+      [showClear]="true"
+      placeholder="{{ 'TABLE.SELECT_PRODUCT' | translate }}"
+      class="w-full"
+    ></p-select>
+    <validator-errors
+      [control]="presentationForm.get('product_id')"
+      [label]="'TABLE.PRODUCT' | translate"
+    />
+  </div>
+
   <!-- Name -->
   <div class="flex flex-col gap-2">
     <label for="name" class="font-bold text-surface-700 text-xs"
@@ -11,6 +34,7 @@
       placeholder="Ej: Bulto, Caja, Litro..."
       class="w-full"
     />
+    <validator-errors [control]="presentationForm.get('name')" [label]="'TABLE.NAME' | translate" />
   </div>
 
   <!-- Factor & Barcode -->
@@ -26,6 +50,10 @@
         placeholder="1"
         class="w-full"
       ></p-inputNumber>
+      <validator-errors
+        [control]="presentationForm.get('factor')"
+        [label]="'TABLE.FACTOR' | translate"
+      />
       <span class="text-xs text-surface-400">{{ 'TABLE.FACTOR_HINT' | translate }}</span>
     </div>
     <div class="flex flex-col gap-2">
@@ -41,6 +69,10 @@
         formControlName="barcode"
         placeholder="Ej: 123456789"
         class="w-full"
+      />
+      <validator-errors
+        [control]="presentationForm.get('barcode')"
+        [label]="'TABLE.BARCODE' | translate"
       />
     </div>
   </div>
@@ -60,6 +92,10 @@
         placeholder="$ 0"
         class="w-full"
       ></p-inputNumber>
+      <validator-errors
+        [control]="presentationForm.get('cost_price')"
+        [label]="'CATALOG.COST_PRICE' | translate"
+      />
     </div>
     <div class="flex flex-col gap-2">
       <label for="sale_price" class="font-bold text-surface-700 text-xs"
@@ -74,6 +110,10 @@
         placeholder="$ 0"
         class="w-full"
       ></p-inputNumber>
+      <validator-errors
+        [control]="presentationForm.get('sale_price')"
+        [label]="'CATALOG.SALE_PRICE' | translate"
+      />
     </div>
   </div>
 

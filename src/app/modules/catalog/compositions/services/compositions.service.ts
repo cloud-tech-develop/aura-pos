@@ -1,31 +1,49 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CompositionsApiService } from './compositions-api.service';
-import { Composition, CompositionRequest } from '../interfaces';
+import {
+  Composition,
+  CreateCompositionRequest,
+  UpdateCompositionRequest,
+} from '../interfaces';
+import { PageData, PageParams } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CompositionsService {
-  private compositionsApiService = inject(CompositionsApiService);
+  private apiService = inject(CompositionsApiService);
 
-  getAll(): Observable<{ error: boolean; msg: string; data?: Composition[] }> {
-    return this.compositionsApiService.getAll();
+  getById(
+    id: number,
+  ): Observable<{ error: boolean; msg: string; data?: Composition }> {
+    return this.apiService.getById(id);
   }
 
-  getById(id: string): Observable<{ error: boolean; msg: string; data?: Composition }> {
-    return this.compositionsApiService.getById(id);
+  create(
+    payload: CreateCompositionRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Composition }> {
+    return this.apiService.create(payload);
   }
 
-  create(payload: CompositionRequest): Observable<{ error: boolean; msg: string; data?: Composition }> {
-    return this.compositionsApiService.create(payload);
+  update(
+    id: number,
+    payload: UpdateCompositionRequest,
+  ): Observable<{ error: boolean; msg: string; data?: Composition }> {
+    return this.apiService.update(id, payload);
   }
 
-  update(id: string, payload: CompositionRequest): Observable<{ error: boolean; msg: string; data?: Composition }> {
-    return this.compositionsApiService.update(id, payload);
+  delete(id: number): Observable<{ error: boolean; msg: string }> {
+    return this.apiService.delete(id);
   }
 
-  delete(id: string): Observable<{ error: boolean; msg: string }> {
-    return this.compositionsApiService.delete(id);
+  page(
+    payload: PageParams<null>,
+  ): Observable<{
+    error: boolean;
+    msg: string;
+    data?: PageData<Composition>;
+  }> {
+    return this.apiService.page(payload);
   }
 }

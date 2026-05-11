@@ -1,0 +1,11 @@
+.labels-page {
+  min-height: 200px;
+}
+
+tr.selected {
+  background: color-mix(in srgb, var(--p-primary-500) 10%, transparent);
+}
+
+tr.saved {
+  background: color-mix(in srgb, var(--p-green-500) 10%, transparent);
+}

@@ -1,0 +1,96 @@
+<form [formGroup]="compositionForm" class="flex flex-col gap-6 p-6">
+  <!-- Parent Product -->
+  <div class="flex flex-col gap-2">
+    <label for="parent_product" class="font-bold text-surface-700 text-xs"
+      >{{ 'TABLE.PARENT_PRODUCT' | translate }} <span class="text-red-500">*</span></label
+    >
+    <p-select
+      id="parent_product"
+      formControlName="parent_product_id"
+      [options]="products()"
+      optionLabel="name"
+      optionValue="id"
+      [filter]="true"
+      filterBy="name"
+      [showClear]="true"
+      [disabled]="isEditing()"
+      [placeholder]="'COMPOSITIONS.SELECT_PARENT' | translate"
+      class="w-full"
+    ></p-select>
+  </div>
+
+  <!-- Child Product -->
+  <div class="flex flex-col gap-2">
+    <label for="child_product" class="font-bold text-surface-700 text-xs"
+      >{{ 'TABLE.CHILD_PRODUCT' | translate }} <span class="text-red-500">*</span></label
+    >
+    <p-select
+      id="child_product"
+      formControlName="child_product_id"
+      [options]="products()"
+      optionLabel="name"
+      optionValue="id"
+      [filter]="true"
+      filterBy="name"
+      [showClear]="true"
+      [disabled]="isEditing()"
+      [placeholder]="'COMPOSITIONS.SELECT_CHILD' | translate"
+      class="w-full"
+    ></p-select>
+  </div>
+
+  <!-- Type & Quantity -->
+  <div class="grid grid-cols-2 gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="type" class="font-bold text-surface-700 text-xs"
+        >{{ 'TABLE.TYPE' | translate }} <span class="text-red-500">*</span></label
+      >
+      <p-select
+        id="type"
+        formControlName="type"
+        [options]="typeOptions()"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="'COMPOSITIONS.SELECT_TYPE' | translate"
+        class="w-full"
+      ></p-select>
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="quantity" class="font-bold text-surface-700 text-xs"
+        >{{ 'TABLE.QUANTITY' | translate }} <span class="text-red-500">*</span></label
+      >
+      <p-inputNumber
+        id="quantity"
+        formControlName="quantity"
+        [min]="0"
+        [maxFractionDigits]="2"
+        [step]="0.5"
+        placeholder="1"
+        class="w-full"
+      ></p-inputNumber>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex justify-end gap-3 pt-4 border-t border-surface-100">
+    <button
+      pButton
+      type="button"
+      [label]="'GLOBAL.ACTIONS.CANCEL' | translate"
+      icon="pi pi-times"
+      class="p-button-outlined p-button-secondary border-surface-200 text-surface-600"
+      (click)="cancel()"
+    ></button>
+    <button
+      pButton
+      type="button"
+      [label]="
+        isEditing() ? ('GLOBAL.ACTIONS.UPDATE' | translate) : ('GLOBAL.ACTIONS.SAVE' | translate)
+      "
+      icon="pi pi-check"
+      [loading]="isSaving()"
+      class="p-button-primary"
+      (click)="save()"
+    ></button>
+  </div>
+</form>
